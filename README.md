@@ -1,5 +1,6 @@
 ---
-description: 中文书名《使用Kotlin进行Android开发》，开源书籍，使用gitbook平台进行编辑和发布。
+description: >-
+  中文书名《使用Kotlin进行Android开发》，开源书籍，使用gitbook平台进行编辑和发布。https://liumengtime.gitbook.io/androiddevelopmentwithkotlin/
 ---
 
 # 作者序
@@ -11,4 +12,6 @@ description: 中文书名《使用Kotlin进行Android开发》，开源书籍，
 | 作者 | 邮箱 |
 | :--- | :--- |
 | MamunLiu | liumengtime@gmail.com |
+
+
 
