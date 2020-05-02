@@ -278,3 +278,7 @@ Retrofit（一个非常受欢迎的Android网络框架）属性初始化将被�
 
 ## 在Android Studio中使用Kotlin
 
+Android Studio现有的工具也适用于Kotlin。使用这些工具，我们可以很方便地进行调试、代码检查、代码补全以及重构等等，几乎和使用Java的时候一样。最大的改变就是Kotlin的语法，我们需要做的就是给项目配置Kotlin。
+
+Android应用程序具有多个入口（不同的inetnt可以启动程序中不同的组件），并且需要AndroidFramework依赖。运行书籍中的代码示例，需要继承Activity类并在其中放置代码。
+

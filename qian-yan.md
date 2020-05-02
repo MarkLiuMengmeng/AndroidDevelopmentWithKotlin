@@ -28,8 +28,8 @@ Google IO 2017宣布Kotlin成为 Android 官方开发语言，Kotlin在Android�
 
 ## 阅读前需要了解什么知识？
 
-* Java和面向对象的编程概念，包括对象、类、构造函数、接口、方法、getter和setter及泛型等。
-* Android Platform API，这部分知识会帮助你更深入了解示例和Kotlin所解决的问题。即使不是很了解这部分内容，仍然不影响理解本书的绝大部分内容，而且Kotlin也可以应用在数据科学、桌面程序、Web端等领域的开发上。
+* Java和面向对象的编程概念，包括对象、类、构造函数、接口、方法、getter和setter及泛型。
+* Android Platform API，这部分知识会帮助你更深入了解示例和Kotlin所解决的问题。即使不是很了解这部分内容，仍然不影响理解本书的绝大部分内容，而且Kotlin也可以应用在数据科学、服务端、Web端等领域的开发上。
 
 
 
