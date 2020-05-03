@@ -224,7 +224,7 @@ println(ball) // prints: Ball(size=12, color=Red)
 
 可以看到我们可以很容易地处理不可变的对象。
 
-Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需代理。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，StringUtils类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android framework类添加扩展。
+Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需代理。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，StringUtils类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android Framework类添加扩展。
 
 Android ImageView没有从网络加载图像的功能，因此我们可以使用Picasso库（一个Android平台的图片加载库）为ImageView添加扩展方法来实现此功能：
 
@@ -273,12 +273,70 @@ Retrofit（一个非常受欢迎的Android网络框架）属性初始化将被�
 {% hint style="info" %}
 运行Kotlin最快的方法是使用[Kotlin Playground](https://play.kotlinlang.org/)。点击链接，无需下载任何软件，而且可以方便地在各个Kotlin版本之间切换，很容易在上面测试Kotlin的各种语言特性。
 
-与Java类似，main函数是Kotlin应用程序的入口。而Android应用程序具有多个入口， main函数是被Android framework隐式调用的，因此我们无法使用它来运行Android平台上的Kotlin代码。
+与Java类似，main函数是Kotlin应用程序的入口。而Android应用程序具有多个入口， main函数是被Android Framework隐式调用的，因此我们无法使用它来运行Android平台上的Kotlin代码。
 {% endhint %}
 
 ## 在Android Studio中使用Kotlin
 
 Android Studio现有的工具也适用于Kotlin。使用这些工具，我们可以很方便地进行调试、代码检查、代码补全以及重构等等，几乎和使用Java的时候一样。最大的改变就是Kotlin的语法，我们需要做的就是给项目配置Kotlin。
 
-Android应用程序具有多个入口（不同的inetnt可以启动程序中不同的组件），并且需要AndroidFramework依赖。运行书籍中的代码示例，需要继承Activity类并在其中放置代码。
+Android应用程序具有多个入口（不同的inetnt可以启动程序中不同的组件），且需要Android Framework依赖。运行书籍中的代码示例需要继承Activity类并在其中放置代码。
+
+### 给旧项目配置Kotlin
+
+Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下载安装任何软件包。
+
+在Android Studio 2.x版本中使用Kotlin必须手动安装Kotlin插件，在Android Studio中选择 **File \| Settings \| Plugins \| Install JetBrains plugin**，输入Kotlin并点击install：
+
+![](.gitbook/assets/chapter1_1.jpg)
+
+安装完成需要重启，待重启之后我们需要在项目中配置Kotlin，进行**Configure Kotlin in project** 操作（Windows中的快捷键是 **Ctrl+Shift+A**，在macOS中是 **command + shift + A**），也可以在菜单中点击**Tools \| Kotlin \| Configure Kotlin in Project**：
+
+![](.gitbook/assets/chapter1_2.jpg)
+
+然后选择**Android with Gradle**：
+
+![](.gitbook/assets/chapter1_3.jpg)
+
+最后选择所配置的**模组**（Module）的Kotlin版本：
+
+![](.gitbook/assets/chapter1_4.jpg)
+
+点击 **Sync Now** 同步一下就完成了：
+
+![](.gitbook/assets/chapter1_5.jpg)
+
+这样，我们就可以在配置好的模组中编写Kotlin代码了。
+
+### 在新项目中使用Kotlin
+
+只需要在创建时勾选 **Include Kotlin support** 即可：
+
+![](.gitbook/assets/chapter1_6.jpg)
+
+我们可以看到Kotlin的代码源文件放在Java的源文件夹下，我们可以另建一个Kotlin源文件夹，但这不是必需的：
+
+![](.gitbook/assets/chapter1_7.jpg)
+
+### 用转换器将Java转换为Kotlin（J2K）
+
+使用 **Java to Kotlin converter \(J2K\)** 有两种方式：
+
+第一种是使用快捷键（Windows中的是 **Alt + Shift + Ctrl + K ，**macOS中的是 **option + shift + command + K**）。
+
+另一种是把Java代码粘贴到新建的Kotlin文件中，它就会转换为Kotlin代码（有弹窗提示）。这在学习Kotlin时非常有用，我们可以先把代码用Java写好然后进行转换，由于Kotlin和Java的互操作性，我们甚至可以一个文件一个文件地逐步过渡到Kotlin。
+
+### Kotlin Read Eval Print Loop（REPL）
+
+Kotlin REPL是一个Shell，可以快速地帮你验证Kotlin代码。当你需要运行一段独立于Android Framework的Kotlin代码时，它就非常趁手了，因为它比进行App调试快得多：
+
+![](.gitbook/assets/chapter1_8.jpg)
+
+### 简介Kotlin编译原理
+
+Kotlin可以被编译为**Java字节码**（Java bytecode）然后转成**Dalvik字节码**（Dalvik bytecode）。Kotlin是跨平台的，但我们主要看一下在Android平台的编译流程：
+
+代码源文件（.kt文件/.java文件）—&gt; Java字节码（.class文件）—&gt; Dalvik字节码（.dex文件）—&gt; 安装包（.apk文件）
+
+也就是说，Java编译器的编译结果和Kotlin编译器的编译结果会在字节码层面合并到一起。在纯Java项目或纯Kotlin项目中，就只有一个对应的编译器工作了。
 
