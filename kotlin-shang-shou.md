@@ -336,7 +336,7 @@ Kotlin REPL是一个Shell，可以快速地帮你验证Kotlin代码。当你需�
 
 Kotlin可以被编译为**Java字节码**（Java bytecode）然后转成**Dalvik字节码**（Dalvik bytecode）。Kotlin是跨平台的，但我们主要看一下在Android平台的编译流程：
 
-代码源文件（.kt文件/.java文件）—&gt; Java字节码（.class文件）—&gt; Dalvik字节码（.dex文件）—&gt; 安装包（.apk文件）
+![](.gitbook/assets/chapter1_9.png)
 
 也就是说，Java编译器的编译结果和Kotlin编译器的编译结果会在字节码层面合并到一起。在纯Java项目或纯Kotlin项目中，就只有一个对应的编译器工作了。
 
