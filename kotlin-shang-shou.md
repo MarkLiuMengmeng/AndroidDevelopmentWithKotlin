@@ -20,7 +20,7 @@ Kotlin团队致力于使Kotlin插件变得越来越好。Kotlin大多数错误�
 {% hint style="info" %}
 Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
 
-Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT) 
+Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT)
 
 Kotlin slack频道： [http://slack.kotlinlang.org/](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
 {% endhint %}

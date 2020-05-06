@@ -86,5 +86,3 @@ var persons = listOf(personInstance1, personInstance2)
 
 假设我们传入的是`Person`类，那么上面的推断类型就为`List<Person>`。
 
-
-
