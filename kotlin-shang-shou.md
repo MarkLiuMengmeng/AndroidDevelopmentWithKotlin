@@ -13,12 +13,14 @@ description: Kotlin是一门非常出色的语言，能让Android开发更轻松
 * **简洁**：Kotlin消除了大部分Java的冗余代码，同样的编程任务Kotlin需要的代码更少。因此，Kotlin写出的代码更具表现力，更容易阅读和理解。
 * **互操作性**：Kotlin旨在与Java无缝并行工作（跨语言项目）。现有Java库和框架的生态系统与Kotlin一起使用而不会有任何性能损失。许多Java库甚至推出了Kotlin特定的版本，以符合Kotlin的习惯用法。 无需任何特殊语法Kotlin类可以在Java代码中直接实例化并透明地引用，反之亦然。 这使我们能够轻松地将Kotlin纳入现有的Android项目，与Java一起使用。
 * **工具友好**：可用任何 Java IDE 或者使用命令行构建，例如Android Studio、IntelliJ Idea、Eclipse和Standalone Compiler。并能使用现代IDE优秀高效的代码编辑功能。
-* **跨平台**：我们可以面向许多平台，包括移动应用程序 （Android甚至iOS）、服务器端应用程序（后端）、Web开发（前端 ）、数据科学、桌面应用程序，甚至构建系统（Gradle）。
+* **跨平台**：我们可以面向许多平台，包括移动应用程序 （Android甚至iOS）、服务器端应用程序（后端）、Web开发（前端 ）、数据科学、桌面应用程序，甚至构建系统（Gradle）。Kotlin团队的目标是将其打造为真正的全堆栈语言。
 
 Kotlin团队致力于使Kotlin插件变得越来越好。Kotlin大多数错误都已快速修复并且实现了开发者社区要求的许多功能。
 
 {% hint style="info" %}
 Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
+
+Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
 Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT)
 
