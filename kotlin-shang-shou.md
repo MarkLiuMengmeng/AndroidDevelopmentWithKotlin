@@ -49,7 +49,7 @@ var name = "Mamun"
 name = 2 // 错误, 因为 name 的类型是 String
 ```
 
-这个变量已经被推断为 String，所以赋值给它一个**整型**（integer）会产生一个**编译时错误**（compilation error）。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
+这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个**编译时错误**（compilation error）。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
 
 ```text
 val name = "Mamun"
@@ -72,7 +72,7 @@ var b: String? = "abc"
 b = null // 正确
 ```
 
-在数据类型之后加一个问号，我们就可以标记一个变量是可以存储空值的（String / String?）。如果我们不明确标记某一个变量是可空的，那么它将不能被任何一个可空的**引用**（reference）赋值。Kotlin提供了合适的方法来处理可空的变量——我们可以使用**安全调用**（safe call）**操作符**（operator）来进行操作：
+在数据类型之后加一个问号，我们就可以标记一个变量是可以存储空值的（`String`/`String?`）。如果我们不明确标记某一个变量是可空的，那么它将不能被任何一个可空的**引用**（reference）赋值。Kotlin提供了合适的方法来处理可空的变量——我们可以使用**安全调用**（safe call）**操作符**（operator）来进行操作：
 
 ```text
 savedInstanceState?.doSomething
@@ -121,7 +121,7 @@ capitals.forEach { (city, country) ->
 }
 ```
 
-Kotlin通过一组接口和辅助方法（List / MutableList、Set / MutableSet、Map / MutableMap...）来区分可变与不可变集合:
+Kotlin通过一组接口和辅助方法（`List`/`MutableList`、`Set`/`MutableSet`、`Map`/`MutableMap`...）来区分可变与不可变集合:
 
 ```text
 val list = listOf(1, 2, 3, 4, 5, 6) // 推断类型为 List
@@ -176,7 +176,7 @@ return
 x.length // x 已自动转换为 String
 ```
 
-Kotlin编译器在执行类型检查之后，就知道了变量x的类型为String。因此它自动将其转换为String类型，从而允许其调用String类的所有方法并访问String类的所有属性，无需再进行任何显式强制转换。
+Kotlin编译器在执行类型检查之后，就知道了变量x的类型为`String`。因此它自动将其转换为`String`类型，从而允许其调用`String`类的所有方法并访问`String`类的所有属性，无需再进行任何显式强制转换。
 
 有时，一个函数的功能仅是返回一个表达式的值。这种情况我们可以用表达式的语法来代替函数体：
 
@@ -224,9 +224,9 @@ println(ball) // prints: Ball(size=12, color=Red)
 
 可以看到我们可以很容易地处理不可变的对象。
 
-Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需代理。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，StringUtils类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android Framework类添加扩展。
+Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需代理。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，`StringUtils`类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android Framework类添加扩展。
 
-Android ImageView没有从网络加载图像的功能，因此我们可以使用Picasso库（一个Android平台的图片加载库）为ImageView添加扩展方法来实现此功能：
+Android `ImageView`没有从网络加载图像的功能，因此我们可以使用Picasso库（一个Android平台的图片加载库）为`ImageView`添加扩展方法来实现此功能：
 
 ```text
 fun ImageView.loadUrl(url: String) {
@@ -236,7 +236,7 @@ fun ImageView.loadUrl(url: String) {
 imageView.loadUrl("www.test.com\\image0.png")
 ```
 
-我们也可以实现一个简单的显示toast的拓展：
+我们也可以实现一个简单的`Toast`的拓展：
 
 ```text
 fun Context.toast(text:String) {
@@ -280,7 +280,7 @@ Retrofit（一个非常受欢迎的Android网络框架）属性初始化将被�
 
 Android Studio现有的工具也适用于Kotlin。使用这些工具，我们可以很方便地进行调试、代码检查、代码补全以及重构等等，几乎和使用Java的时候一样。最大的改变就是Kotlin的语法，我们需要做的就是给项目配置Kotlin。
 
-Android应用程序具有多个入口（不同的inetnt可以启动程序中不同的组件），且需要Android Framework依赖。运行书籍中的代码示例需要继承Activity类并在其中放置代码。
+Android应用程序具有多个入口（不同的`inetnt`可以启动程序中不同的组件），且需要Android Framework依赖。运行书籍中的代码示例需要继承`Activity`类并在其中放置代码。
 
 ### 给旧项目配置Kotlin
 
@@ -290,7 +290,7 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 ![](.gitbook/assets/chapter1_1.jpg)
 
-安装完成需要重启，待重启之后我们需要在项目中配置Kotlin，进行**Configure Kotlin in project** 操作（Windows中的快捷键是 **Ctrl+Shift+A**，在macOS中是 **command + shift + A**），也可以在菜单中点击**Tools \| Kotlin \| Configure Kotlin in Project**：
+安装完成需要重启，待重启之后我们需要在项目中配置Kotlin，进行**Configure Kotlin in project** 操作（Windows中的快捷键是 **Ctrl+Shift+A**，macOS中是 **command + shift + A**），也可以在菜单中点击**Tools \| Kotlin \| Configure Kotlin in Project**：
 
 ![](.gitbook/assets/chapter1_2.jpg)
 

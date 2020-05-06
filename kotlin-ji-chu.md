@@ -6,7 +6,7 @@ description: 积小流而成江海。这章我们介绍Kotlin语言的基础要�
 
 ## 变量
 
-在Kotlin中有两种变量：**var**（variable）和 **val**（value）。var 是可变的，即可以在初始化赋值之后可以被重新赋值，等同于Java中的普通变量。
+在Kotlin中有两种变量：`var`（variable）和 `val`（value）。`var`是可变的，即可以在初始化赋值之后可以被重新赋值，等同于Java中的普通变量。
 
 ```text
 fun main() {
@@ -15,7 +15,7 @@ fun main() {
 }
 ```
 
-val是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带final修饰符的变量。但它不能保证引用的对象中的值不会被修改（重新赋值）：
+`val`是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带`final`修饰符的变量。但它不能保证引用的对象中的值不会被修改（重新赋值）：
 
 ```text
 class Fruit(var name:String)//类的声明会在第四章中说明
@@ -26,7 +26,7 @@ fun main() {
 }
 ```
 
-由于val变量可以有一个自定义getter，所以我们也不能保证每一次的访问就是返回的都是同一个对象：
+由于`val`变量可以有一个自定义getter，所以我们也不能保证每一次的访问就是返回的都是同一个对象：
 
 ```text
 val random: Int
@@ -52,7 +52,7 @@ var fruit: String = "orange"//完整声明
 var fruit = "orange"//省略类型声明
 ```
 
-上面虽然类型声明被省略了，但数据类型会被隐式地设置为 String，因为Kotlin是强类型的语言。在随后的使用中编译器会验证是否符合正确的数据类型：
+上面虽然类型声明被省略了，但数据类型会被隐式地设置为`String`，因为Kotlin是强类型的语言。在随后的使用中编译器会验证是否符合正确的数据类型：
 
 ```text
 var fruit = "orange"
@@ -66,5 +66,25 @@ var fruit: Any = "orange"
 fruit = 10
 ```
 
-Any相当于Java中的Object，处于继承层级的顶端。
+`Any`相当于`Java`中的Object，处于继承层级的顶端。
+
+编译器同样可以从函数进行类型推断：
+
+```text
+var total = sum(10, 20)
+```
+
+有时候我们自己并不确定编译器到底给这个变量设置了什么数据类型，这个类型可能是`Int`，也可能是`Double`或者`Float`，我们可以将插入符置于变量名上，按快捷键（Windows中的是**Shift + Ctrl + P**，macOS中的是**arrow key + control + P**）显示具体推断成何种数据类型：
+
+![](.gitbook/assets/chapter2_1.jpg)
+
+类型推断同样适用于泛型：
+
+```text
+var persons = listOf(personInstance1, personInstance2)
+```
+
+假设我们传入的是`Person`类，那么上面的推断类型就为`List<Person>`。
+
+
 
