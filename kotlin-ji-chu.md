@@ -265,5 +265,29 @@ val isCorrect = quiz?.currentQuestion?.answer?.isCorrect ?: false
 
 ## 非空断言操作符（not-null assertion operator）
 
+非空断言操作符由两个叹号组成（`!!`）。这个操作符可以显式地将可空类型转化为非空类型：
 
+```text
+var testStr: String? = "test"
+var size: Int = testStr!!.length
+```
+
+一般来说，Kotlin不允许我们直接访问可空类型变量`testStr`的属性`length`。当我们用非空断言操作符显式将其转换为非空类型就可以直接访问了。然而如果我们的判断错误，那么程序将会在运行时抛出空指针异常。
+
+```text
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val locked: Boolean = savedInstanceState!!.getBoolean("theKey")
+}
+```
+
+上面的代码会编译通过，但是我们知道，当一个新创建的`Activity`时，它的`savedInstanceState`将会是空，此时上面的代码会抛出空指针异常。
+
+看到非空断言操作符时，它意味着潜在的空指针异常，此时代码的工作方式更像Java。所以我们必须小心地使用它，大部分情况应该被安全调用和智能类型转换来代替。我们还可以利用`let`函数来处理可空性问题。
+
+{% hint style="info" %}
+关于非空断言操作符的使用建议：[https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205](https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205)
+{% endhint %}
+
+## `let`函数
 
