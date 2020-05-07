@@ -218,7 +218,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 }
 ```
 
-如果`savedInstanceState`为空，返回空值，反之则返回`savedInstanceState?.getBoolean("locked")`的执行结果。
+如果`savedInstanceState`为空，返回空值，反之则返回`savedInstanceState?.getBoolean("theKey")`的执行结果。
 
 在Java代码中常常见到的嵌套空值检查，也可以用Kotlin中的安全调用操作符写得更简明：
 
