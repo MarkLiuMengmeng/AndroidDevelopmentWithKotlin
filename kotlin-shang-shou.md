@@ -51,7 +51,7 @@ var name = "Mamun"
 name = 2 // 错误, 因为 name 的类型是 String
 ```
 
-这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个**编译时错误**（compilation error）。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
+这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个编译时错误。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
 
 ```text
 val name = "Mamun"

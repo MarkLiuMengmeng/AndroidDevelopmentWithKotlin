@@ -123,13 +123,13 @@ var time = 18L //用字面常量（literal constant）声明数据类型为Long
 var name //错误，编译器无法得知它会存储什么类型的值
 ```
 
-## 严格空安全（Strict null safety）
+## 严格空类型安全（Strict null safety）
 
 在使用Java开发时，最常见的错误就是空指针异常（NullPointerExceptions）。Sir Tony Hoare在2009年3月的Qcon技术会议上发表了题为“Null引用：代价十亿美元的错误”的演讲，回忆自己1965年设计第一个全面的类型系统时，未能抵御住诱惑，加入了Null引用，仅仅是因为实现起来非常容易。它后来成为许多程序设计语言的标准特性，导致了数不清的错误、漏洞和系统崩溃，可能在之后40年中造成了十亿美元的损失。
 
 为了避免空指针异常，我们需要编写防御性的代码，在使用一个对象前检查它是否为空。包括Kotlin在内的许多现代编程语言采取了行动，将这种运行时的错误转化为编译时错误以提升编程语言的安全性。Kotlin实现这个目的的途径就是为语言类型增加**可空性安全机制**（nullability safeness mechanisms），Kotlin的类型系统会区分**可空类型**（nullable type）和**非空类型**（non-nullable type），这样可以在开发期间检测和预防非常多的空指针异常。
 
-严格空安全是Kotlin类型系统的一部分。默认类型是非空的，如果想存储可能为空的数据必须要显式声明它是可空类型的：
+严格空类型安全是Kotlin类型系统的一部分。默认类型是非空的，如果想存储可能为空的数据必须要显式声明它是可空类型的：
 
 ```text
 val age: Int = null //错误，默认类型不可为空
@@ -205,7 +205,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 }
 ```
 
-虽然这种处理方式在Java中司空见惯，但不得不说这样写代码一点都不简洁。现在Kotlin允许用更简洁的方式处理这类问题，那就是**安全调用操作符**（safe call operator）。
+虽然这种处理方式在Java中司空见惯，但这样写代码无法让人一眼就能看出它的含义。现在Kotlin允许用更简洁的方式处理这类问题，比如**安全调用操作符**（safe call operator）。
 
 ## **安全调用操作符**（safe call operator）
 
