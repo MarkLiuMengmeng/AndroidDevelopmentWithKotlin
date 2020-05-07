@@ -209,5 +209,36 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 ## **安全调用操作符**（safe call operator）
 
+安全调用操作符由一个问号和点表示（`?.`）。如果操作符左侧为空则返回空值，否则返回右侧的表达式的执行结果：
+
+```text
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val locked: Boolean? = savedInstanceState?.getBoolean("theKey")
+}
+```
+
+如果`savedInstanceState`为空，返回空值，反之则返回`savedInstanceState?.getBoolean("locked")`的执行结果。
+
+在Java代码中常常见到的嵌套空值检查，也可以用Kotlin中的安全调用操作符写得更简明：
+
+```text
+//Java
+Boolean isCorrect;
+if(quiz !=null ){
+    if(quiz.currentQuestion != null) {
+        if(quiz.currentQuestion.answer != null ) {
+            isCorrect = quiz.currentQuestion.answer.isCorrect();
+        }
+    }
+}
+//Kotlin
+val isCorrect= quiz?.currentQuestion?.answer?.isCorrect
+```
+
+在上面的调用链中，当任何一个安全调用操作符左侧为空就会返回空值。有时我们想在取得的对象为空时也能有一个默认值，除了经典的`if`-`else`解决方案，我们还可以用更简洁的**猫王操作符**（Elvis operator）。
+
+## **猫王操作符**（Elvis operator）
+
 
 
