@@ -207,7 +207,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 虽然这种处理方式在Java中司空见惯，但这样写代码无法让人一眼就能看出它的含义。现在Kotlin允许用更简洁的方式处理这类问题，比如**安全调用操作符**（safe call operator）。
 
-## **安全调用操作符**（safe call operator）
+## **安全调用操作符**（Safe call operator）
 
 安全调用操作符由一个问号和点表示（`?.`）。如果操作符左侧为空则返回空值，否则返回右侧的表达式的执行结果：
 
@@ -263,7 +263,7 @@ val isCorrect = quiz?.currentQuestion?.answer?.isCorrect ?: false
 [关于猫王操作符名称的由来](http://dobsondev.com/2014/06/06/the-elvis-operator/)
 {% endhint %}
 
-## 非空断言操作符（not-null assertion operator）
+## 非空断言操作符（Not-null assertion operator）
 
 非空断言操作符由两个叹号组成（`!!`）。这个操作符可以显式地将可空类型转化为非空类型：
 
@@ -283,11 +283,34 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 上面的代码会编译通过，但是我们知道，当一个新创建的`Activity`时，它的`savedInstanceState`将会是空，此时上面的代码会抛出空指针异常。
 
-看到非空断言操作符时，它意味着潜在的空指针异常，此时代码的工作方式更像Java。所以我们必须小心地使用它，大部分情况应该被安全调用和智能类型转换来代替。我们还可以利用`let`函数来处理可空性问题。
+看到非空断言操作符时，它意味着潜在的空指针异常，此时代码的工作方式更像Java。所以我们必须小心地使用它，大部分情况应该被安全调用和智能类型转换来代替。
 
 {% hint style="info" %}
-关于非空断言操作符的使用建议：[https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205](https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205)
+关于非空断言操作符的一些使用建议：[https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205](https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205)
 {% endhint %}
 
-## `let`函数
+## 平台类型（Platform type）
+
+我们知道大部分Android SDK和库由Java写成，虽然编译器可以通过注解来获取Java中的可空性信息，但大部分Java变量没有注解，我们可以把它们都看作可空类型并每次访问时检查可空性，但这显然不是上策。
+
+于是Kotlin引入了平台类型，平台类型不能由开发者自己定义，但我们可以在异常信息和方法参数列表中看到这种特殊的语法（类型名后加`!`）：
+
+```text
+View! // View 定义成了一个平台类型
+```
+
+平台类型可以是为可空类型也可以视为非空类型，相当于一个待定类型。决定如何使用以及正确使用是我们开发者的责任。例如：
+
+```text
+val textView = findViewById(R.id.textView)
+```
+
+在一般情况下，Kotlin编译器并不知道`findViewById`方法会返回可空类型还是非空类型，这也是`View`被设置为平台类型的原因。这时候我们开发者就必须确定它的可空性。如果我们在所有布局文件都有关于这个`textView`的定义（无论横屏、竖屏、大屏、小屏等的布局文件），那么我们可以将它设置为非空类型，否则（比如只有横屏布局中有定义）我们应该把它设置为可空类型。
+
+```text
+val textView = findViewById(R.id.textView) as TextView // 设置为非空类型
+val textView = findViewById(R.id.textView) as TextView? // 设置为可空类型
+```
+
+## 类型转换
 
