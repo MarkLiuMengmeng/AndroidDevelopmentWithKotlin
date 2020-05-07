@@ -225,7 +225,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 ```text
 //Java
 Boolean isCorrect;
-if(quiz !=null ){
+if(quiz != null ){
     if(quiz.currentQuestion != null) {
         if(quiz.currentQuestion.answer != null ) {
             isCorrect = quiz.currentQuestion.answer.isCorrect();
@@ -239,6 +239,31 @@ val isCorrect= quiz?.currentQuestion?.answer?.isCorrect
 在上面的调用链中，当任何一个安全调用操作符左侧为空就会返回空值。有时我们想在取得的对象为空时也能有一个默认值，除了经典的`if`-`else`解决方案，我们还可以用更简洁的**猫王操作符**（Elvis operator）。
 
 ## **猫王操作符**（Elvis operator）
+
+猫王操作符由一个问号和冒号表示（`?:`）。它的语法是：`first operand ?: second operand`。它的执行逻辑是当第一个操作数不为空时返回**第一个操作数**（first operand），否则返回**第二个操作数**（second operand）。
+
+有了它我们可以很方便地为上节例子加上默认值（false）：
+
+```text
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val locked: Boolean = savedInstanceState?.getBoolean("theKey") ?: false
+}
+```
+
+还可以用在上节第二个例子：
+
+```text
+val isCorrect = quiz?.currentQuestion?.answer?.isCorrect ?: false
+```
+
+并且编译器会智能地将`isCorrect`推断为非空类型。
+
+{% hint style="info" %}
+[关于猫王操作符名称的由来](http://dobsondev.com/2014/06/06/the-elvis-operator/)
+{% endhint %}
+
+## 非空断言操作符（not-null assertion operator）
 
 
 
