@@ -27,7 +27,7 @@ Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.
 Kotlin slack频道： [http://slack.kotlinlang.org/](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
 {% endhint %}
 
-使用Kotlin进行Android程序开发变得越来越高效和愉快，Kotlin与JDK 6兼容，因此即使Android4之前的Android设备中，使用Kotlin创建的应用程序也可以安全运行。
+使用Kotlin进行Android程序开发变得越来越高效和愉快，Kotlin与JDK6兼容，因此即使Android4之前的Android设备中，使用Kotlin创建的应用程序也可以正确运行。
 
 Kotlin旨在通过结合**过程式编程**（procedural programming）和**函数式编程**（functional programming）的概念和元素以带来两全其美的编程体验。 它遵循许多准则，如每个Java开发人员的必读书籍——Joshua Bloch撰写的《Effective Java》。
 
@@ -132,7 +132,7 @@ val mutableList = mutableListOf(1, 2, 3, 4, 5, 6) // 推断类型为 MutableList
 
 不可变集合意味着集合初始化后其状态就不可改变，我们无法添加或移除数据项。可变集合意思就很明显了，我们可以改变它的状态。
 
-通过使用lambda表达式，我们可以非常简洁地使用Android Framework：
+通过使用lambda表达式，我们可以非常简洁地使用Android Framework提供的API：
 
 ```text
 view.setOnClickListener {
