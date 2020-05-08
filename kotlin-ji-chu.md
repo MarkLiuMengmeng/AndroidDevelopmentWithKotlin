@@ -348,7 +348,7 @@ val productFragment: ProductFragment? = fragment as? ProductFragment
 // 得到null，不会抛出异常
 ```
 
-在我们的程序运行逻辑中，`Fragment`常常是一个必不可少的变量，如果我们希望得到一个非空类型的`productFragment`，那么我们可以使用猫王操作符：
+在我们的程序运行逻辑中，`productFragment`常常是一个必不可少的变量，如果我们希望得到一个非空类型的`productFragment`，那么我们可以使用猫王操作符：
 
 ```text
 val fragment: String = "ProductFragment"
@@ -427,7 +427,11 @@ if ( view != null ){
 view.isShown() // 错误，view可能为空
 ```
 
-总之，无论通过类型检查还是逻辑语句，让编译器完全确定是这个类型后，编译器就会为我们执行隐式的类型转换，称之为智能类型转换。
+总之，无论通过类型检查还是逻辑语句，让编译器完全确定是这个类型后，编译器就会为我们执行隐式的智能类型转换。
+
+## 基础数据类型
+
+
 
 
 
