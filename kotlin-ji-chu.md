@@ -71,7 +71,7 @@ fruit = 10
 编译器同样可以从函数进行类型推断：
 
 ```text
-var total = sum(10, 20)
+val total = sum(16, 64)
 ```
 
 有时候我们自己并不确定编译器到底给这个变量设置了什么数据类型，这个类型可能是`Int`，也可能是`Double`或者`Float`，我们可以将插入符置于变量名上，按快捷键（Windows中的是**Shift + Ctrl + P**，macOS中的是**arrow key + control + P**）显示具体推断成何种数据类型：
@@ -151,10 +151,10 @@ name.toUpperCase() // 错误，引用可能为空
 `Nothing`是一个虚类型（uninhabited type），无法拥有实例。这样的继承结构也说明了为什么非空类型可以复制给它对应的可空类型，反之则不行：
 
 ```text
-var nullableVehicle: Vehicle?
-var vehicle: Vehicle
-nullableVehicle = vehicle // 正确
-vehicle = nullableVehicle // 错误，nullableVehicle可能为空
+var nullableView: View?
+var view: View
+nullableView = view // 正确，虽然view和nullableView类型不一致，但是其子类
+view = nullableView // 错误，nullableView和view类型不一致，也不是其子类
 ```
 
 泛型类则有更多的可能，以`ArrayList`为例：
@@ -371,23 +371,23 @@ name = age.toString()
 
 ![](.gitbook/assets/chapter2_4.jpg)
 
-如果我们需要把一个`Animal`变量进行类型转换为`Fish`然后调用其成员方法，在Java中我们需要这样做：
+如果我们需要把一个`Animal`变量进行类型转换为`Tiger`然后调用其成员方法，在Java中我们需要这样做：
 
 ```text
 //Java
-if (animal instanceof Fish){
-    Fish fish = (Fish) animal;
-    fish.isHungry();
+if (animal instanceof Tiger){
+    Tiger tiger = (Tiger) animal;
+    tiger.isHungry();
     //或者
-    ((Fish) animal).isHungry();
+    ((Tiger) animal).isHungry();
 }
 ```
 
-代码是有些冗余的，假设我们在检查`animal`是否是`Fish`类型时编译器替我们完成转换不是更好吗？Kotlin中的智能类型转换可以实现这一点：
+代码是有些冗余的，假设我们在检查`animal`是否是`Tiger`类型时编译器替我们完成转换不是更好吗？Kotlin中的智能类型转换可以实现这一点：
 
 ```text
 //Kotlin
-if (animal is Fish) {
+if (animal is Tiger) {
     animal.isHungry()
 }
 ```
@@ -395,7 +395,7 @@ if (animal is Fish) {
 但是在`if`的花括号之外，编译器并不知道`animal`会是什么类型，会被我们如何处理。所以上面的智能类型转换范围仅限于花括号之内：
 
 ```text
-if (animal is Fish) {
+if (animal is Tiger) {
     animal.isHungry()
 }
 animal.isHungry() //错误
@@ -404,16 +404,16 @@ animal.isHungry() //错误
 如果我们想反过来用也是可以的：
 
 ```text
-if (animal !is Fish) 
+if (animal !is Tiger) 
     return
-animal.isHungry() //执行到这里编译器同样能确定animal是Fish类的实例
+animal.isHungry() //执行到这里编译器同样能确定animal是Tiger类的实例
 ```
 
 在条件表达式使用中，由于`&&`和`||`具有短路效果。以`condition1() && condition2()`为例，当左侧`conditon1()`为返回true时，右侧`candition2()`才会执行。因此智能类型转换在此处也有效：
 
 ```text
-if (animal is Fish && animal.isHungry()) {
-    println("Fish is hungry")
+if (animal is Tiger&& animal.isHungry()) {
+    println("Tiger is hungry")
 }
 ```
 
@@ -429,9 +429,24 @@ view.isShown() // 错误，view可能为空
 
 总之，无论通过类型检查还是逻辑语句，让编译器完全确定是这个类型后，编译器就会为我们执行隐式的智能类型转换。
 
-## 基础数据类型
+## 基础数据类型（Primitive data type）
 
+Java中`int`是基础数据类型，而`Integer`为`int`的**装箱类型**（boxed representation）。装箱（`Boxing`）是将一个基础数据类型包装为一个引用类型使其具有和对象一样的性质。
 
+在Kotlin中，一切都是对象。`Int`、`Long`、`Char`等在内也不例外。这样一来就简化了代码的复杂性。我们可以直接像使用一个普通对象一样对`Int`类型进行操作：
 
+```text
+val code: Int = 25
+code.toChar()
+```
 
+为了优化性能，Kotlin在编译为JVM字节码时仍然会尽可能的优化为Java对应的基础数据类型。但我们知道Kotlin中非空类型`Int`是有一个对应的可空类型`Int?`的，那么可空类型就会被转译为Java中对应的装箱类型。举个例子：Kotlin中的`Int`存储为Java中的`int`，Kotlin中的`Int?`存储为Java中的`Integer`。
+
+```text
+var a: Int = 1 // 被存储为基础数据类型
+var b: Int? = null // 被存储为装箱数据类型
+b = 24 // 即使有值也被存储为装箱数据类型
+```
+
+我们可以看到Kotlin虽然将基础数据类型也视作对象来对待和使用，但Java中的装箱概念仍然在默默影响着Kotlin代码的实际性能。装箱类型会比基础数据类型消耗更多的资源，如果是仅仅数个变量，那我们无需担心它的影响，但在拥有海量数据的列表和数组中可能是影响其性能的关键。所以我们来看一下这些“基础数据类型”。
 
