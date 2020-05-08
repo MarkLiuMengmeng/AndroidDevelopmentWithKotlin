@@ -177,7 +177,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-这段代码会通过编译，但会在运行时崩溃并抛出空指针异常。我们知道，`Activity`在第一次创建时该方法会被传进去一个`null`，只有在用一个保存的状态重新创建`Activity`时该值才会不为空。
+这段代码会通过编译，但会在运行时崩溃并抛出空指针异常。我们知道，`Activity`在第一次创建时该方法会被传进去一个空值，只有在用一个保存的状态重新创建`Activity`时该值才会不为空。
 
 我们看一下上面的代码用Kotlin写会怎样：
 
@@ -312,5 +312,122 @@ val textView = findViewById(R.id.textView) as TextView // 设置为非空类型
 val textView = findViewById(R.id.textView) as TextView? // 设置为可空类型
 ```
 
-## 类型转换
+## 类型转换（Cast）
+
+类型转换概念许多编程语言都支持。在Java中在访问某个类型的变量成员前我们需要显式地将其转换为该类型。Kotlin在类型转换方面也做了改进，引入了**安全类型转换**（safe cast）和**智能类型转换**（smart cast）。
+
+### 安全类型转换和不安全类型转换
+
+让我们先看Java中的类型转换：
+
+```text
+Fragment fragment = new ProductFragment();
+ProductFragment productFragment = (ProductFragment) fragment
+```
+
+在Kotlin中用`as`关键字来进行类型转换：
+
+```text
+val fragment: Fragment = ProductFragment()
+val productFragment: ProductFragment = fragment as ProductFragment
+```
+
+`ProductFragment`是`Fragment`的子类型，上面的代码能够正常工作。但如果仅仅是变量名相似而实际上转换前后的类型并无关系，那么就会引起`ClassCastException`：
+
+```text
+val fragment : String = "ProductFragment"
+val productFragment : ProductFragment = fragment as ProductFragment
+// 抛出异常: ClassCastException
+```
+
+由于可能引发异常，因此通过`as`进行的类型转换是不安全的类型转换。为了解决这个问题，Kotlin引入了安全类型转换操作符（`as?`），它也叫**可空类型转换操作符**（nullable cast operator）。如果被转换的变量可以完成转换就会成功进行类型转换，如果不行则会返回空值：
+
+```text
+val fragment: String = "ProductFragment"
+val productFragment: ProductFragment? = fragment as? ProductFragment
+// 得到null，不会抛出异常
+```
+
+在我们的程序运行逻辑中，`Fragment`常常是一个必不可少的变量，如果我们希望得到一个非空类型的`productFragment`，那么我们可以使用猫王操作符：
+
+```text
+val fragment: String = "ProductFragment"
+val productFragment: ProductFragment? = fragment as? ProductFragment ?: ProductFragment()
+```
+
+当我们转换Kotlin中的**基本类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
+
+```text
+val name: String
+val age: Int = 12
+name = age.toString()
+```
+
+### 智能类型转换
+
+与显式使用`as`关键字进行转换不同，智能类型转换是隐式的。当编译器完全确定在类型检查后变量类型不会改变时，才会进行智能类型转换。一般来说，智能类型转换对不可变的引用（`val`）和本地可变引用（`var`）起效。
+
+我们假设两个类有这样一个继承关系：
+
+![](.gitbook/assets/chapter2_4.jpg)
+
+如果我们需要把一个`Animal`变量进行类型转换为`Fish`然后调用其成员方法，在Java中我们需要这样做：
+
+```text
+//Java
+if (animal instanceof Fish){
+    Fish fish = (Fish) animal;
+    fish.isHungry();
+    //或者
+    ((Fish) animal).isHungry();
+}
+```
+
+代码是有些冗余的，假设我们在检查`animal`是否是`Fish`类型时编译器替我们完成转换不是更好吗？Kotlin中的智能类型转换可以实现这一点：
+
+```text
+//Kotlin
+if (animal is Fish) {
+    animal.isHungry()
+}
+```
+
+但是在`if`的花括号之外，编译器并不知道`animal`会是什么类型，会被我们如何处理。所以上面的智能类型转换范围仅限于花括号之内：
+
+```text
+if (animal is Fish) {
+    animal.isHungry()
+}
+animal.isHungry() //错误
+```
+
+如果我们想反过来用也是可以的：
+
+```text
+if (animal !is Fish) 
+    return
+animal.isHungry() //执行到这里编译器同样能确定animal是Fish类的实例
+```
+
+在条件表达式使用中，由于`&&`和`||`具有短路效果。以`condition1() && condition2()`为例，当左侧`conditon1()`为返回true时，右侧`candition2()`才会执行。因此智能类型转换在此处也有效：
+
+```text
+if (animal is Fish && animal.isHungry()) {
+    println("Fish is hungry")
+}
+```
+
+之前我们说过可空类型必须要经过非空检查才能访问其成员，实际上经过检查后智能类型转换已经将可空类型已经转化为非空类型：
+
+```text
+val view: View?
+if ( view != null ){
+    view.isShown() // view已被转换成非空类型，可以直接访问其成员方法
+}
+view.isShown() // 错误，view可能为空
+```
+
+总之，无论通过类型检查还是逻辑语句，让编译器完全确定是这个类型后，编译器就会为我们执行隐式的类型转换，称之为智能类型转换。
+
+
 

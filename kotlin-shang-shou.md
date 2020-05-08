@@ -29,7 +29,7 @@ Kotlin slack频道： [http://slack.kotlinlang.org/](https://surveys.jetbrains.c
 
 使用Kotlin进行Android程序开发变得越来越高效和愉快，Kotlin与JDK 6兼容，因此即使Android4之前的Android设备中，使用Kotlin创建的应用程序也可以安全运行。
 
-Kotlin旨在通过结合**过程式编程**（procedural programming）和**函数式编程**（functional programming）的概念和元素以带来两全其美的编程体验。 它遵循许多准则，如每个Java开发人员的必读书籍——约书亚·布洛赫（Joshua Bloch）撰写的《Effective Java》。
+Kotlin旨在通过结合**过程式编程**（procedural programming）和**函数式编程**（functional programming）的概念和元素以带来两全其美的编程体验。 它遵循许多准则，如每个Java开发人员的必读书籍——Joshua Bloch撰写的《Effective Java》。
 
 最重要的是，Kotlin是开源的，因此我们可以查验该项目并积极参与到Kotlin项目的各个方面，例如Kotlin插件、编译器、文档或Kotlin语言本身。
 
@@ -51,7 +51,7 @@ var name = "Mamun"
 name = 2 // 错误, 因为 name 的类型是 String
 ```
 
-这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个**编译时错误**（compilation error）。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
+这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个编译时错误。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
 
 ```text
 val name = "Mamun"
