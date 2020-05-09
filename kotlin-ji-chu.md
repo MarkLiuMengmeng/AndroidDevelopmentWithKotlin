@@ -45,7 +45,7 @@ Kotlin是允许在文件级别定义变量和函数的，而Java必须要在类�
 var fruit: String
 ```
 
-虽然第一眼看起来很奇怪，但是这个结构是Kotlin类型推断的重要组成部分。类型推断就是编译器可以根据上下文来推断变量的数据类型，比如当变量声明和初始化写在一起时，我们可以省略类型声明。
+虽然第一眼看起来有些奇怪，但是这个结构是Kotlin类型推断的重要组成部分。类型推断就是编译器可以根据上下文来推断变量的数据类型，比如当变量声明和初始化写在一起时，我们可以省略类型声明。
 
 ```kotlin
 var fruit: String = "orange"//完整声明
@@ -477,7 +477,7 @@ var rocketWeight: Long = myWeight.toLong()//正确
 
 表面上看，它增加了代码的冗余度，但它同时也防止了可能因隐式转换导致数据丢失等意料之外的错误，变得更加安全。
 
-### 字符\(Char\)
+### 字符
 
 Kotlin中使用字符和Java基本一致，单引号声明`Char`类型，双引号声明`String`类型，特殊字符用反斜杠转义：
 
@@ -542,5 +542,97 @@ val isCorrect: Boolean? = null //对应Java中的装箱类型
 
 `||`和`&&`操作符具有短路的性质，英文称为lazy conjunction。`||`操作符在左侧命题为真时，会跳过右侧命题直接得出结果（真）。同样`&&`会在左侧命题为假时直接得出结果（假）。
 
+## 复合数据类型（Composite data type）
 
+相比于Java，Kotlin引入了一些新的复合数据类型，也对老的复合数据类型做了改进。
+
+### 字符串
+
+Kotlin中字符串的使用方式和Java大致相同，也有一些新的特性。在Kotlin中字符串可以像数组那样使用下标访问对应的字符，即可以当作一个字符数组来使用：
+
+```kotlin
+val str = "abcd"
+println (str[1]) // 打印结果: b
+```
+
+在Java中，通常字符串构建我们会简单地用`+`号来操作：
+
+```kotlin
+String name = "Mamun";
+int age = 27;
+String message = "My name is" + name + "and I am" + age + "years old";
+```
+
+这种方法很容易操作，但是可读性较差。在Java中我们也可以用类C语言的方式格式化字符串以获得我们想要的结果：
+
+```kotlin
+String name = "Mamun";
+int age = 27;
+String message = String.format("My name is %s and I am %d years old" ,name,age);
+```
+
+其中`%s`是字符串类型的占位符，`%d`是整型（十进制）的占位符。这样的实现方式提高了可读性，但我们必须记忆或查阅对应数据类型的占位符，否则就会出错，这提高了出错的可能性。而在Kotlin中我们使用字符串模板特性会使这项任务更加简单：
+
+```kotlin
+val name = "Mamun"
+val age = 27
+val message = "My name is $name and I am $age years old"
+println(message)
+//打印结果:Prints: My name is Mamun and I am 27 years old
+```
+
+我们看到字符串和数字都只用美元符`$`创建的占位符就可以了，甚至我们可以在里面放表达式：
+
+```kotlin
+val name = "Mamun"
+val message = "My name has ${name.length} characters"
+println(message) //打印结果: My name has 5 characters
+```
+
+### 范围（Range）
+
+Range是定义一组连续的值的新方式，它由第一个值和最后一个值来表示这组序列。它的操作符由两个点（`..`）表示：
+
+```kotlin
+val intRange = 1..5
+val charRange = 'a'..'e'
+```
+
+我们可以用`in`关键字和for each循环来遍历该数据类型：
+
+```kotlin
+for (i in intRange) print(i) // Prints: 12345
+for (i in charRange) print(i) // Prints: abcde
+```
+
+某个特定的值可以用`in`关键字检查是否在范围之内：
+
+```kotlin
+val BMI0 = 20
+val BMI1 = 24
+val healthy = 18..23
+if (BMI0  in healthy)
+println("$BMI0 is in $healthy range") //Prints: 20 is in 18..23 range
+if (BMI1 !in healthy)
+println("$BMI1 is not in $healthy range") //Prints: 24 is not in 18..23 range
+```
+
+范围默认是升序的，如果想用降序的范围，我们可以使用`downTo`操作符：
+
+```kotlin
+for (i in 5 downTo 1) print(i) // 打印结果: 54321
+```
+
+默认步进为1，即范围元素间差值为1，我们可以使用`step`关键字设置步进，且步进必须为正数：
+
+```kotlin
+for (i in 1..9 step 2) print(i) // 打印结果: 13579
+for (i in 9 downTo 1 step 3) print(i) // 打印结果: 963
+```
+
+### 集合（Collection）
+
+此段待定。
+
+## 语句和表达式
 

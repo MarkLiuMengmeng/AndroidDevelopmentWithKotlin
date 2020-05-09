@@ -22,6 +22,8 @@ Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
 
 Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
+Kotlin API文档：[https://kotlinlang.org/docs/reference/android-overview.html](https://kotlinlang.org/docs/reference/android-overview.html)
+
 Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT)
 
 Kotlin slack频道： [http://slack.kotlinlang.org/](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
