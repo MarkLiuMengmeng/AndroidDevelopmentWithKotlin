@@ -8,7 +8,7 @@ description: 积小流而成江海。这章我们介绍Kotlin语言的基础要�
 
 在Kotlin中有两种变量：`var`（variable）和 `val`（value）。`var`是可变的，即可以在初始化赋值之后可以被重新赋值，等同于Java中的普通变量。
 
-```text
+```kotlin
 fun main() {
     var fruit: String = "orange" //创建变量fruit并初始化赋值orange
     fruit = "banana" //将fruit变量重新赋值为banana
@@ -17,7 +17,7 @@ fun main() {
 
 `val`是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带`final`修饰符的变量。但它不能保证引用的对象中的值不会被修改（重新赋值）：
 
-```text
+```kotlin
 class Fruit(var name:String)//类的声明会在第四章中说明
 fun main() {
     val fruit = Fruit("orange")//创建变量fruit并初始化
@@ -28,7 +28,7 @@ fun main() {
 
 由于`val`变量可以有一个自定义getter，所以我们也不能保证每一次的访问就是返回的都是同一个对象：
 
-```text
+```kotlin
 val random: Int
 get() = Random().nextInt()//自定义getter将会在第四章中说明
 ```
@@ -41,27 +41,27 @@ Kotlin是允许在文件级别定义变量和函数的，而Java必须要在类�
 
 和Java中不同，Kotlin的变量类型声明在变量名之后：
 
-```text
+```kotlin
 var fruit: String
 ```
 
 虽然第一眼看起来很奇怪，但是这个结构是Kotlin类型推断的重要组成部分。类型推断就是编译器可以根据上下文来推断变量的数据类型，比如当变量声明和初始化写在一起时，我们可以省略类型声明。
 
-```text
+```kotlin
 var fruit: String = "orange"//完整声明
 var fruit = "orange"//省略类型声明
 ```
 
 上面虽然类型声明被省略了，但数据类型会被隐式地设置为`String`，因为Kotlin是强类型的语言。在随后的使用中编译器会验证是否符合正确的数据类型：
 
-```text
+```kotlin
 var fruit = "orange"
 fruit = 10 //错误，fruit被推断为String类型，无法赋值int类型数据
 ```
 
 我们可以通过显式声明两者都适用的数据类型使上面的赋值成立：
 
-```text
+```kotlin
 var fruit: Any = "orange"
 fruit = 10
 ```
@@ -70,7 +70,7 @@ fruit = 10
 
 编译器同样可以从函数进行类型推断：
 
-```text
+```kotlin
 val total = sum(16, 64)
 ```
 
@@ -80,7 +80,7 @@ val total = sum(16, 64)
 
 类型推断同样适用于泛型：
 
-```text
+```kotlin
 var persons = listOf(personInstance1, personInstance2)
 ```
 
@@ -88,13 +88,13 @@ var persons = listOf(personInstance1, personInstance2)
 
 再比如`Pair`泛型类的推断：
 
-```text
+```kotlin
 var pair = "Everest" to 8848 // 推断类型为 Pair<String, Int>
 ```
 
 类型推断还能在更复杂的场景中工作，比如根据一个被推断好的类型来进行推断：
 
-```text
+```kotlin
 var map = mapOf("Everest" to 8848, "Mont Blanc" to 4810)
 // 推断类型为 Map<String, Int>
 var map = mapOf("Everest" to 8848, "Mont Blanc" to "4810")
@@ -107,7 +107,7 @@ var map = mapOf("Everest" to 8848, "Mont Blanc" to "4810")
 
 我们可以看到，类型推断可以很好地帮我们精简一部分代码，减少一些工作。但我们有时还是需要手动明确声明数据类型：
 
-```text
+```kotlin
 var time = 18 //使用整数时，默认的推断类型是Int
 var time: Long = 18 //显示声明数据类型为Long
 var time = 18L //用字面常量（literal constant）声明数据类型为Long
@@ -119,7 +119,7 @@ var time = 18L //用字面常量（literal constant）声明数据类型为Long
 
 因为Kotlin是强类型语言，当编译器缺少信息确定变量的数据类型时，我们就需要显式声明它，否则将被视为错误：
 
-```text
+```kotlin
 var name //错误，编译器无法得知它会存储什么类型的值
 ```
 
@@ -131,14 +131,14 @@ var name //错误，编译器无法得知它会存储什么类型的值
 
 严格空类型安全是Kotlin类型系统的一部分。默认类型是非空的，如果想存储可能为空的数据必须要显式声明它是可空类型的：
 
-```text
+```kotlin
 val age: Int = null //错误，默认类型不可为空
 val name: String? = null //正确，加?后缀标记是一个可空变量
 ```
 
 可空类型的引用不能直接调用方法，除非在调用前进行了非空检查：
 
-```text
+```kotlin
 val name: String? = null
 // ...
 name.toUpperCase() // 错误，引用可能为空
@@ -150,7 +150,7 @@ name.toUpperCase() // 错误，引用可能为空
 
 `Nothing`是一个虚类型（uninhabited type），无法拥有实例。这样的继承结构也说明了为什么非空类型可以复制给它对应的可空类型，反之则不行：
 
-```text
+```kotlin
 var nullableView: View?
 var view: View
 nullableView = view // 正确，虽然view和nullableView类型不一致，但是其子类
@@ -168,7 +168,7 @@ view = nullableView // 错误，nullableView和view类型不一致，也不是�
 
 让我们来看一个使用Java开发Android时常见的错误：
 
-```text
+```kotlin
 //Java
 @Override
 public void onCreate(Bundle savedInstanceState) {
@@ -181,7 +181,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 我们看一下上面的代码用Kotlin写会怎样：
 
-```text
+```kotlin
 //Kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -193,7 +193,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 我们加上空值检查就可以解决这个问题：
 
-```text
+```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
@@ -211,7 +211,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 安全调用操作符由一个问号和点表示（`?.`）。如果操作符左侧为空则返回空值，否则返回右侧的表达式的执行结果：
 
-```text
+```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val locked: Boolean? = savedInstanceState?.getBoolean("theKey")
@@ -222,7 +222,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 在Java代码中常常见到的嵌套空值检查，也可以用Kotlin中的安全调用操作符写得更简明：
 
-```text
+```kotlin
 //Java
 Boolean isCorrect;
 if(quiz != null ){
@@ -244,7 +244,7 @@ val isCorrect= quiz?.currentQuestion?.answer?.isCorrect
 
 有了它我们可以很方便地为上节例子加上默认值（false）：
 
-```text
+```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val locked: Boolean = savedInstanceState?.getBoolean("theKey") ?: false
@@ -253,7 +253,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 还可以用在上节第二个例子：
 
-```text
+```kotlin
 val isCorrect = quiz?.currentQuestion?.answer?.isCorrect ?: false
 ```
 
@@ -267,14 +267,14 @@ val isCorrect = quiz?.currentQuestion?.answer?.isCorrect ?: false
 
 非空断言操作符由两个叹号组成（`!!`）。这个操作符可以显式地将可空类型转化为非空类型：
 
-```text
+```kotlin
 var testStr: String? = "test"
 var size: Int = testStr!!.length
 ```
 
 一般来说，Kotlin不允许我们直接访问可空类型变量`testStr`的属性`length`。当我们用非空断言操作符显式将其转换为非空类型就可以直接访问了。然而如果我们的判断错误，那么程序将会在运行时抛出空指针异常。
 
-```text
+```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val locked: Boolean = savedInstanceState!!.getBoolean("theKey")
@@ -295,19 +295,19 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 于是Kotlin引入了平台类型，平台类型不能由开发者自己定义，但我们可以在异常信息和方法参数列表中看到这种特殊的语法（类型名后加`!`）：
 
-```text
+```kotlin
 View! // View 定义成了一个平台类型
 ```
 
 平台类型可以是为可空类型也可以视为非空类型，相当于一个待定类型。决定如何使用以及正确使用是我们开发者的责任。例如：
 
-```text
+```kotlin
 val textView = findViewById(R.id.textView)
 ```
 
 在一般情况下，Kotlin编译器并不知道`findViewById`方法会返回可空类型还是非空类型，这也是`View`被设置为平台类型的原因。这时候我们开发者就必须确定它的可空性。如果我们在所有布局文件都有关于这个`textView`的定义（无论横屏、竖屏、大屏、小屏等的布局文件），那么我们可以将它设置为非空类型，否则（比如只有横屏布局中有定义）我们应该把它设置为可空类型。
 
-```text
+```kotlin
 val textView = findViewById(R.id.textView) as TextView // 设置为非空类型
 val textView = findViewById(R.id.textView) as TextView? // 设置为可空类型
 ```
@@ -320,21 +320,21 @@ val textView = findViewById(R.id.textView) as TextView? // 设置为可空类型
 
 让我们先看Java中的类型转换：
 
-```text
+```kotlin
 Fragment fragment = new ProductFragment();
 ProductFragment productFragment = (ProductFragment) fragment
 ```
 
 在Kotlin中用`as`关键字来进行类型转换：
 
-```text
+```kotlin
 val fragment: Fragment = ProductFragment()
 val productFragment: ProductFragment = fragment as ProductFragment
 ```
 
 `ProductFragment`是`Fragment`的子类型，上面的代码能够正常工作。但如果仅仅是变量名相似而实际上转换前后的类型并无关系，那么就会引起`ClassCastException`：
 
-```text
+```kotlin
 val fragment : String = "ProductFragment"
 val productFragment : ProductFragment = fragment as ProductFragment
 // 抛出异常: ClassCastException
@@ -342,7 +342,7 @@ val productFragment : ProductFragment = fragment as ProductFragment
 
 由于可能引发异常，因此通过`as`进行的类型转换是不安全的类型转换。为了解决这个问题，Kotlin引入了安全类型转换操作符（`as?`），它也叫**可空类型转换操作符**（nullable cast operator）。如果被转换的变量可以完成转换就会成功进行类型转换，如果不行则会返回空值：
 
-```text
+```kotlin
 val fragment: String = "ProductFragment"
 val productFragment: ProductFragment? = fragment as? ProductFragment
 // 得到null，不会抛出异常
@@ -350,14 +350,14 @@ val productFragment: ProductFragment? = fragment as? ProductFragment
 
 在我们的程序运行逻辑中，`productFragment`常常是一个必不可少的变量，如果我们希望得到一个非空类型的`productFragment`，那么我们可以使用猫王操作符：
 
-```text
+```kotlin
 val fragment: String = "ProductFragment"
 val productFragment: ProductFragment? = fragment as? ProductFragment ?: ProductFragment()
 ```
 
 当我们转换Kotlin中的**基本类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
 
-```text
+```kotlin
 val name: String
 val age: Int = 12
 name = age.toString()
@@ -373,7 +373,7 @@ name = age.toString()
 
 如果我们需要把一个`Animal`变量进行类型转换为`Tiger`然后调用其成员方法，在Java中我们需要这样做：
 
-```text
+```kotlin
 //Java
 if (animal instanceof Tiger){
     Tiger tiger = (Tiger) animal;
@@ -385,7 +385,7 @@ if (animal instanceof Tiger){
 
 代码是有些冗余的，假设我们在检查`animal`是否是`Tiger`类型时编译器替我们完成转换不是更好吗？Kotlin中的智能类型转换可以实现这一点：
 
-```text
+```kotlin
 //Kotlin
 if (animal is Tiger) {
     animal.isHungry()
@@ -394,7 +394,7 @@ if (animal is Tiger) {
 
 但是在`if`的花括号之外，编译器并不知道`animal`会是什么类型，会被我们如何处理。所以上面的智能类型转换范围仅限于花括号之内：
 
-```text
+```kotlin
 if (animal is Tiger) {
     animal.isHungry()
 }
@@ -403,7 +403,7 @@ animal.isHungry() //错误
 
 如果我们想反过来用也是可以的：
 
-```text
+```kotlin
 if (animal !is Tiger) 
     return
 animal.isHungry() //执行到这里编译器同样能确定animal是Tiger类的实例
@@ -411,7 +411,7 @@ animal.isHungry() //执行到这里编译器同样能确定animal是Tiger类的�
 
 在条件表达式使用中，由于`&&`和`||`具有短路效果。以`condition1() && condition2()`为例，当左侧`conditon1()`为返回true时，右侧`candition2()`才会执行。因此智能类型转换在此处也有效：
 
-```text
+```kotlin
 if (animal is Tiger&& animal.isHungry()) {
     println("Tiger is hungry")
 }
@@ -419,7 +419,7 @@ if (animal is Tiger&& animal.isHungry()) {
 
 之前我们说过可空类型必须要经过非空检查才能访问其成员，实际上经过检查后智能类型转换已经将可空类型已经转化为非空类型：
 
-```text
+```kotlin
 val view: View?
 if ( view != null ){
     view.isShown() // view已被转换成非空类型，可以直接访问其成员方法
