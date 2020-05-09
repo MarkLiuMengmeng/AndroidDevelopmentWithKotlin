@@ -435,18 +435,112 @@ Java中`int`是基础数据类型，而`Integer`为`int`的**装箱类型**（bo
 
 在Kotlin中，一切都是对象。`Int`、`Long`、`Char`等在内也不例外。这样一来就简化了代码的复杂性。我们可以直接像使用一个普通对象一样对`Int`类型进行操作：
 
-```text
+```kotlin
 val code: Int = 25
 code.toChar()
 ```
 
 为了优化性能，Kotlin在编译为JVM字节码时仍然会尽可能的优化为Java对应的基础数据类型。但我们知道Kotlin中非空类型`Int`是有一个对应的可空类型`Int?`的，那么可空类型就会被转译为Java中对应的装箱类型。举个例子：Kotlin中的`Int`存储为Java中的`int`，Kotlin中的`Int?`存储为Java中的`Integer`。
 
-```text
+```kotlin
 var a: Int = 1 // 被存储为基础数据类型
 var b: Int? = null // 被存储为装箱数据类型
 b = 24 // 即使有值也被存储为装箱数据类型
 ```
 
 我们可以看到Kotlin虽然将基础数据类型也视作对象来对待和使用，但Java中的装箱概念仍然在默默影响着Kotlin代码的实际性能。装箱类型会比基础数据类型消耗更多的资源，如果是仅仅数个变量，那我们无需担心它的影响，但在拥有海量数据的列表和数组中可能是影响其性能的关键。所以我们来看一下这些“基础数据类型”。
+
+### 数字
+
+Kotlin用于存储数字的数据类型等同于Java的基础数据类型：
+
+| 数据类型 | 存储位宽\(Bit\) |
+| :--- | :--- |
+| Int | 32 |
+| Short | 16 |
+| Long | 64 |
+| Float | 32 |
+| Double | 64 |
+| Byte | 8 |
+
+与Java中不同的一点是，Kotlin中不会为数字类型提供隐式的转换，需要显式地通过标准库的方法转换：
+
+```kotlin
+//Java
+int myWeight = 88;
+long rocketWeight = myWeight;
+//Kotlin
+var myWeight : Int = 88
+var rocketWeight: Long = myWeight // 错误，数据类型不一致
+var rocketWeight: Long = myWeight.toLong()//正确
+```
+
+表面上看，它增加了代码的冗余度，但它同时也防止了可能因隐式转换导致数据丢失等意料之外的错误，变得更加安全。
+
+### 字符\(Char\)
+
+Kotlin中使用字符和Java基本一致，单引号声明`Char`类型，双引号声明`String`类型，特殊字符用反斜杠转义：
+
+```kotlin
+val char = 'a' // 声明一个Char类型
+val string = "a" // 声明一个String类型
+```
+
+常见的特殊字符：
+
+| 转义方式 | 含义 |
+| :--- | :--- |
+| \t | 制表符 |
+| \b | 退格符 |
+| \n | 换行符 |
+| \r | 回车 |
+| \' | 单引号 |
+| \" | 双引号 |
+| \\ | 反斜杠 |
+| \$ | 美元符 |
+| \u | Unicode转义序列 |
+
+### 数组
+
+在Kotlin中，一切皆对象。数组由`Array`类来表示，创建一个数组最简单的方法是用标准库中的`arrayOf`函数：
+
+```kotlin
+val array0 = arrayOf(1,2,3) // 推断类型为 Array<Int>
+val array1: Array<Short> = arrayOf(1,2,3) //显式声明类型为Array<Short>
+val array2: Array<Long> = arrayOf(1,2,3) //显式声明类型为Array<Long>
+```
+
+因为`Array`是泛型类，它创建时会使用装箱类型。我们知道装箱类型会影响性能，所以Kotlin也准备了基础数据类型的数组类来减少对性能的损耗，如：`IntArray`、`ShortArray`、`LongArray`等，他们之间和`Array`类并无继承关系。我们同样是通过标准库的函数去创建它们：
+
+```kotlin
+val array0 = intArrayOf(1, 2, 3) //创建IntArray
+val array1 = shortArrayOf(1, 2, 3) //创建ShortArray
+val array2 = longArrayOf(1, 2, 3) //创建LongArray
+```
+
+Kotlin中数组下标同样是从0开始，语法也和Java的一致：
+
+```kotlin
+val array = arrayOf(1,2,3)
+println(array[1]) //打印结果: 2
+```
+
+### 布尔类型
+
+在Kotlin中布尔类型同样被视为对象，使用方式和其它的基础数据类型相似：
+
+```kotlin
+val isCorrect: Boolean = true //对应Java中的基础数据类型
+val isCorrect: Boolean? = null //对应Java中的装箱类型
+```
+
+与之配套的还有我们经常使用的逻辑操作符：
+
+* `||`：逻辑或，两侧**命题**（Predicate）有一侧为真结果即为**真**（true），否则为**假**（false）。
+* `&&`：逻辑与，两侧命题同时为真结果即为真，否则为假。
+* `!`：逻辑非，命题为真结果即为假，命题为假结果即为真。
+
+`||`和`&&`操作符具有短路的性质，英文称为lazy conjunction。`||`操作符在左侧命题为真时，会跳过右侧命题直接得出结果（真）。同样`&&`会在左侧命题为假时直接得出结果（假）。
+
+
 
