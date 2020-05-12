@@ -632,7 +632,7 @@ for (i in 9 downTo 1 step 3) print(i) // 打印结果: 963
 
 ### 集合（Collection）
 
-此段待定。
+Kotlin引入了许多新特性，集合类的新特性与这些新特性密切相关，我们将在稍后的章节（第七章）讨论它们。
 
 ## 语句和表达式
 
@@ -652,7 +652,216 @@ var total = a + b
  MyClass
 ```
 
-Kotlin是一个面向表达式的语言，以前在Java中被视作语句的代码，在Kotlin中也能被视为表达式，比如**控制流**（Control flow），在Java中我们把它们看作语句，而在Kotlin中被视作表达式。
+Kotlin是一个面向表达式的语言，以前在Java中被视作语句的代码，在Kotlin中也能被视为表达式，比如**控制流**（Control flow），在Java中我们把它们看作语句，而在Kotlin中被视作表达式（循环除外）。
 
 ## 控制流（Control flow）
+
+Kotlin引入了一种新的控制流结构`when`用来代替Java的`switch... case`。同时除了循环语句之外，其他控制流结构在Kotlin中被视为表达式。
+
+### if
+
+`if`的工作方式和Java很类似：
+
+```kotlin
+if(x > 10)
+    println("greater")
+else
+    println("smaller")
+```
+
+正如我们前面提到的，Kotlin将`if`视为表达式，这样可以写出更简洁的语法：
+
+```kotlin
+println(if(x > 10) "greater" else "smaller")
+```
+
+表达式的值正是返回分支的最后一句。若`x`大于10，返回greater；若`x`小于10，返回smaller。当我们把`if`当作语句使用时，返回值就会被忽略掉。这种视为表达式的特性给我们提供了更多的可能。
+
+### when
+
+`when`在Kotlin中是多路选择表达式，一般来说它比是大段的`if...else if`语句是更好的选择。它的语法更加简洁：
+
+```kotlin
+when (x) {
+    1 -> print("x == 1")
+    2 -> print("x == 2")
+    else -> println("x is neither 1 nor 2")
+}
+```
+
+`when`语句会依次检查每个条件，直到某一个条件满足，它和Java的`switch... case`的工作方式很像，但它不需要每个条件都写冗余的`break`语句。
+
+与`if`类似，`when`语句也会返回被满足条件分支的最后一句作为表达式的返回值。
+
+```kotlin
+val animal = "Tiger"
+val message= when (vehicle) {
+    "Tiger" -> {
+        // Some code
+        "Four legs"
+    }
+    "Monkey"->{
+        // Some code
+        "Two legs"
+    }
+    else -> {
+        //some code
+        "Unknown number of legs"
+    }
+}
+println(message) //打印结果: Four legs
+```
+
+到这里，我们大概意识到返回最后一行在Kotlin中是一个常见的行为，我们在随后接触lambda表达式时也会看到。
+
+当我们把`when`当作表达式使用时，`else`语句是不可缺少的，正如Java中的`default`语句。我们还可以把多个条件放在同一个分支，条件之间用逗号隔开：
+
+```kotlin
+val animal = "Tiger"
+when (vehicle) {
+    "Tiger", "Monkey" -> print("Animal")
+    else -> print("Unidentified object")
+}//打印结果：Animal
+```
+
+`when`还可以用`is`关键字很方便地检查变量的类型，同时这里也支持智能类型转换：
+
+```kotlin
+val name = when (person) {
+    is String -> person.toUpperCase()//这里进行了智能类型转换
+    is User -> person.name
+}
+```
+
+检查是否在一个`Range`中同理：
+
+```kotlin
+val riskAssessment = 80
+val risk = when (riskAssessment) {
+    in 1..20 -> "negligible risk"
+    in 21..40 -> "minor risk"
+    in 41..60 -> "major risk"
+    else -> "undefined risk"
+}
+println(risk) // 打印结果: undefined risk
+```
+
+同时`when`还支持嵌套使用：
+
+```kotlin
+val riskAssessment = 80
+val handleStrategy = "Warn"
+val risk = when (riskAssessment) {
+    in 1..20 -> print("negligible risk")
+    in 21..40 -> print("minor risk")
+    in 41..60 -> print("major risk")
+    else -> when (handleStrategy){
+                "Warn" -> "Risk assessment warning"
+                "Ignore" -> "Risk ignored"
+                else -> "Unknown risk!"
+            }
+}
+println(risk) // 打印结果: Risk assessment warning
+```
+
+由此可见，`when`是一个很强大的控制流结构，比`if...else if`语句更加简明，比`switch... case`有更强的控制能力。
+
+### 循环（Loop）
+
+循环是一种直到终止条件满足才会停止执行的控制结构。在Kotlin中循环语句可以遍历任何提供**迭代器**（iterator）的对象。迭代器是一个接口，里面有两个方法：`hasNext` 和`next`。我们也可以在我们自定义类中实现这个接口来方便我们的遍历操作。
+
+Kotlin中提供了三种循环结构：`for`、`while`和 `do... while`，它们的工作方式和其他编程语言大致相同，我们简单介绍一下。
+
+#### for
+
+我们可以直接用`in`关键字遍历：
+
+```kotlin
+var array = arrayOf(1, 2, 3)
+for (item in array)
+    print(item)
+```
+
+也可以用序号遍历：
+
+```kotlin
+for (i in array.indices)
+    print(array[i])
+```
+
+还可以用解构声明遍历：
+
+```kotlin
+for ((index, value) in array.withIndex()) {
+    println("Element at $index is $value")
+}
+```
+
+#### while
+
+第一种结构：
+
+```kotlin
+while (condition) {
+    //code
+}
+```
+
+第二种结构：
+
+```kotlin
+do {
+    //code
+} while (condition)
+```
+
+与Java不同的是，Kotlin中可以在函数体中声明变量并在终止条件中使用该变量：
+
+```kotlin
+do {
+    var found = false
+    //..
+} while (found)
+```
+
+这两种循环结构的区别是，前者先检查终止条件再执行函数体，后者先执行函数体后检查终止条件。这意味着后者至少执行一次。
+
+#### break 和 continue
+
+所有循环结构都支持`break`和`continue`语句。`break` 是终止执行当前的循环；`continue` 是进行当前循环的下一次执行。
+
+```kotlin
+val range = 1..7
+for(i in range) {
+    if (i == 3)
+        break
+    print("$i ")
+}// 打印结果: 1 2
+
+for(i in range) {
+    if (i == 3)
+        continue
+    print("$i ")
+}// 打印结果: 1 2 4 5 6 7
+```
+
+我们使用它们可以在完成任务后尽快地结束循环，以节省系统的宝贵资源。有些时候仅仅控制当前循环并不尽如人意，我们可以用标签来一次性跳出多个循环：
+
+```kotlin
+val charRange = 'A'..'B'
+val intRange = 1..7
+outer@ for(value in intRange) {
+    println("Outer loop: $value ")
+    for (char in charRange) {
+        if(char == 'B')
+        break@outer
+        println("Inner loop: $char ")
+    }
+}
+// 打印结果
+//Outer loop: 1
+//Inner loop: A
+```
+
+## 异常（Exception）
 
