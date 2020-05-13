@@ -865,3 +865,32 @@ outer@ for(value in intRange) {
 
 ## 异常（Exception）
 
+大多数的Java编程指南（如：Effective Java）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
+
+未检验异常是指未被`try`... `catch`代码块包围的异常，当这种异常发生时会沿着调用栈依次传递，如果未找到`try`... `catch`来处理此异常就会终止线程的执行。
+
+已检验异常是指被`try`... `catch`代码块包围的异常，当我们用一个声明会抛出异常的方法时，如果不把可能出现的异常用关键字`throw`抛出，那么就必须使用`try`... `catch`代码块，我们有时认为我们的代码逻辑是没有漏洞的，会将`catch`包围的语句置空：
+
+```kotlin
+try {
+    doSomething()
+} catch (IOException e) {  
+    //无代码
+}
+```
+
+这种代码会使异常发生时不再传递，只是简单的消失。但这种安全只是假象，它可能会把关键的异常隐藏起来，使程序产生难以预料的行为和难以定位的bug。
+
+在Kotlin中这种情况将不会发生，因为在Kotlin中所有异常都被视为未检验异常，即使使用在Java中声明会抛出异常的类，我们也不需要加上`try`... `catch`代码块才能让程序通过编译：
+
+```kotlin
+fun makeTroubles() {
+    throw IOException()
+}
+fun test() {
+    makeTroubles() //不需要使用 try-catch 代码块
+}
+```
+
+
+
