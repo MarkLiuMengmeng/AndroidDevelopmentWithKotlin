@@ -4,9 +4,9 @@ description: 积小流而成江海。这章我们介绍Kotlin语言的基础要�
 
 # Kotlin基础
 
-## 变量
+## 变量（Variable）
 
-在Kotlin中有两种变量：`var`（variable）和 `val`（value）。`var`是可变的，即可以在初始化赋值之后可以被重新赋值，等同于Java中的普通变量。
+在Kotlin中有两种变量：`var`和 `val`。`var`是可变的，即可以在初始化赋值之后可以被重新赋值，等同于Java中的普通变量。
 
 ```kotlin
 fun main() {
@@ -37,7 +37,7 @@ get() = Random().nextInt()//自定义getter将会在第四章中说明
 Kotlin是允许在文件级别定义变量和函数的，而Java必须要在类中定义。
 {% endhint %}
 
-## 类型推断
+## 类型推断（Type inference）
 
 和Java中不同，Kotlin的变量类型声明在变量名之后：
 
@@ -919,5 +919,42 @@ val result = try {
 
 可以看到这里和控制流语句被视为表达式的行为是一致的。
 
+## 编译时常量（Compile-time constant）
 
+我们知道`val`变量是已读的，很多时候我们可以把它当作常量来处理，但有些时候在编译时并不知道它的值：
+
+```kotlin
+val name:String = getName()
+```
+
+它将会在运行时被赋值。我们有时需要在编译时就使用它们，比如注解中的赋值，而注解是在编译时进行的操作：
+
+![](.gitbook/assets/chapter2_5.jpg)
+
+{% hint style="info" %}
+上图的一些解释：[http://blog.itpub.net/26246674/viewspace-706703/](http://blog.itpub.net/26246674/viewspace-706703/)
+{% endhint %}
+
+为了确保值在编译时能够使用，我们要使用`const`修饰符来标记变量：
+
+```kotlin
+const val MAX_LOG_ENTRIES = 100
+```
+
+这样我们就可以在注解中使用它了：
+
+```kotlin
+@MyLogger(MAX_LOG_ENTRIES )
+class Test
+```
+
+使用`const`修饰符有三点限制：
+
+* 必须初始化为基础数据类型或`String`类型。
+* 必须声明在最顶层或作为一个对象的成员。
+* 不能有自定义的getter。
+
+## 代理（Delegate）
+
+Kotlin对代理提供了内置的支持，并相对Java做了许多改进。代理在程序的开发过程中应用频繁，因此我们单开一章来介绍（第八章）。
 

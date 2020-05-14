@@ -22,6 +22,8 @@ Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
 
 Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
+Kotlin API文档：[https://kotlinlang.org/docs/reference/android-overview.html](https://kotlinlang.org/docs/reference/android-overview.html)
+
 Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT)
 
 Kotlin slack频道： [http://slack.kotlinlang.org/](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up)
@@ -39,35 +41,35 @@ Kotlin旨在通过结合**过程式编程**（procedural programming）和**函�
 
 让我们从变量声明开始：
 
-```text
+```kotlin
 var name = "Mamun" // 推断类型为 String
 name = "Andecy"
 ```
 
 请注意，Kotlin不必在句尾使用分号，但如果使用了分号也不会引起任何错误，分号是一个可选项而非强制性的语法。我们也不必声明变量的类型，因为编译器可以从上下文中推断出变量的类型。Kotlin是强类型的语言，所以每一个变量只能有一种适当的类型：
 
-```text
+```kotlin
 var name = "Mamun"
 name = 2 // 错误, 因为 name 的类型是 String
 ```
 
 这个变量已经被推断为`String`，所以赋值给它一个**整型**（integer）会产生一个编译时错误。接下来让我们看看Kotlin如何使用**字符串模板**（string templates）来更好地拼接字符串：
 
-```text
+```kotlin
 val name = "Mamun"
 println("My name is $name") // 打印结果: My name is Mamun
 ```
 
 我们不再需要字符“+”来拼接字符串，用Kotlin，我们可以轻松地将单个变量甚至整个表达式转换为字符串：
 
-```text
+```kotlin
 val name = "Mamun"
 println("My name is ${name.toUpperCase()}") // 打印结果: My name is MAMUN
 ```
 
 在Java中，任何变量都可以存储**空值**（null）。而在Kotlin中，**严格空类型安全**（strict null safety）要求我们必须明确地标记每一个变量是否可以存储空值。
 
-```text
+```kotlin
 var a: String = "abc"
 a = null // 编译时错误
 var b: String? = "abc"
@@ -76,7 +78,7 @@ b = null // 正确
 
 在数据类型之后加一个问号，我们就可以标记一个变量是可以存储空值的（`String`/`String?`）。如果我们不明确标记某一个变量是可空的，那么它将不能被任何一个可空的**引用**（reference）赋值。Kotlin提供了合适的方法来处理可空的变量——我们可以使用**安全调用**（safe call）**操作符**（operator）来进行操作：
 
-```text
+```kotlin
 savedInstanceState?.doSomething
 ```
 
@@ -84,7 +86,7 @@ savedInstanceState?.doSomething
 
 Kotlin也提供了一些新的数据类型，我们可以用`Range`数据类型定义一个闭区间区域：
 
-```text
+```kotlin
 for (i in 1..10) {
     print(i)
 } // 打印结果: 12345678910
@@ -92,7 +94,7 @@ for (i in 1..10) {
 
 Kotlin引入了含有**中缀符**（infix notation）的`Pair`数据类型，我们可以存储一些常见的成对数据：
 
-```text
+```kotlin
 val capital = "BeiJing" to "China"
 println(capital.first) // 打印结果: BeiJing
 println(capital.second) // 打印结果: China
@@ -100,7 +102,7 @@ println(capital.second) // 打印结果: China
 
 上面示例中的关键字`to`就是中缀符，我们还可以通过**解构声明**（destructive declaration）将其解构为单独的变量，甚至用它遍历列表：
 
-```text
+```kotlin
 val (city, country) = capital
 println(city) // 打印结果: BeiJing
 println(country) // 打印结果: China
@@ -116,7 +118,7 @@ for ((city, country) in capitals) {
 
 我们也可以使用`forEach`函数遍历列表：
 
-```text
+```kotlin
 val capitals = listOf("BeiJing" to "China", "NewYork" to "America")
 capitals.forEach { (city, country) ->
     println("Capital of $country is $city")
@@ -125,7 +127,7 @@ capitals.forEach { (city, country) ->
 
 Kotlin通过一组接口和辅助方法（`List`/`MutableList`、`Set`/`MutableSet`、`Map`/`MutableMap`...）来区分可变与不可变集合:
 
-```text
+```kotlin
 val list = listOf(1, 2, 3, 4, 5, 6) // 推断类型为 List
 val mutableList = mutableListOf(1, 2, 3, 4, 5, 6) // 推断类型为 MutableList
 ```
@@ -134,7 +136,7 @@ val mutableList = mutableListOf(1, 2, 3, 4, 5, 6) // 推断类型为 MutableList
 
 通过使用lambda表达式，我们可以非常简洁地使用Android Framework提供的API：
 
-```text
+```kotlin
 view.setOnClickListener {
     println("Click")
 }
@@ -142,7 +144,7 @@ view.setOnClickListener {
 
 Kotlin标准库\(stdlib\)包含着很多可以高效简洁地处理集合的函数，使我们可以轻松地在列表上进行**流处理**（stream processing）：
 
-```text
+```kotlin
 val text = capitals.map { (_, country) -> country.toUpperCase() }
                    .onEach { println(it) }
                    .filter { it.startsWith("C") }
@@ -155,7 +157,7 @@ println(text) // 打印结果: Countries prefix C:CHINA
 
 我们也可以定义自己的lambda，以全新方式编写代码。下面这个lambda使我们能够在Android Marshmallow或更高版本中运行特定的代码：
 
-```text
+```kotlin
 inline fun supportsMarshmallow(code: () -> Unit) {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
     code()
@@ -168,7 +170,7 @@ supportsMarshmallow {
 
 智能类型转换使我们无需执行冗余的强制类型转换就能编写相应的代码：
 
-```text
+```kotlin
 if (x is String) {
     print(x.length) // x 已自动转换为 String
 }
@@ -182,14 +184,14 @@ Kotlin编译器在执行类型检查之后，就知道了变量x的类型为`Str
 
 有时，一个函数的功能仅是返回一个表达式的值。这种情况我们可以用表达式的语法来代替函数体：
 
-```text
+```kotlin
 fun sum(a: Int, b: Int) = a + b
 println (sum(2 + 6)) // 打印结果: 8
 ```
 
 使用**默认参数语法**（default argument syntax），我们可以为每个参数定义一个默认参数：
 
-```text
+```kotlin
 fun printMessage(fruit: String, amount: Int = 0, name: String = "Anonymous") {
     println("$name has $amount $fruit")
 }
@@ -200,7 +202,7 @@ printMessage("apples", 10, "Andecy") // 打印结果: Andecy has 10 apples
 
 唯一的限制是我们需要提供不带默认值的所有参数。 我们还可以使用**命名参数语法**（named argument syntax）来指定函数参数的值：
 
-```text
+```kotlin
 printMessage("oranges", name = "Mamun")
 ```
 
@@ -208,7 +210,7 @@ printMessage("oranges", name = "Mamun")
 
 我们在开发中常常需要为数据模型创建大量的类，Kotlin提供了一种非常简单的方法来定义和操作数据模型类，只需要在类声明前加上`data`**修饰符**（modifier）：
 
-```text
+```kotlin
 data class Ball(var size:Int, val color:String)
 val ball = Ball(12, "Red")
 println(ball) // 打印结果: Ball(size=12, color=Red)
@@ -216,7 +218,7 @@ println(ball) // 打印结果: Ball(size=12, color=Red)
 
 我们不需要`new`关键字来进行类的实例化，我们可以很容易地创建该类的副本：
 
-```text
+```kotlin
 val smallBall = ball.copy(size = 3)
 println(smallBall) // prints: Ball(size=3, color=Red)
 smallBall.size++
@@ -230,7 +232,7 @@ Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们
 
 Android `ImageView`没有从网络加载图像的功能，因此我们可以使用Picasso库（一个Android平台的图片加载库）为`ImageView`添加扩展方法来实现此功能：
 
-```text
+```kotlin
 fun ImageView.loadUrl(url: String) {
     Picasso.with(context).load(url).into(this)
 }
@@ -240,17 +242,17 @@ imageView.loadUrl("www.test.com\\image0.png")
 
 我们也可以实现一个简单的`Toast`的拓展：
 
-```text
+```kotlin
 fun Context.toast(text:String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 //用法 (Activity 类内部)
-toast("Hello")
+toast("Hello World!")
 ```
 
 Kotlin中的**接口**（interface）可以有默认的实现：
 
-```text
+```kotlin
 interface UserData {
     val email:String
     val name:String
@@ -260,7 +262,7 @@ interface UserData {
 
 在许多Android程序中，我们希望将对象的初始化延迟到第一次使用它的时候。为了做到这一点，我们可以使用**代理**（delegate）：
 
-```text
+```kotlin
 val retrofit by lazy {
     Retrofit.Builder()
             .baseUrl("https://www.github.com")
