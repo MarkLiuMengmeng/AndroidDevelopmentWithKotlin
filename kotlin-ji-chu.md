@@ -892,5 +892,32 @@ fun test() {
 }
 ```
 
+### try... catch代码块
+
+Java风格：
+
+```kotlin
+try {
+    context.packageManager.getPackageInfo("com.test.app", 0)
+} catch (ex: PackageManager.NameNotFoundException) {
+    //如果对应包名的未安装，将会抛出NameNotFoundException异常，此处进行捕获异常后的处理
+} finally {
+    //无论是否有异常，始终会执行finally代码块，可省略
+}
+```
+
+Kotlin将`try`...`catch`语句也视为表达式，因此可以用变量来接收不同分支所产生的值：
+
+```kotlin
+val result = try {
+    context.packageManager.getPackageInfo("com.test.app", 0)
+    true
+} catch (ex: PackageManager.NameNotFoundException) {
+    false
+}
+```
+
+可以看到这里和控制流语句被视为表达式的行为是一致的。
+
 
 
