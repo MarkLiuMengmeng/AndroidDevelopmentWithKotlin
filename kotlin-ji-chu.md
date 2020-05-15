@@ -286,7 +286,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 看到非空断言操作符时，它意味着潜在的空指针异常，此时代码的工作方式更像Java。所以我们必须小心地使用它，大部分情况应该被安全调用和智能类型转换来代替。
 
 {% hint style="info" %}
-关于非空断言操作符的一些使用建议：[https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205](https://medium.com/@igorwojda/kotlin-combating-non-null-assertions-5282d7b97205)
+关于非空断言操作符的一些使用建议：[https://liumengtime.gitbook.io/translation/kotlin/jing-ti-shi-yong-fei-kong-duan-yan-cao-zuo-fu](https://liumengtime.gitbook.io/translation/kotlin/jing-ti-shi-yong-fei-kong-duan-yan-cao-zuo-fu)
 {% endhint %}
 
 ## 平台类型（Platform type）
