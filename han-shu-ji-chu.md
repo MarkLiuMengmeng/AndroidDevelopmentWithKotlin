@@ -19,7 +19,7 @@ fun main(args: Array<String>) { // 声明了一个参数args，Kotlin_1.3.72版�
 我们已经简单看到了一个函数是什么样子的，并且我们不用任何类就可以声明和使用它。一个函数由`fun`关键字、声明在括号里的参数和函数体组成，我们再来看一个有返回值的函数：
 
 ```kotlin
-fun sum(a:Int,b:Int):Int{ // 与Java不同返回值的类型定义在函数名称和参数表之后
+fun sum(a:Int,b:Int):Int{ // 与Java不同,返回值的类型定义在函数名称和参数表之后
     return a + b
 }
 ```
@@ -75,6 +75,69 @@ show(null)
 show(1)
 // 打印结果: Hello. It is: 1
 show("Skr")
-// 打印结果: Hello. It is: Skr
+// 打印结果: Hello. It is: Skr函数
 ```
+
+## 函数的返回类型
+
+在Kotlin中，所有函数都是有返回值的，如果没有指定函数的返回类型，它的返回值默认为`Unit`类型。为了演示起见，我们可以显式声明出来：
+
+```kotlin
+fun printSum(a: Int, b: Int): Unit {//在实际编码中，可以省略Unit声明
+    val sum = a + b
+    print(sum)
+}
+```
+
+`Unit`对象等价于Java中的`void`，可以被视作为一个普通的对象，可以赋值给其他变量：
+
+```kotlin
+val v = printSum(12, 24)
+println(v is Unit) // 打印结果: true
+```
+
+`Unit`是一个单例，所以下列三个命题均为真：
+
+```kotlin
+println(p is Unit) //打印结果: true
+println(p == Unit) // 打印结果: true
+println(p === Unit) // 打印结果: true
+```
+
+使用不带任何值的`return`语句即可返回`Unit`类型：
+
+```kotlin
+fun printSum(a: Int, b: Int) { // 没有显式指定返回类型的情况下就会隐式设为Unit类型
+    if(a < 0 || b < 0) {
+        return // 函数的返回语句
+    }
+    val sum = a + b
+    print(sum)
+    // 函数执行完毕会自然返回，我们不必再使用函数返回语句
+}
+```
+
+如果我们指定了`Unit`之外的返回类型，那么需要显式地使用返回语句，否则将视为错误：
+
+```kotlin
+fun sumPositive(a: Int, b: Int): Int {
+    if(a > 0 && b > 0) {
+        return a + b
+    }
+    // 错误，if条件不满足时函数没有显式的返回语句
+}
+```
+
+简单地加上一个返回语句即可修复此问题：
+
+```kotlin
+fun sumPositive(a: Int, b: Int): Int {
+    if(a > 0 && b > 0) {
+        return a + b
+    }
+    return -1
+}
+```
+
+## 可变参数
 
