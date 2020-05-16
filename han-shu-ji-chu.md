@@ -11,7 +11,7 @@ description: >-
 
 ```kotlin
 // SomeFile.kt
-fun main(args: Array<String>) { // 声明了一个参数args，Kotlin 1.3.72版本之后将不再需要该参数
+fun main(args: Array<String>) { // 声明了一个参数args，Kotlin_1.3.72版本之后将不再需要该参数
     println("Hello, World!") // 该函数等同于Java中的System.out.println
 }
 ```
@@ -19,7 +19,7 @@ fun main(args: Array<String>) { // 声明了一个参数args，Kotlin 1.3.72版�
 我们已经简单看到了一个函数是什么样子的，并且我们不用任何类就可以声明和使用它。一个函数由`fun`关键字、声明在括号里的参数和函数体组成，我们再来看一个有返回值的函数：
 
 ```kotlin
-fun sum(a:Int,b:Int):Int{ // 返回值的类型定义在函数名称和参数表之后
+fun sum(a:Int,b:Int):Int{ // 与Java不同返回值的类型定义在函数名称和参数表之后
     return a + b
 }
 ```
