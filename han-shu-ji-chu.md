@@ -141,3 +141,45 @@ fun sumPositive(a: Int, b: Int): Int {
 
 ## 可变参数
 
+有些时候，我们在生命函数时并不知道要处理的参数的具体数目，在这种情况下，我们可以使用`vararg`修饰符修饰一个参数，这样这个参数就可以接受任意数量的参数：
+
+```kotlin
+fun printSum(vararg numbers: Int) {
+    val sum = numbers.sum()
+    print(sum)
+}
+printSum(1,2,3,4) // 打印结果: 10
+printSum(1) // 打印结果: 1
+printSum() // 打印结果: 0
+```
+
+实参中所包含的数据可以在函数体内部视为一个数组，数组的类型对应着参数的数据类型，一般来说，数组的数据类型会是泛型类`Array<T>，`但在上例中我们使用的是`Int`类型的参数，Kotlin有一个优化过的数组类型`IntArray`，Kotlin会自动使用这个更佳的选择：
+
+![](.gitbook/assets/chapter3_1.jpg)
+
+我们仍然可以在可变参数之前声明普通的参数：
+
+```kotlin
+fun printAll(prefix: String, postfix: String, vararg texts: String){
+    val allTexts = texts.joinToString(", ")
+    println("$prefix$allTexts$postfix")
+}
+printAll("All texts: ","!" , "Hello", "World")
+// 打印结果: All texts: Hello, World!
+```
+
+当我们使用可变参数时，可以一个一个地传参，也可以使用**延展操作符**（spread operator）一次性传进去整个数组：
+
+```kotlin
+printSum(1,2,3,4) // printSum函数定义参见本节开头，打印结果：10
+val numbers = intArrayOf(1, 2, 3)
+printSum(*numbers) // 打印结果：6
+printSum(1,*numbers,2) // 打印结果：9
+```
+
+需要注意的是，一个函数只可以有一个可变参数。
+
+
+
+
+
