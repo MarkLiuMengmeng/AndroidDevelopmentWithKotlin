@@ -243,7 +243,7 @@ fun textFormatted(text: String, name: String) = text
 **命令式编程**（Imperative programming）与**声明式编程**（Declarative programming）
 
 * 命令式编程：这种编程范式描述的是执行一个操作所需的确切的步骤，非常直观。
-* 声明式编程：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（Functional programming）**逻辑编程**（Logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
+* 声明式编程：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（Functional programming）和**逻辑编程**（Logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
 {% endhint %}
 
 
