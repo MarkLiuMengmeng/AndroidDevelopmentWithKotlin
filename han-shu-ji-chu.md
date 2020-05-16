@@ -179,7 +179,72 @@ printSum(1,*numbers,2) // 打印结果：9
 
 需要注意的是，一个函数只可以有一个可变参数。
 
+## 单表达式函数
 
+我们在实际的开发中，许多函数仅仅只有一个表达式，比如我们要获取某个控件上的文本：
+
+```kotlin
+fun getEmail(): String {
+    return emailView.text.toString()
+}
+```
+
+这种类型的代码在Android项目中随处可见，下面是一些常见的使用场景：
+
+* 提取一些小的操作
+* 使用多态来为一个类提供特定的值
+* 在不同的架构层之间传递数据（上面的例子就可能出现在MVP设计模式中，用于View层与Presenter层传递数据）
+* 基于递归的函数式编程风格函数
+
+Kotlin中提供了一个改进的表示方法，当一个函数只包含一个表达式时，我们可以省略函数体，直接使用等号来指定表达式，这样定义的函数称为单表达式函数。
+
+我们来用新的方式声明前面的函数：
+
+```kotlin
+fun getEmail() = emailView.text.toString()
+```
+
+这时候返回类型也成为了一个可选项，因为编译器可以从表达式中推断出来。
+
+在Android的视图操作中，我们经常会与视图的Id打交道，来看看它怎么发挥作用：
+
+```kotlin
+class AddressAdapter : ItemAdapter<AddressAdapter.ViewHolder>() {
+    override fun getLayoutId() = R.layout.choose_address_view
+    override fun onCreateViewHolder(itemView: View) = ViewHolder(itemView)
+    // ...
+}
+```
+
+有时我们需要根据交互的视图来执行相应的操作：
+
+```kotlin
+override fun onOptionsItemSelected(item: MenuItem): Boolean = when{
+    item.itemId == android.R.id.home -> {
+        onBackPressed()
+        true
+    }
+    else -> super.onOptionsItemSelected(item)
+}
+```
+
+在链式操作一些数据时：
+
+```kotlin
+fun textFormatted(text: String, name: String) = text
+                  .trim()
+                  .capitalize()
+                  .replace("{name}", name)
+```
+
+可以看到这个特性能让我们的代码更加简洁，更具可读性。单表达式函数在Android开发和函数式编程中的应用十分广泛。
+
+{% hint style="info" %}
+**命令式编程**（Imperative programming）与**声明式编程**（Declarative programming）
+
+* 命令式编程：这种编程范式描述的是执行一个操作所需的确切的步骤，非常直观。
+* 声明式编程：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（Functional programming）**逻辑编程**（Logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
+{% endhint %}
 
 
 
