@@ -246,5 +246,59 @@ fun textFormatted(text: String, name: String) = text
 * 声明式编程：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（Functional programming）和**逻辑编程**（Logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
 {% endhint %}
 
+## 尾递归函数（Tail-recursive function）
+
+**递归函数**（Recursive function）是指调用自身的函数，比如：
+
+```kotlin
+fun getState(state: State, n: Int): State =
+    if (n <= 0) state 
+    else getState(nextState(state), n - 1)
+```
+
+递归函数是函数式编程的重要组成部分，问题是每个递归函数的调用需要将前一个函数的返回地址保存在栈上，如果递归进行地太深（栈上的函数太多）时会抛出`StackOverflowError`。
+
+经典的解决办法是使用遍历来代替递归：
+
+```kotlin
+fun getState(state: State, n: Int): State {
+    var state = state
+    for (i in 1..n) {
+        state = state.nextState()
+    }
+    return state
+}
+```
+
+但是由于遍历和递归在思路上有着本质的区别，所以更适当的解决方式是使用像Kotlin这样的现代编程语言提供的尾递归函数。尾递归函数是一种特殊的递归函数，该函数将调用自身作为执行的最后一个操作（换句话说，递归发生在函数的最后一个操作中）。这使我们可以优化编译器进行的递归调用，并以更加有效的方式执行递归操作，而且无需担心潜在的`StackOverflowError`。要使函数尾递归，我们需要用tailrec修饰符标记它：
+
+```kotlin
+tailrec fun getState(state: State, n: Int): State =
+    if (n <= 0) state
+    else getState(state.nextState(), n - 1)
+```
+
+为了弄清楚它的工作原理，我们将它编译后再反编译为Java代码，我们可以看到这些（代码经过简化）：
+
+```kotlin
+public static final State getState(@NotNull State state, int n){
+    while(true) {
+        if(n <= 0) {
+            return state;
+        }
+        state = state.nextState();
+        n = n - 1;
+    }
+}
+```
+
+可以看到底层实现方式仍是遍历，这就是为什么不会出现`StackOverflowError`。但在编写代码时我们可以用递归的思想去编写，使用递归的代码往往会更加简洁。
+
+使用尾递归函数要满足三个条件：
+
+* 函数只能在执行最后一个操作时调用自身
+* 不能在`try` / `catch` / `finally`代码块中使用
+* 在撰写本文时，仅允许Kotlin编译为JVM平台代码时使用
+
 
 
