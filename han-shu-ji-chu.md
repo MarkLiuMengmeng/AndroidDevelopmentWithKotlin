@@ -39,5 +39,42 @@ val total = sum (12,24)//调用sum函数赋值给total变量
 
 ## 参数
 
+在函数的声明中，每个参数都必须明确指定其类型。所有参数都被定义为不可变类型（只读）且无法被定义为可变的，因为可变类型的参数容易出错且在Java中经常被程序员误用。如果我们确实需要一个可变类型变量，那么可以在函数体中声明一个具有相同名称局部变量来作为影子变量：
 
+```kotlin
+fun findDuplicates(list: List<Int>): List<Int> {
+    var list = list.sorted()
+    //...
+}
+```
+
+我们可以这么做，但会显示警号，因为这样的重复命名让我们难以定位问题并降低了代码的可读性。一个更好的办法是用数据的内容来命名参数，用数据的目的来命名变量，这两者在大多数情况下是不同的：
+
+```kotlin
+fun findDuplicates(originList<Int>): List<Int> {
+    var sortedList = originList.sorted()
+    //...
+}
+```
+
+{% hint style="info" %}
+我们一直在使用参数这个术语，实际上它是有两种类型的：**形参**（Parameters）和**实参**（Arguments）。以我们上节末尾使用的`sum`函数来说：
+
+* 形参指的是在函数声明中定义的变量，指的是`sum`函数声明时声明的`a`和`b`。
+* 实参指的是在调用函数时传进去的实际值，指的是在调用`sum`函数时传入的`12`和`24`.
+{% endhint %}
+
+和Java中一样，实参是可以传入形参的子类型的。如果我们声明形参类型为`Any?`，那么我们可以传入任何值：
+
+```kotlin
+fun show(arg: Any?) {
+    println("Hello. It is: $arg")
+}
+show(null)
+// 打印结果: Hello. It is: null
+show(1)
+// 打印结果: Hello. It is: 1
+show("Skr")
+// 打印结果: Hello. It is: Skr
+```
 
