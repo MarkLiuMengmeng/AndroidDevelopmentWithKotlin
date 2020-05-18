@@ -37,57 +37,6 @@ Kotlin调用函数的语法和Java等大部分编程语言类似：
 val total = sum (12,24)//调用sum函数赋值给total变量
 ```
 
-## 顶层函数
-
-定义在文件顶层的函数被称为顶层函数，上节中的`main`函数就是顶层函数。如果想在其它文件中使用顶层函数，和Java一样使用`import`语句导入即可（在Android Studio等的现代的IDE中，导入操作会自动完成）：
-
-```kotlin
-// Test.kt
-package com.example
-fun printValue(v:Any?) {
-    print(v)
-}
-// Main.kt
-import com.example.printValue
-fun main(args: Array<String>) {
-    printValue(8)
-}
-```
-
-我们知道Kotlin在Android平台会编译为Java字节码，在Android5.0之前运行在Dalvik虚拟机上，在5.0之后运行在ART（Android RunTime）上。这两种虚拟机都只执行定义在类中的函数，为了解决这个问题，编译器会为我们自动生成一个类，类名是原文件名加上Kt后缀，了解这个之后我们就知道如何在Java文件中使用上面的`printValue`函数：
-
-```kotlin
-TestKt.printValue(8)
-```
-
-可以预见的是这个生成类的默认的命名方式可能会重名，或者影响可读性。我们可以在文件开始（包名之前）使用注解来指定生成类的名称：
-
-```kotlin
-@file:JvmName("Test")
-```
-
-这样生成类的名称为`Test`而不是`TestKt`了。我们还可以使多个Kotlin文件编译成同一个类：
-
-```kotlin
-// Max.kt
-@file:JvmName("Math")
-@file:JvmMultifileClass
-package com.example.math
-fun max(n1: Int, n2: Int): Int = if(n1 > n2) n1 else n2
-// Min.kt
-@file:JvmName("Math")
-@file:JvmMultifileClass
-package com.example.math
-fun min(n1: Int, n2: Int): Int = if(n1 < n2) n1 else n2
-```
-
-我们可以在Java中这样使用：
-
-```kotlin
-Math.min(1, 2)
-Math.max(1, 2)
-```
-
 ## 参数
 
 在函数的声明中，每个参数都必须明确指定其类型。所有参数都被定义为不可变类型（只读）且无法被定义为可变的，因为可变类型的参数容易出错且在Java中经常被程序员误用。如果我们确实需要一个可变类型变量，那么可以在函数体中声明一个具有相同名称局部变量来作为影子变量：
@@ -109,7 +58,7 @@ fun findDuplicates(originList<Int>): List<Int> {
 ```
 
 {% hint style="info" %}
-我们一直在使用参数这个术语，实际上它是有两种类型的：**形参**（Parameters）和**实参**（Arguments）。以我们第一节末尾使用的`sum`函数来说：
+我们一直在使用参数这个术语，实际上它是有两种类型的：**形参**（Parameters）和**实参**（Arguments）。以我们上节末尾使用的`sum`函数来说：
 
 * 形参指的是在函数声明中定义的变量，指的是`sum`函数声明时声明的`a`和`b`。
 * 实参指的是在调用函数时传进去的实际值，指的是在调用`sum`函数时传入的`12`和`24`.
@@ -126,48 +75,8 @@ show(null)
 show(1)
 // 打印结果: Hello. It is: 1
 show("Skr")
-// 打印结果: Hello. It is: Skr
+// 打印结果: Hello. It is: Skr函数
 ```
-
-## 可变参数
-
-有些时候，我们在生命函数时并不知道要处理的参数的具体数目，在这种情况下，我们可以使用`vararg`修饰符修饰一个参数，这样这个参数就可以接受任意数量的参数：
-
-```kotlin
-fun printSum(vararg numbers: Int) {
-    val sum = numbers.sum()
-    print(sum)
-}
-printSum(1,2,3,4) // 打印结果: 10
-printSum(1) // 打印结果: 1
-printSum() // 打印结果: 0
-```
-
-实参中所包含的数据可以在函数体内部视为一个数组，数组的类型对应着参数的数据类型，一般来说，数组的数据类型会是泛型类`Array<T>，`但在上例中我们使用的是`Int`类型的参数，Kotlin有一个优化过的数组类型`IntArray`，Kotlin会自动使用这个更佳的选择：
-
-![](.gitbook/assets/chapter3_1.jpg)
-
-我们仍然可以在可变参数之前声明普通的参数：
-
-```kotlin
-fun printAll(prefix: String, postfix: String, vararg texts: String){
-    val allTexts = texts.joinToString(", ")
-    println("$prefix$allTexts$postfix")
-}
-printAll("All texts: ","!" , "Hello", "World")
-// 打印结果: All texts: Hello, World!
-```
-
-当我们使用可变参数时，可以一个一个地传参，也可以使用**延展操作符**（spread operator）一次性传进去整个数组：
-
-```kotlin
-printSum(1,2,3,4) // printSum函数定义参见本节开头，打印结果：10
-val numbers = intArrayOf(1, 2, 3)
-printSum(*numbers) // 打印结果：6
-printSum(1,*numbers,2) // 打印结果：9
-```
-
-需要注意的是，一个函数只可以有一个可变参数。
 
 ## 函数的返回类型
 
@@ -230,34 +139,45 @@ fun sumPositive(a: Int, b: Int): Int {
 }
 ```
 
-## Nothing返回类型
+## 可变参数
 
-有些时候我们希望定义一个永远抛出异常的函数，比如：
-
-* 在异常处理系统比较重要的项目中，并且需要在异常发生的时候提供更多的信息
-* 在单元测试中抛出异常，以测试我们代码的异常处理能力
-
-这时候我们可以用到一个特殊类`Nothing`，`Nothing`是一个虚类型（uninhabited type），无法拥有实例。一个返回类型为`Nothing`的函数将不会返回任何值并永远无法运行到`return`语句，只会抛出异常。
-
-让我们看一个简单的例子：
+有些时候，我们在生命函数时并不知道要处理的参数的具体数目，在这种情况下，我们可以使用`vararg`修饰符修饰一个参数，这样这个参数就可以接受任意数量的参数：
 
 ```kotlin
-fun fail(): Nothing = throw Error()
+fun printSum(vararg numbers: Int) {
+    val sum = numbers.sum()
+    print(sum)
+}
+printSum(1,2,3,4) // 打印结果: 10
+printSum(1) // 打印结果: 1
+printSum() // 打印结果: 0
 ```
 
-这样的函数用起来就像一个`throw`语句，但是它拥有独特的返回类型，能让我们写出更具表现力的代码：
+实参中所包含的数据可以在函数体内部视为一个数组，数组的类型对应着参数的数据类型，一般来说，数组的数据类型会是泛型类`Array<T>，`但在上例中我们使用的是`Int`类型的参数，Kotlin有一个优化过的数组类型`IntArray`，Kotlin会自动使用这个更佳的选择：
+
+![](.gitbook/assets/chapter3_1.jpg)
+
+我们仍然可以在可变参数之前声明普通的参数：
 
 ```kotlin
-fun getFirstCharOrFail(str: String): Char
-                       = if(str.isNotEmpty()) str[0] else fail()
-val name: String = getName() ?: fail()
-val enclosingElement = element.enclosingElement 
-                       ?: throwError ("Lack of enclosing element")
+fun printAll(prefix: String, postfix: String, vararg texts: String){
+    val allTexts = texts.joinToString(", ")
+    println("$prefix$allTexts$postfix")
+}
+printAll("All texts: ","!" , "Hello", "World")
+// 打印结果: All texts: Hello, World!
 ```
 
-为什么这个函数能被赋值为`char`、`String`以及自定义的各种类型呢？这是因为`Nothing`是所有数据类型的子类：
+当我们使用可变参数时，可以一个一个地传参，也可以使用**延展操作符**（spread operator）一次性传进去整个数组：
 
-![](.gitbook/assets/chapter2_3.jpg)
+```kotlin
+printSum(1,2,3,4) // printSum函数定义参见本节开头，打印结果：10
+val numbers = intArrayOf(1, 2, 3)
+printSum(*numbers) // 打印结果：6
+printSum(1,*numbers,2) // 打印结果：9
+```
+
+需要注意的是，一个函数只可以有一个可变参数。
 
 ## 单表达式函数
 
@@ -380,99 +300,5 @@ public static final State getState(@NotNull State state, int n){
 * 不能在`try` / `catch` / `finally`代码块中使用
 * 在撰写本文时，仅允许Kotlin编译为JVM平台代码时使用
 
-## 本地函数（Local functions）
 
-和本地变量类似，定义在函数体中的函数称为本地函数。
-
-```kotlin
-fun printTexts() {
-    fun printText() { // printText是一个本地函数，它定义在printTexts函数里面
-        print("Hello,World!")
-    }
-    printText()
-}
-printText() // 错误，本地函数在定义的函数体之外不可用
-```
-
-本地函数可以直接访问所定义函数体中的变量，不需要进行传参：
-
-```kotlin
-fun printTexts() {
-    var texts: List<String> = emptyList()
-    fun doWork() {
-        for(text in texts){// 可以直接访问texts
-            print(text)
-        }
-    }
-    doWork()
-}
-```
-
-本地函数适用于提取仅在某个函数中使用的共有操作，需要使用到某个函数中参数、本地变量等的操作。
-
-## 有选择地传参
-
-有些时候我们调用一个函数只需要传入其中部分参数，在Java中，我们会定义相同方法的多个重载来完成不同传参的调用需求。重载导致的一个问题是方法数会以排列组合的量级增长，这会使代码难以维护。重载还要求重载的函数之间要有不同的参数表区分彼此，参数名称不同而参数数据类型相同的重载无法实现。所以我们在开发时经常需要在函数体中处理不同的传参可能。
-
-因此我们在使用Java编码时经常会调用传入许多空值的方法：
-
-```kotlin
-layoutInflater.createView(context,name,null,null)
-```
-
-Kotlin提供了**默认参数**（Default argument）和**命名参数语法**（named argument syntax），事情就变得不一样了。
-
-### 默认参数
-
-Kotlin的默认参数和C++中的工作方式一样，当调用函数时如果没有提供某个参数值，默认的参数值就会发挥作用。定义方式也与C++中类似：
-
-```kotlin
-fun printValue(value: String, inBracket: Boolean = true,
-               prefix: String = "", suffix: String = "") {
-    print(prefix)
-    if (inBracket) {
-        print("(${value})")
-    } else {
-        print(value)
-    }
-    println(suffix)
-}
-```
-
-我们可以像没有默认参数那样传入所有值来进行调用，也可以省略传入若干个有默认值的参数：
-
-```kotlin
-printValue("test", true, "","") // 打印结果: (test)
-printValue("test") // 打印结果: (test)
-printValue("test", false) // 打印结果: test
-```
-
-### 命名参数语法
-
-即使加上了默认参数，但仍然有一个问题是如果想传入一个参数，就必须将前面的参数一并传入。有些时候我们希望只传靠后的参数而不传前面的，那么我们可以使用命名参数语法指定传入的参数：
-
-```kotlin
-printValue("test", true, "", "!") // 传统方式，打印结果: (test)!
-printValue("test", suffix = "!") // 命名参数方式，打印结果: (test)!
-```
-
-在使用命名参数语法时，我们还可以随意调整传参顺序而不会对程序产生任何影响：
-
-```kotlin
-printValue(value = "test", suffix = "!") // 打印结果: (test)!
-printValue(suffix = "!", value = "test") // 打印结果: (test)!
-```
-
-这样的调用方式更加灵活，无需重载函数，就可以让我们随意选择必要的参数以想要的顺序传入，同时也更具可读性。
-
-我们还可以将默认参数语法和经典的语法结合起来使用，但是只要使用了命名参数语法，下一个参数就不能使用经典参数语法了：
-
-```kotlin
-printValue ("test", inBracket = true, prefix = "") // 正确
-printValue ("test", inBracket = true, "") // 错误
-```
-
-需要注意的是，命名参数语法也为我们带来了一些额外的考虑，如果我们更改参数的名称，可能会使项目产生一些错误，特别是我们在做一个库的时候，更应该小心更改参数名称。
-
-命名参数语法不能在调用Java函数时使用，因为Java字节码并不总是保留参数的名称（Java8引入了编译器保留参数名称的新特性）。
 
