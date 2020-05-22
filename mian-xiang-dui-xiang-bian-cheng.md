@@ -179,6 +179,10 @@ user.age = 22 //打印结果：setter new value assigned 22
 
 我们可以看到Kotlin中编写代码时幕后字段和它的getter和setter是放到一起的，这样我们可以很容易地读懂代码逻辑和进行维护。而在Java中我们常常把字段声明在类的顶部，把getter和setter声明在类的底部，我们经常不能在一页中看清楚他们的逻辑。
 
+{% hint style="info" %}
+直接（自定义getter和setter）或间接（自动生成的getter和setter）使用`field`字段的，这样的属性才会有幕后字段，否则（getter和setter都是使用的其他变量）没有幕后字段。
+{% endhint %}
+
 ### 延迟初始化属性
 
 有些时候，我们知道这个变量不会为空，但是声明时也不能直接给它赋值。比如常用的存储Android视图引用的变量：
@@ -250,6 +254,23 @@ val activityRule//注解在自定义getter方法上
 ```
 
 ### 内联属性
+
+我们可以使用`inline`修饰符来优化属性的调用，前提是没有幕后字段的属性：
+
+```kotlin
+inline val now: Long
+    get() {
+        return System.currentTimeMillis()
+    }
+```
+
+在编译时，每个`now`属性的调用都会被替换为实际值：
+
+```kotlin
+System.currentTimeMillis()
+```
+
+内联属性会节省一些额外的创建开销，并能在编写代码时提高可读性。
 
 
 
