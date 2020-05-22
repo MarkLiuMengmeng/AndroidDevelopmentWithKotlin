@@ -151,5 +151,33 @@ Java和Kotlin的属性访问语法
 由于Kotlin和Java有良好的互操作性，和上节提到的类的实例化语法类似，使用的地点（Java文件还是Kotlin文件中）决定你应该使用哪种语法。
 {% endhint %}
 
+### 自定义getter和setter
 
+有些时候我们会希望在访问属性时进行一些额外的操作，比如验证一些值的正确性、打印一些日志等，这些都可以通过自定义getter和setter实现。
+
+我们知道年龄如果为负数是不合理的，让我们给上面的`User`类中的`age`属性加上负值验证：
+
+```kotlin
+class User(var name: String,age:Int) {
+    var age = age
+    get() {
+        println("getter value retrieved")
+        return field
+    }
+    set(value) {
+        field = if (value < 0) 0 else value
+        println("setter new value assigned $field")
+    }
+}
+//使用示例
+val user = User("Mamun",24)
+var age = user.age //打印结果：getter value retrieved
+user.age = 22 //打印结果：setter new value assigned 22
+```
+
+上面自定义的getter和setter仅对`age`属性生效，对`name`属性是不生效的。我们可以看到我们用到了一个特殊的变量`field`，它代表的是对应的幕后字段，在这里我们不能直接使用`age`，因为这样会死循环调用getter。
+
+我们可以看到Kotlin中编写代码时幕后字段和它的getter和setter是放到一起的，这样我们可以很容易地读懂代码逻辑和进行维护。而在Java中我们常常把字段声明在类的顶部，把getter和setter声明在类的底部，我们经常不能在一页中看清楚他们的逻辑。
+
+### 延迟初始化属性
 
