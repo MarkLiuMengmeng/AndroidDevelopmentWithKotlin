@@ -181,3 +181,41 @@ user.age = 22 //打印结果：setter new value assigned 22
 
 ### 延迟初始化属性
 
+有些时候，我们知道这个变量不会为空，但是声明时也不能直接给它赋值。比如常用的存储Android视图引用的变量：
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+    private var button: Button? = null
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        button = findViewById(R.id.button) as Button
+    }
+}
+```
+
+`button`变量在声明的时候，布局文件尚未初始化，此时不能给它赋值，为了完成在`onCreate`方法的赋值操作，我们必须声明它为可空类型。这样做是很不方便的，可空类型变量在使用时每次都要进行非空检查或者使用安全调用操作符，而视图变量是一个使用频率又相当高。
+
+这时候我们可以使用`lateinit`修饰符来修饰该变量，告诉编译器它在使用之前不会为空，它的初始化被推迟了，这样我们可以把上面的变量声明为非空类型的：
+
+```kotlin
+class MainActivity : AppCompatActivity() {
+    private lateinit var button: Button
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        button = findViewById(R.id.button) as Button
+    }
+}
+```
+
+这时候确保它非空就是我们程序员的责任了，如果在未被初始化时访问它，会抛出**UninitializedPropertyAccessException**。
+
+延迟初始化不仅出现在视图相关的变量中，还经常出现在依赖注入库、单元测试库等的使用中：
+
+```kotlin
+@Inject lateinit var volumeManager: VolumeManager // 使用依赖注入库Dagger
+@Mock lateinit var mockEventBus: EventBus // 使用单元测试库Mockito
+```
+
+
+
