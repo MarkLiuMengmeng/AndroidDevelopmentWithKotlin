@@ -289,6 +289,21 @@ override fun onCreate(savedInstanceState: Bundle?) {
 [关于非空断言操作符的一些使用建议](https://liumengtime.gitbook.io/translation/kotlin/jing-ti-shi-yong-fei-kong-duan-yan-cao-zuo-fu)
 {% endhint %}
 
+## 自增和自减操作符（Increment and decrement operators）
+
+和许多编程语言类似，Kotlin支持自增和自减操作符，以自增操作符为例，也分为**前增**（pre-increment）用法和**后增**（post-increment）用法：
+
+```kotlin
+var speed = 1.0
+println(++speed) // 前增用法，打印结果: 2.0
+println(speed) // 打印结果: 2.0
+speed = 1.0 //重新赋值
+println(speed++) // 后增用法，打印结果: 1.0
+println(speed) // 打印结果: 2.0
+```
+
+自减操作符与自增操作符工作方式类似。
+
 ## 平台类型（Platform type）
 
 我们知道大部分Android SDK和库由Java写成，虽然编译器可以通过注解来获取Java中的可空性信息，但大部分Java变量没有注解，我们可以把它们都看作可空类型并每次访问时检查可空性，但这显然不是上策。
