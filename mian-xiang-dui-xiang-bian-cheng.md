@@ -272,5 +272,50 @@ System.currentTimeMillis()
 
 内联属性会节省一些额外的创建开销，并能在编写代码时提高可读性。
 
+## 构造器
 
+通过前面我们大概了解到，我们可以定义不带构造器的类，也可以定义带一个主构造器的类，还可以定义一个带主构造器和若干次构造器的类。
+
+需要注意的是，主构造器一个类只能声明一个，属性声明仅能在主构造器中进行，如果需要在次构造器中使用属性，那就需要先在类中声明：
+
+```kotlin
+class User(var name: String) {
+    var age:Int? = null
+    
+    constructor(name:String,age:Int):this(name){
+        this.age = age
+    }
+}
+```
+
+我们看到上面的例子中，次构造器使用的`this`关键字来调用主构造器。在主构造器定义的类中，必须隐式或者显式地调用主构造器。显式调用主构造器是指直接调用主构造器，隐式调用是指次构造器调用主构造器。
+
+如果子类没有构造器而父类有非空的构造器，则每个次构造器都要使用`super`关键字来初始化基类：
+
+```kotlin
+class ProductView : View {
+    constructor(ctx: Context) : super(ctx)
+    constructor(ctx: Context, attrs : AttributeSet) : super(ctx, attrs)
+    constructor(context: Context?, attrs : AttributeSet?, defStyleAttr:
+                Int) : super(context, attrs, defStyleAttr)
+}
+```
+
+构造器默认的可见性是`public`，我们想设置构造器的可见性时，直接在构造器关键字`constructor`前加上可见性修饰符：
+
+```kotlin
+class User private constructor()
+```
+
+当我们使用像Dagger这样的依赖注入库来注解构造器时也是如此：
+
+```kotlin
+class User @Inject constructor()
+```
+
+它们也可以一起使用：
+
+```kotlin
+class User @Inject private constructor()
+```
 
