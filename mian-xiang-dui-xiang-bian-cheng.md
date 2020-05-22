@@ -210,12 +210,46 @@ class MainActivity : AppCompatActivity() {
 
 这时候确保它非空就是我们程序员的责任了，如果在未被初始化时访问它，会抛出**UninitializedPropertyAccessException**。
 
-延迟初始化不仅出现在视图相关的变量中，还经常出现在依赖注入库、单元测试库等的使用中：
+延迟初始化的应用场景很常见，不仅出现在视图相关的变量中，还经常出现在依赖注入库、单元测试库等的使用中：
 
 ```kotlin
 @Inject lateinit var volumeManager: VolumeManager // 使用依赖注入库Dagger
 @Mock lateinit var mockEventBus: EventBus // 使用单元测试库Mockito
 ```
+
+### 注解属性
+
+我们用Kotlin写了一个属性，Kotlin就会为我们生成很多配套的JVM字节码（`privte`字段、getter和setter）。有些时候有些库的注解处理器或基于反射实现的库要求我们的字段设置为`public`。如单元测试库JUnit，它要求我们`@Rule`注解必须加在字段或者getter方法上：
+
+```kotlin
+@Rule
+val activityRule = ActivityTestRule(MainActivity::class.Java) //无法识别
+```
+
+使用Kotlin写这段代码JUnit是无法识别的，我们需要使用注解`@JvmField`来指明这是一个Java字段：
+
+```kotlin
+@JvmField @Rule
+val activityRule = ActivityTestRule(MainActivity::class.Java)
+```
+
+注解`@JvmField`的使用有一定限制：
+
+* 必须有幕后字段
+* 可见性不能为`private`
+* 没有`open`、`const`、`override`这些修饰符修饰
+
+我们也可以直接注解在getter方法上：
+
+```kotlin
+@get:Rule //注解在默认getter方法上
+val activityRule = ActivityTestRule(MainActivity::class.Java)
+
+val activityRule//注解在自定义getter方法上
+@Rule get() = ActivityTestRule(MainActivity::class.java)
+```
+
+### 内联属性
 
 
 
