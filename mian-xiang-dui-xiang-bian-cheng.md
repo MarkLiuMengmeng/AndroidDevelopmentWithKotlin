@@ -144,8 +144,10 @@ class User(
 {% hint style="info" %}
 Java和Kotlin的属性访问语法
 
-**Java**：通过属性对应的getter或者setter方法访问，如`user.getName()`，`user.setName("Mamun")`
+**Java**：通过属性对应的getter或者setter方法访问，如`user.getName()`，`user.setName("Mamun")`。
 
-**Kotlin**：直接使用`.`来访问属性，`val name = user.name`，`user.name = "Mamun"`虽然看起来好像失去了封装性，但实际上Kotlin使用的是getter和setter，所以Kotlin相当于在语言层面内置了面向对象的封装。
+**Kotlin**：直接使用`.`来访问属性，如`val name = user.name`，`user.name = "Mamun"`。虽然看起来好像失去了封装性，但实际上Kotlin使用的是getter和setter，所以Kotlin相当于在语言层面内置了面向对象的封装。并且在访问属性的同时可以使用自增和自减操作符，如`user.age++`。
 {% endhint %}
+
+
 
