@@ -319,3 +319,22 @@ class User @Inject constructor()
 class User @Inject private constructor()
 ```
 
+### 构造器参数和属性
+
+我们已经知道在主构造器中使用`var`或者`val`关键字可以声明属性，如果不使用所声明的仅仅是构造器参数，构造器参数仅仅在构造器中使用，用于类的创建，创建之后，无法像访问类的属性那样访问它：
+
+```kotlin
+class User(var name:String, age:Int)
+val user = User("Mamun", 27)
+println(user.name) // 打印结果：Mamun
+println(user.age) // 错误，age只是一个构造器参数
+```
+
+下面这个表格列出了他们之间的主要区别：
+
+| 类的声明 | 是否生成getter | 是否生成setter | 类型 |
+| :--- | :--- | :--- | :--- |
+| `class User(name:String)` | 否 | 否 | 构造器参数 |
+| `class User(var name:String)` | 是 | 是 | 属性 |
+| `class User(val name:String)` | 是 | 否 | 属性 |
+
