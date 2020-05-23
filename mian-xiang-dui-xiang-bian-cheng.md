@@ -373,8 +373,8 @@ class User(var name: String = "", var age: Int = 1, val gender:String = "Unkown"
 
 val user = User()
 val user1 = User("Mamun",18)
-val user2 = User(gender ="Female")
+val user2 = User(gender = "Female")
 ```
 
-
+## 接口
 
