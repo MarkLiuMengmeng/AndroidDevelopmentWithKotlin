@@ -338,3 +338,5 @@ println(user.age) // 错误，age只是一个构造器参数
 | `class User(var name:String)` | 是 | 是 | 属性 |
 | `class User(val name:String)` | 是 | 否 | 属性 |
 
+
+
