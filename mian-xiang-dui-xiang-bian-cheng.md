@@ -338,5 +338,43 @@ println(user.age) // 错误，age只是一个构造器参数
 | `class User(var name:String)` | 是 | 是 | 属性 |
 | `class User(val name:String)` | 是 | 否 | 属性 |
 
+### 构造器的默认参数
+
+如果一个类有很多参数，但有的参数是可选的，为了满足我们多样化的创建需求，在Java中我们会用很多设计模式：
+
+* **伸缩式构造器模式**（Telescoping constructor pattern）:设置一系列的构造器，每个构造器依次增加一个参数。现在已经不推荐这种方式了，因为当参数较多时，代码会难以维护且难以阅读，由于参数的顺序是固定的，在传参时你仍然可能传入你并不设置的参数值。在Android中，仍有少量的类在使用这种方式，比如`android.view.View`类：
+
+```kotlin
+val view = View(context)
+val view = View(context, attributeSet)
+val view = View(context, attributeSet, defStyleAttr)
+```
+
+* **JavaBean模式**（JavaBeans pattern）：使用无参构造方法创建对象，通过属性的setter设置参数。这种方式比较适合自动化的赋值，因为手动编写代码时容易遗漏设置操作：
+
+```kotlin
+val user = User()
+user.setName("Mamun")
+user.setAge(27)
+```
+
+* **建造者模式**（Builder pattern）：使用建造者对象来逐步设置参数，每一步的设置都会返回当前生成的对象，最后使用一个无参的`build`方法完成对象的构造。建造者模式兼顾了伸缩式构造器模式的安全性和JavaBean模式的可读性，但是由于多了一个辅助对象的开销，某些情况下的性能会受到影响：
+
+```kotlin
+Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("https://api.github.com/")
+                                .build()
+```
+
+好消息是，Kotlin引入了默认参数和命名参数语法，默认参数给了我们传参的可选性，命名参数语法给了我们传参顺序的灵活性，结合这两个特性，我们可以把类的创建工作变得非常简单，我们可以像调用一个函数那样完成类的创建：
+
+```kotlin
+class User(var name: String = "", var age: Int = 1, val gender:String = "Unkown")
+
+val user = User()
+val user1 = User("Mamun",18)
+val user2 = User(gender ="Female")
+```
+
 
 
