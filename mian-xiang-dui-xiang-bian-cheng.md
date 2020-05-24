@@ -378,3 +378,137 @@ val user2 = User(gender = "Female")
 
 ## 接口
 
+在Kotlin中使用`interface`关键字定义接口：
+
+```kotlin
+interface PhoneNumProvider{
+    fun validatePhoneNum()
+}
+```
+
+Kotlin中不使用Java中的`implement`关键字，而是使用`:`来实现接口：
+
+```kotlin
+class User:PhoneNumProvider {
+    override fun validatePhoneNum() {
+        //phoneNumber validation
+    }
+}
+```
+
+Kotlin的接口中还可以定义属性：
+
+```kotlin
+interface PhoneNumProvider {
+    val phoneNum: String
+    fun validatePhoneNum()
+}
+```
+
+实现接口的类必须实现所有的属性和方法：
+
+```kotlin
+class User() : PhoneNumProvider {
+    override val phoneNum: String = "1234567"
+    override fun validatePhoneNum() {
+        //phoneNumber validation
+    }
+}
+```
+
+**复写**（`override`）属性可以放在主构造器中：
+
+```kotlin
+class User(override val phoneNum: String) : PhoneNumProvider {
+    override fun validatePhoneNum() {
+        //phoneNumber validation
+    }
+}
+```
+
+和Java8引入的接口默认方法类似，Kotlin也允许接口中定义的方法有默认实现：
+
+```kotlin
+interface PhoneNumProvider {
+    val phoneNum: String
+    val phoneNumLength:Int
+    get()= phoneNum.length // 属性get方法的默认实现
+    
+    fun validatePhoneNum() = phoneNumLength == 11 // 普通方法的默认实现，返回类型被推断为Boolean
+}
+```
+
+对于默认实现的限制是不能使用幕后字段，因为接口是无状态的。默认实现的意义在于可以将子类中可能重复定义的方法提取出来，使代码更易维护且更具可读性。
+
+和Java中类似，Kotlin中的类只能继承一个类，可以实现多个接口，继承类和实现接口都使用`:`，它们之间用`,`隔开：
+
+```kotlin
+open class Human
+interface PhoneNumProvider {
+    val phoneNum: String
+    
+    fun validatePhoneNum()
+}
+
+interface EmailProvider{
+    val email:String
+    
+    fun validateEmail()
+}
+
+class User(override val phoneNum: String,override val email:String):Human(),PhoneNumProvider,EmailProvider {
+    override fun validatePhoneNum(){
+        //phoneNumber validation
+    }
+    override fun validateEmail(){
+        //email validation
+    }
+}
+```
+
+既然一个类可以实现多个接口，那么如果两个接口中有一样签名的方法该如何呢？假设我们有两个有相同方法的接口：
+
+```kotlin
+interface A{
+    fun test(){
+        print("A")
+    }
+}
+interface B{
+    fun test(){
+        print("B")
+    }
+}
+```
+
+答案是复写一个方法即可：
+
+```kotlin
+class Tester:A,B{
+    override fun test(){
+        println("tester")
+    }
+}
+```
+
+打印结果以实现的子类为准，因为越靠近继承链底端的类越具体，所复写方法的优先级越高：
+
+```kotlin
+Tester().test() // 打印结果：tester
+```
+
+如果想使用父类的方法可以使用`super`关键字加方括号引用类名：
+
+```kotlin
+class Tester:A,B{
+    override fun test(){
+        super<A>.test()
+        super<B>.test()
+    }
+}
+//使用示例
+Tester().test() // 打印结果：AB
+```
+
+
+
