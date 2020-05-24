@@ -617,3 +617,17 @@ public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAtt
 
 我们可以看到Kotlin在提升与Java的互操作性方面做出的努力。
 
+## 数据类
+
+我们在开发工作经常会创建一些用于存储数据的类（来自数据库或者服务器）。在Java中我们需要写出许多getter和setter，还经常会重写`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作也是一个问题。
+
+我们已经了解到Kotlin会为我们自动生成getter和setter方法。Kotlin实际上做了更多，我们可以使用`data`关键字来修饰一个类：
+
+```kotlin
+data class Product(var name: String, var price: Double)
+```
+
+这样修饰后的类编译器会为我们自动生成相应的`equals`、`hashCode`、`toString`、`copy`和多个`componentN` 方法。需要注意的是，data关键字不能和`abstract`、`inner`、和`sealed`一起使用。
+
+让我们具体来看一下这些方法。
+
