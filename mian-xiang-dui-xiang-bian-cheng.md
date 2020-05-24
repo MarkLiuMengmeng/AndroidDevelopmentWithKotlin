@@ -416,7 +416,7 @@ class User() : PhoneNumProvider {
 }
 ```
 
-**复写**（`override`）属性可以放在主构造器中：
+**重写**（`override`）属性可以放在主构造器中：
 
 ```kotlin
 class User(override val phoneNum: String) : PhoneNumProvider {
@@ -510,5 +510,110 @@ class Tester:A,B{
 Tester().test() // 打印结果：AB
 ```
 
+## 继承
 
+我们已经知道所有类型的父类型是`Any`，等同于Java中的`Object`。每个类都隐式或显式地继承`Any`：
+
+```kotlin
+class Animal // 隐式继承Any
+class Animal:Any // 显式继承Any
+```
+
+与Java不同的是，在Kotlin中每个类默认加上了`final`修饰符。由于多态的存在，参数可以传指定类型的子类型，意料之外的子类型传值可能会引起意外的行为。所以Kotlin引入了这个特性来增强继承方面的安全性。
+
+和Java一样，Kotlin也是单继承的。但继承不再使用`extends`关键字，而是`:`
+
+```kotlin
+class Animal
+class Tiger:Animal() //错误，final修饰的类无法被继承 
+```
+
+我们要使一个类可以被继承，要显式地加上`open`修饰符，它就像`final`的反义词：
+
+```kotlin
+open class Animal
+class Tiger:Animal() //正确
+```
+
+需要注意的是，类中的属性和方法默认也是`final`的，我们需要给每一个想要重写的成员加上`open`关键字：
+
+```kotlin
+open class Animal(){
+    open var name:String = "Unkown"
+    open fun eat(){}
+}
+class Tiger:Animal(){
+    override var name:String = "Tiger"
+    override fun eat(){
+        println("Tiger is eating")
+    }
+}
+```
+
+在上面`Animal`类中我们并不想实现`eat`方法，只是定义了一个行为，把它声明为抽象类是更好的方案。声明抽象成员和抽象类需要使用`abstract`关键字：
+
+```kotlin
+abstract class Animal(){
+    abstract var name:String // 用了abstract之后，不初始化变量
+    abstract fun eat() // 用了abstract之后，没有方法体
+}
+```
+
+这样修改之后，前面例子中的`Tiger`类依然是正确的。被`abstract`修饰的类和成员默认是`open`的，因为它们需要继承来实现具体的操作。
+
+{% hint style="info" %}
+**抽象类**（abstract class）和**接口**（interface）：
+
+**抽象类**：抽象类是使用`abstract`修饰符修饰的类，它只能用作基类不能实例化。
+
+* 抽象类中可以有抽象成员也可以有普通成员
+* 如果一个子类实现了父类（抽象类）的所有抽象方法，那么该子类可以不必是抽象类，否则就依然是抽象类
+* 抽象方法没有方法体，抽象属性不初始化变量
+
+**接口**：接口使用`interface`修饰符修饰，它也不能被实例化。
+
+* 一个类只能继承一个类，但是可以实现多个接口
+* 接口中的成员默认均是抽象的
+{% endhint %}
+
+## JvmOverloads注解
+
+我们前面在构造器一节提到Android中的`View`类使用的是伸缩式构造器模式。如果有时我们想自定义视图的话，我们的构造器可能是这样声明的：
+
+```kotlin
+class CustomView : View {
+    constructor(context: Context?) : this(context, null)
+    constructor(context: Context?, attrs: AttributeSet?) :this(context, attrs, 0)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr:Int) : 
+                super(context, attrs, defStyleAttr) {
+        //...
+    }
+}
+```
+
+这样的写法可以看到有许多冗余的代码，Kotlin的解决方案是使用`@JvmOverload`注解：
+
+```kotlin
+class CustomView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr)
+```
+
+该注解会告知编译器生成额外的JVM字节码构造器重载：
+
+```kotlin
+public CustomView(Context context) {
+    super(context);
+}
+public CustomView(Context context, @Nullable AttributeSet attrs) {
+    super(context, attrs);
+}
+public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+}
+```
+
+我们可以看到Kotlin在提升与Java的互操作性方面做出的努力。
 
