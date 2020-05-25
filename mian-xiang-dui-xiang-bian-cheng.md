@@ -720,3 +720,15 @@ print(productB == productC) // 打印结果: false
 
 默认情况下，编译器生成的`equals`方法比较的是声明在主构造器中的属性，这适用于大多数情况。如果我们需要自定义实现，我们可以重写`equals`方法，编译器不会再生成默认实现。
 
+### toString 方法
+
+默认生成的方法中含有所有包含在主构造器中的属性信息：
+
+```kotlin
+data class Product(var name:String, var price:Double)
+val productA = Product("Glove", 19.9)
+println(productA) // 打印结果：Product(name=Glove, price=19.9)
+```
+
+相比于普通类`toString`实现中的类名+内存地址（Product@28a418fc），我们可以在控制台或者日志中打印出更易读的信息。
+
