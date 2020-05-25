@@ -633,7 +633,7 @@ data class Product(var name: String, var price: Double)
 
 ### equals和hashCode方法
 
-在处理数据类时，我们经常需要比较两个实例是否**结构相等**（Structural equality），意思是验证它们是否包含同样的数据而非验证它们是否是同一个实例。常见的做法是使用`equals`方法：
+在处理数据类时，我们经常需要比较两个实例是否数据相等**据**，意思是验证它们是否包含同样的数据而非验证它们是否是同一个实例。常见的做法是使用`equals`方法：
 
 ```kotlin
 product.equals(product1)
@@ -648,5 +648,75 @@ product.equals(product1)
 
 重写`hashCode`方法的一般做法是让两个相等（相等根据具体的需求来定，完全相等或是结构相等甚至别的需求）的对象有一样的哈希码。
 
-我们来看一下上面Product类的
+我们来看一下上面`Product`类的Java实现：
+
+```kotlin
+public class Product {
+    private String name;
+    private Double price;
+    
+    public Product(String name, Double price) {
+        this.name = name;
+        this.price = price;
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = result + (price != null ? price.hashCode() : 0);
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product) o;
+        if (name != null ? !name.equals(product.name) :product.name != null) {
+            return false;
+        }
+        return price != null ? price.equals(product.price) :product.price == null;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Double getPrice() {
+        return price;
+    }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+}
+```
+
+在很早之前，使用Java需要手动编写所有的代码。现在，像Android Studio这样的现代IDE可以自动为我们生成这样的代码，但我们仍需要维护这些代码以确保它们在修改或重构之后能够正常工作。
+
+在Kotlin中，这个问题将迎刃而解，下面这个类的定义包含上面Java实现的所有方法，仅仅需要在普通类声明前加上`data`关键字：
+
+```kotlin
+data class Product(var name: String, var price: Double)
+```
+
+我们在使用**结构相等操作符**（Structural equality operator）`==`时，始终在幕后调用的是`equals`方法，有了如上定义之后：
+
+```kotlin
+val productA = Product("Glove", 19.9)
+val productB = Product("Glove", 19.9)
+val productC = Product("Earphone", 29.9)
+print(productA == productA) // 打印结果: true
+print(productA == productB) // 打印结果: true
+print(productB == productA) // 打印结果: true
+print(productA == productC) // 打印结果: false
+print(productB == productC) // 打印结果: false
+```
+
+默认情况下，编译器生成的`equals`方法比较的是声明在主构造器中的属性，这适用于大多数情况。如果我们需要自定义实现，我们可以重写`equals`方法，编译器不会再生成默认实现。
 
