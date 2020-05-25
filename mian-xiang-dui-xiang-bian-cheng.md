@@ -619,7 +619,7 @@ public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAtt
 
 ## 数据类
 
-我们在开发工作经常会创建一些用于存储数据的类（来自数据库或者服务器）。在Java中我们需要写出许多getter和setter，还经常会重写`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作也是一个问题。
+我们在开发工作经常会创建一些用于存储数据的类（存储来自数据库或者服务器的数据）。在Java中我们需要写出许多getter和setter，还经常会重写`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作仍然是一个问题。
 
 我们已经了解到Kotlin会为我们自动生成getter和setter方法。Kotlin实际上做了更多，我们可以使用`data`关键字来修饰一个类：
 
@@ -630,4 +630,23 @@ data class Product(var name: String, var price: Double)
 这样修饰后的类编译器会为我们自动生成相应的`equals`、`hashCode`、`toString`、`copy`和多个`componentN` 方法。需要注意的是，data关键字不能和`abstract`、`inner`、和`sealed`一起使用。
 
 让我们具体来看一下这些方法。
+
+### equals和hashCode方法
+
+在处理数据类时，我们经常需要比较两个实例是否**结构相等**（Structural equality），意思是验证它们是否包含同样的数据而非验证它们是否是同一个实例。常见的做法是使用`equals`方法：
+
+```kotlin
+product.equals(product1)
+```
+
+`equals`方法内部实现用到了`hashCode`方法，它们之间有一个**合约**（Contract）用法：
+
+* 如果两个对象相等，则它们必须具有相同的哈希码。
+* 如果两个对象具有相同的哈希码，则它们可以相等也可以不相等（因为我们可以根据需要比较其它字段）。
+
+所以，我们重写`equals`方法就必须重写`hashCode`方法，否则会出现意料之外的行为。如果我们只想重写`hashCode`方法，`equals`方法则不必重写。
+
+重写`hashCode`方法的一般做法是让两个相等（相等根据具体的需求来定，完全相等或是结构相等甚至别的需求）的对象有一样的哈希码。
+
+我们来看一下上面Product类的
 
