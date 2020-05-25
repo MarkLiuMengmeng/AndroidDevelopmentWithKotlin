@@ -627,7 +627,7 @@ public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAtt
 data class Product(var name: String, var price: Double)
 ```
 
-这样修饰后的类编译器会为我们自动生成相应的`equals`、`hashCode`、`toString`、`copy`和多个`componentN` 方法。需要注意的是，data关键字不能和`abstract`、`inner`、和`sealed`一起使用。
+这样修饰后的数据类编译器会为我们自动生成相应的`equals`、`hashCode`、`toString`、`copy`和多个`componentN` 方法。需要注意的是，data关键字不能和`abstract`、`inner`、和`sealed`一起使用。
 
 让我们具体来看一下这些方法。
 
@@ -730,5 +730,48 @@ val productA = Product("Glove", 19.9)
 println(productA) // 打印结果：Product(name=Glove, price=19.9)
 ```
 
-相比于普通类`toString`实现中的类名+内存地址（Product@28a418fc），我们可以在控制台或者日志中打印出更易读的信息。
+相比于普通类`toString`实现中的类名+内存地址（Product@28a418fc），我们可以在控制台或者日志中输出更易读的信息。
+
+### copy 方法
+
+默认情况下，数据类还会生成适当的copy方法，用于创建某个类的副本：
+
+```kotlin
+data class Product(var name:String, var price:Double)
+
+val productA = Product("Glove", 19.9)
+println(productA) // 打印结果：Product(name=Glove, price=19.9)
+val productB = productA.copy()
+println(productB) // 打印结果：Product(name=Glove, price=19.9)
+```
+
+`copy`方法中含有主构造器中对应的所有参数，我们还可以结合命名参数语法修改任意参数：
+
+```kotlin
+val productA = Product("Glove", 19.9)
+val productB = productA.copy(name = "Earphone")
+val productC = productA.copy(name = "Earphone",price = 39.9)
+println(productA) // 打印结果：Product(name=Glove, price=19.9)
+println(productB) // 打印结果：Product(name=Earphone, price=19.9)
+println(productC) // 打印结果：Product(name=Earphone, price=39.9)
+```
+
+`copy`方法产生的副本是浅拷贝（只复制当前对象，不复制对象中的对象），拷贝前后两个对象中的对象仍是共用一个：
+
+```kotlin
+data class Producer(val name:String,var address:String)
+data class Product(val name:String, val price:Double, val producer:Producer)
+
+val productA = Product("Glove", 19.9,Producer("A","China"))
+val productB = productA.copy()
+productA.producer.address = "America"
+println(productA) // 打印结果：Product(name=Glove, price=19.9, producer=Producer(name=A, address=America))
+println(productB) // 打印结果：Product(name=Glove, price=19.9, producer=Producer(name=A, address=America))
+```
+
+在属性声明中使用不可变型变量`val`，然后通过其副本修改数据，这样做的好处是自由地在多线程操作中共享数据，以防止可变型变量`var`在多线程操作中潜在的错误共享错误。
+
+### componentN 方法与解构声明
+
+
 
