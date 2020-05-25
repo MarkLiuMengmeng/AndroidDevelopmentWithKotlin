@@ -829,5 +829,136 @@ for ((name, price) in products) {
 
 需要注意的是，在本节开始我们说了，这些方法是加上`data`关键字的类编译器才会自动生成的，所以别忘了这一点。
 
+## 操作符重载
 
+Kotlin有一组预定义的运算符，有固定的符号表示形式（例如+， 和\*）和固定的优先级。大多数运算符被直接转换为方法调用，一些被翻译成复杂一些的表达式，详见下表：
+
+| 操作符示例 | 对应的方法/表达式 |
+| :--- | :--- |
+| `a + b` | `a.plus(b)` |
+| `a - b` | `a.minus(b)` |
+| `a * b` | `a.times(b)` |
+| `a / b` | `a.div(b)` |
+| `a % b` | `a.rem(b`\) |
+| `a..b` | `a.rangeTo(b)` |
+| `a += b` | `a.plusAssign(b)` |
+| `a -= b` | `a.minusAssign(b)` |
+| `a *= b` | `a.timesAssign(b)` |
+| `a /= b` | `a.divAssign(b)` |
+| `a %= b` | `a.remAssign(b)` |
+| `a++` | `a.inc()` |
+| `a--` | `a.dec()` |
+| `a in b` | `b.contains(a)` |
+| `a !in b` | `!b.contains(a)` |
+| `a[i]` | `a.get(i)` |
+| `a[i, j]` | `a.get(i, j)` |
+| `a[i, ..., n]` | `a.get(i, ..., n)` |
+| `a[i] = b` | `a.set(i, b)` |
+| `a[i, j] = b` | `a.set(i, j, b)` |
+| `a[i, ..., n] = b` | `a.set(i_1, ..., i_n, b)` |
+| `a()` | `a.invoke()` |
+| `a(i)` | `a.invoke(i)` |
+| `a(i, j)` | `a.invoke(i, j)` |
+| `a(i, ..., n)` | `a.invoke(i, ..., n)` |
+| `a == b` | `a?.equals(b) ?: (b === null)` |
+| `a != b` | `!(a?.equals(b) ?: (b === null))` |
+| `a > b` | `a.compareTo(b) > 0` |
+| `a < b` | `a.compareTo(b) < 0` |
+| `a >= b` | `a.compareTo(b) >= 0` |
+| `a <= b` | `a.compareTo(b) <= 0` |
+
+当我们使用某个特定的操作符时（左列），编译器会将其转换为对应的函数调用（右列）。
+
+我们可以用`operator`关键字自定义对应的函数实现，这样的自定义实现称作**操作符重载**（Operator overloading）。
+
+让我们试着在一个`Point`类中重载一个`+`操作符：
+
+```kotlin
+data class Point(var x: Double, var y: Double) {
+    operator fun plus(point: Point) = Point(x + point.x, y+ point.y)
+}
+
+var p1 = Point(5.8, 2.7)
+var p2 = Point(6.5, 4.2)
+println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
+```
+
+通过重载`plus`方法，当每次使用`+`操作符时，都会调用相应的操作符方法（`plus`），在底层编译器会生成函数调用的方法：
+
+```kotlin
+p1.plus(p2)
+```
+
+在我们上面的例子中我们的`plus`的参数列表用了`Point`类型，但这并不是必须的，操作符重载并不像方法重写那样需要继承一个类，还有固定的参数和固定的数据类型，操作符重载对应的方法参数列表并不是固定的。不过，有些方法的返回值类型是固定的，比如`plusAssign`对应的`+=`操作符是一个语句，返回值类型需要是`Unit`。所以运算符重载的方法定义相当灵活，我们可以定义多个相同名称不同参数的重载方法：
+
+```kotlin
+data class Point(var x: Double, var y: Double) {
+    operator fun plus(point: Point) = Point(x + point.x, y +point.y)
+    operator fun plus(increment:Double) = Point(x + increment, y + increment)
+    operator fun plus(prefix:String) = "$prefix ${this.toString()}"
+}
+
+var p1 = Point(5.8, 2.7)
+var p2 = Point(6.5, 4.2)
+println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
+println(p1 + 2.4) //打印结果：Point(x=8.2, y=5.1)
+println(p1 + "Detail:") // 打印结果：Detail: Point(x=5.8, y=2.7)
+```
+
+基本的操作符对应有组合操作符（`+`对应`+=`），只要定义了基本操作符的重载方法，组合操作符也就无需定义了，它会自动调用：
+
+```kotlin
+var p1 = Point(5.8, 2.7)
+var p2 = Point(6.5, 4.2)
+p1+=p2
+println(p1) //打印结果：Point(x=12.3, y=6.9)
+```
+
+如果我们同时定义了相同参数的`plus`和`plusAssign`重载方法，再使用`+=`操作符时编译器会抛出错误，因为编译器不知道应该调用哪个方法：
+
+```kotlin
+data class Point(var x: Double, var y: Double) {
+    operator fun plus(point: Point) = Point(x + point.x, y + point.y)
+    operator fun plusAssign(point:Point) {
+        x += point.x
+        y += point.y
+    }
+}
+
+var p1 = Point(5.8, 2.7)
+var p2 = Point(6.5, 4.2)
+var p3 = p1+p2 //正确
+p1+=p2  //错误，Assignment operations ambiguity
+```
+
+我们最好只定义基本操作符。如果真的有需求需要同时定义，记得要使用不同的参数。
+
+有个好消息是，虽然Java不支持操作符重载，但由于Kotlin和Java良好的互操作性，Kotlin可以使用Java中满足要求（方法名、返回值，可见性等）的操作符重载：
+
+```kotlin
+// Java
+public class Point {
+    private final int x;
+    private final int y;
+    
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public Point plus(Point point) { //不需要operator关键字，因为Java不支持
+        return new Point(point.getX() + x, point.getY() + y);
+    }
+}
+//Kotlin
+var p1 = Point(5.8, 2.7)
+var p2 = Point(6.5, 4.2)
+println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
+```
 
