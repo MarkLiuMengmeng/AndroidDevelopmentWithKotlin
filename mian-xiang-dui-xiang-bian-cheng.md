@@ -771,7 +771,63 @@ println(productB) // 打印结果：Product(name=Glove, price=19.9, producer=Pro
 
 在属性声明中使用不可变型变量`val`，然后通过其副本修改数据，这样做的好处是自由地在多线程操作中共享数据，以防止可变型变量`var`在多线程操作中潜在的错误共享错误。
 
-### componentN 方法与解构声明
+### 解构声明与componentN 方法
+
+有些时候我们需要将对象中的属性值赋给单个变量进行操作，我们可以使用一种叫做**解构声明**（Destructuring declaration）的语法：
+
+```kotlin
+data class Product(val name:String, val price:Double)
+
+val productA = Product("Glove", 19.9)
+var (name,price) = productA
+println(name) // 打印结果：Glove
+println(price) // 打印结果：19.9
+```
+
+解构声明允许我们一次性声明和赋值多个变量。上面的代码会创建两个可变型变量`name`和`price`并赋值。编译器生成的代码像下面这样：
+
+```kotlin
+val productA = Product("Glove", 19.9)
+var name = productA.component1()
+var price = productA.component2()
+```
+
+每一个定义在主构造器的属性编译器都会生成一个`componentN`方法，其中N是在主构造器中声明的顺序，前面的`Product`类中`name`对应的是`component1`，`price`对应的是`component2`。我们可以直接调用它们：`var name = productA.component1()`，但是这样的代码意义不明且难以维护。我们还是将他们留给编译器，我们使用阅读性更强的解构声明。
+
+我们还可以在解构声明中用`_`来将不需要的值省略：
+
+```kotlin
+val productA = Product("Glove", 19.9)
+var (_,price) = productA
+println(price) // 打印结果：19.9
+```
+
+我们还可以在字符串中使用解构声明：
+
+```kotlin
+val file = "MainActivity.kt"
+val (name, extension) = file.split(".", limit = 2)
+println(name) // 打印结果：MainActivity
+println(extension) //打印结果：kt
+```
+
+还可以在遍历中使用：
+
+```kotlin
+val products = listOf(
+    Product("Glove", 19.9),
+    Product("Earphone", 39.9)
+)
+println("Products:")
+for ((name, price) in products) {
+    println("$name :$price")
+}
+//打印结果：Products:
+//         Glove :19.9
+//         Earphone :39.9
+```
+
+需要注意的是，在本节开始我们说了，这些方法是加上`data`关键字的类编译器才会自动生成的，所以别忘了这一点。
 
 
 
