@@ -962,3 +962,64 @@ var p2 = Point(6.5, 4.2)
 println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
 ```
 
+## 对象声明（Object declaration）
+
+在开发工作中我们经常会使用单例模式，单例模式可以帮助我们控制实例的数目，节约系统资源。在Java中通常的实现方式像这样：
+
+```kotlin
+public class Singleton {
+    private static Singleton instance = null;
+    
+    private Singleton(){}
+    
+    private synchronized static void createInstance() {//synchronized关键字保证线程安全
+        if (instance == null) {
+            instance = new Singleton();
+        }
+    }
+    public static Singleton getInstance() {
+        if (instance == null) createInstance();
+        return instance;
+    }
+}
+```
+
+这种解决方案有的大多是固定的部分，而我们每次实现的时候都要全部写出来，代码有冗余。Kotlin有一种特殊的语言结构叫做对象声明，可以简化单例的创建。
+
+或许你会好奇为何根对象在Kotlin中变成了`Any`而不是`Object`，请考虑一下两点：
+
+* Kotlin不仅支持面向对象编程，而且支持函数式编程
+* 对象声明使用了`object`关键字
+
+对象声明和类的声明很像，只是把`class`关键字替换为`object`关键字：
+
+```kotlin
+object Singleton
+```
+
+我们可以像普通类那样像其中添加成员：
+
+```kotlin
+object SQLiteSingleton {
+     val TAG = "SQLiteSingleton"
+     fun getAllUsers(): List<User> {
+         //...
+     }
+}
+```
+
+这些成员的访问像访问Java中静态成员那样：
+
+```kotlin
+SQLiteSingleton.TAG
+SQLiteSingleton.getAllUsers()
+```
+
+像Java中实现的单例模式一样，它是使用时才会被初始化的。它可以被嵌套在其他对象声明中或者非内部类中，但它不能赋值给变量。
+
+{% hint style="info" %}
+在Kotlin中，我们可以感觉到对象这个术语又增加了新的含义：一种特殊的语言结构。
+{% endhint %}
+
+
+
