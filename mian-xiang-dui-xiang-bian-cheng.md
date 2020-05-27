@@ -1021,5 +1021,85 @@ SQLiteSingleton.getAllUsers()
 在Kotlin中，我们可以感觉到对象这个术语又增加了新的含义：一种特殊的语言结构。
 {% endhint %}
 
+## 对象表达式（Object expression）
+
+使用Java在Android开发的时候经常会使用到匿名类（类名省略）的用法：
+
+```java
+OnClickListener mClickListener = new View.OnClickListener(){       
+     @Override
+     public void onClick(View v){
+         System.out.pritln("Click");
+     }
+};
+```
+
+匿名类实现的功能和具名类是一样的，但是用匿名类更加简洁方便。形式上像是实例化了一个接口，但是接口是不能实例化的，它实际上是一个实现了接口的类，只是类名省略了，我们仍需要重写所实现接口中的方法后才能使用。
+
+我们本章一开始就提到了在Kotlin中实例化对象不再使用`new`关键字，那么我们应该如何使用像Java一样使用简洁的匿名类语法呢？
+
+我们可以使用对象表达式来实现：
+
+```kotlin
+val mClickListener = object : View.OnClickListener{
+     override fun onClick(v : View){
+         println("Click")
+     }
+};
+```
+
+不仅可以用匿名类实现接口，也可以继承类：
+
+```kotlin
+val broadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        println("Got a broadcast ${intent.action}")
+    }
+}
+```
+
+{% hint style="info" %}
+ **适配器模式\(Adapter Pattern\)**：将一个接口转换成客户希望的另一个接口，使接口不兼容的类可以一起工作，其别名为包装器\(Wrapper\)。
+{% endhint %}
+
+假设我们像实现一个视频播放功能，我们可能定义这样的接口和方法来播放视频：
+
+```kotlin
+interface Player {
+    fun play()
+}
+
+fun playWith(player: Player) {
+    print("playing video")
+    player.play()
+}
+```
+
+假设我们使用的第三方的类库，其中的视频播放类提供了`play`方法：
+
+```kotlin
+open class VideoPlayer {
+    fun play() {
+        println("Play videos")
+    }
+}
+```
+
+现在我们的问题是第三方的接口并没有实现我们的`Player`接口，也就不能和我们定义的`playWith`方法一起工作。我们知道适配器模式常用的实现方式就是继承所有需要的类和接口，不能继承的类采用代理。我们使用最新认识的对象表达式可以同时继承类和接口，很方便地实现适配器模式：
+
+```kotlin
+val player = object: VideoPlayer(), Player {}
+playWith(player)
+```
+
+这一工作如果使用Java来做将会多写许多代码。同时，对象表达式中可以像普通类一样定义变量，像普通类那样访问：
+
+```kotlin
+val player = object: VideoPlayer(), Player {
+    val length = 0
+}
+println(player.length) // 打印结果：0
+```
+
 
 
