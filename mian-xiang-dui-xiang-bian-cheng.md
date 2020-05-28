@@ -1101,5 +1101,22 @@ val player = object: VideoPlayer(), Player {
 println(player.length) // 打印结果：0
 ```
 
+## 伴随对象（Companion object）
+
+前面的对象声明展示了如何像Java那样定义和访问静态成员。Kotlin还允许我们定义一种与类关联的对象，这个对象也是单例的，并与所有关联类的实例分享其状态。该对象是所关联类的伴随对象，对应的，被关联的类是该对象的伴随类。
+
+![](.gitbook/assets/chapter4_1.jpg)
+
+前面的图示表示了三个`Tiger`类的实例关联同一个伴随对象。这样的示例用代码表示如下：
+
+```kotlin
+class Tiger {
+    companion object {}//声明伴随对象的语法
+}
+val tiger1 = Tiger()
+val tiger2 = Tiger()
+val tiger3 = Tiger()
+```
+
 
 
