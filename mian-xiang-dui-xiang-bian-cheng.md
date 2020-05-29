@@ -376,6 +376,27 @@ val user1 = User("Mamun",18)
 val user2 = User(gender = "Female")
 ```
 
+### 初始化块
+
+除了构造器之外，我们还有一种代码结构用于类的初始化，那就是初始化块，使用`init`关键字，在类的实例化过程中，会先执行初始化块再执行构造器：
+
+```kotlin
+open class Parent {
+    constructor() {
+        println("Parent constructor")
+    }
+    init {
+        println("Parent initialization block")
+    }
+}
+
+Parent()
+//打印结果: Parent initialization block
+//         Parent constructor
+```
+
+它等价于Java中的初始化块。初始化块和构造器的相似之处在于都可以定义多个，都用于类的初始化工作，区别在于：构造器仅会选择一个执行，代码块每一个都会执行。
+
 ## 接口
 
 在Kotlin中使用`interface`关键字定义接口：
