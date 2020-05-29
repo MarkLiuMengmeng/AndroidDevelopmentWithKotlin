@@ -1211,3 +1211,102 @@ A() // 打印结果: Inatance created
 
 伴随对象还可以像普通类那样包含函数，实现接口，以及继承类。我们之前用Java实现的静态成员大多可以通过伴随对象实现，便于管理且提高了可读性。
 
+## 枚举类
+
+枚举类型是一组命名值组成的数据类型。定义一个枚举类型，我们需要将`enum`关键字添加到类声明中：
+
+```kotlin
+enum class Suit {
+    HEART,
+    SPADE,
+    CLUB,
+    DIAMOND,
+}
+val hostSuit = Suit.HEART
+```
+
+和Java一样，将`String`转化为枚举类型使用`valueOf`方法，或者使用Kotlin辅助方法`enumValueOf`：
+
+```kotlin
+val selectedSuit1 = Suit.valueOf("HEART")
+val selectedSuit2 = enumValueOf<Suit>("HEART")
+
+println(selectedSuit1 == Suit.HEART) // 打印结果：true
+println(selectedSuit2 == Suit.HEART) // 打印结果：true
+```
+
+和Java一样获取枚举类中的所有值使用`values`方法，或者使用Kotlin辅助方法`enumerateValues`：
+
+```kotlin
+for (suit in Suit.values()) {
+    println("name: ${it.name}, ordinal: ${it.ordinal}")
+}
+for (suit in enumValues<Suit>()) {
+    println("name: ${it.name}, ordinal: ${it.ordinal}")
+}
+
+// 打印结果：
+// name: HEART, ordinal: 0
+// name: SPADE, ordinal: 1
+// name: CLUB, ordinal: 2
+// name: DIAMOND, ordinal: 3
+```
+
+枚举类同样可以有自己的构造器，假设我们需要一张图片来代表它们的形状：
+
+```kotlin
+enum class Suit (val iamgeUrl:String){
+    HEART("https://www.xxxx.com/suit=heart"),
+    SPADE("https://www.xxxx.com/suit=spade"),
+    CLUB("https://www.xxxx.com/suit=club"),
+    DIAMOND("https://www.xxxx.com/suit=diamond")
+}
+```
+
+我们还可以在其中定义方法，对每个枚举值都有效：
+
+```kotlin
+enum class Suit (val imageUrl:String){
+    HEART("https://www.xxxx.com/suit=heart"),
+    SPADE("https://www.xxxx.com/suit=spade"),
+    CLUB("https://www.xxxx.com/suit=club"),
+    DIAMOND("https://www.xxxx.com/suit=diamond");
+    
+    fun downloadImage() {
+        println("downloading image from $imageUrl")
+        //...
+    }
+}
+
+Suit.DIAMOND.downloadImage() // 打印结果：downloading image from https://www.xxxx.com/suit=diamond
+```
+
+请注意，`DIAMOND`定义后面少见地用到了分号，这是为了区分枚举值定义和成员定义。
+
+我们还可以定义抽象成员，然后在每个枚举值定义中重写：
+
+```kotlin
+enum class Suit (val imageUrl:String){
+    HEART("https://www.xxxx.com/suit=heart"){
+        override val chineseName = "红桃"
+    },
+    SPADE("https://www.xxxx.com/suit=spade"){
+        override val chineseName = "黑桃"
+    },
+    CLUB("https://www.xxxx.com/suit=club"){
+        override val chineseName = "梅花"
+    },
+    DIAMOND("https://www.xxxx.com/suit=diamond"){
+        override val chineseName = "方片"
+    };
+    
+    abstract val chineseName:String
+    fun downloadImage() {
+        println("downloading image from $imageUrl")
+        //...
+    }
+}
+```
+
+### 中缀调用
+
