@@ -1118,5 +1118,75 @@ val tiger2 = Tiger()
 val tiger3 = Tiger()
 ```
 
+在伴随对象中定义的成员可以像访问Java静态方法那样访问它，这是一个定义与一个类相关而不是每个实例都相关的行为的好地方。比如工厂方法、Activity的请求码，放置配置或者数据对应的Key等等。
 
+让我们看一个常见的定义`start`方法的例子：
+
+```kotlin
+//MainActivity.kt
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val user = intent.getParcelableExtra<User>(KEY_USER) //取得数据
+        //...
+    }
+    
+    companion object {
+        const val KEY_USER = "user" 
+        fun start(context: Context, user: User) { // 可以像访问静态方法那样访问该方法
+            val intent = Intent(context,MainActivity::class.java)
+            intent.putExtra(KEY_USER , user) // 放入数据
+            context.startActivity(intent)
+        }
+    }
+}
+// 使用示例
+MainActivity.start(context, user)
+```
+
+我们可以看到我们可以在`Acticity`创建之前就调用`start`方法，正如我们经常在Java中使用的静态方法。我们把它与所应用的类关联起来显然变得更易读和管理了。伴随类可以随意使用伴随对象的成员，伴随对象却不能随意使用伴随类的成员，就像在Java中静态成员不能使用非静态成员那样。
+
+伴随对象在底层实现中存在一个类`Companion`，我们可以在调用链中加上这个类名，但在Kotlin中一般不这么做（代码冗余），而在Java中需要这么调用：
+
+```kotlin
+MainActivity.Companion.start(context, user)
+```
+
+伴随对象是延迟加载的，当你第一次访问它的时候才会创建：
+
+```kotlin
+class A {
+    companion object {
+        var a: Int = 0
+        init {
+            println("companion object created")
+        }
+    }
+}
+//使用示例
+A.a // 打印结果: companion object created
+```
+
+当类实例化时无论你是否访问了伴随对象的成员，伴随对象都会创建且会首先创建，创建之后再次实例化类就不会再创建伴随对象，所有的类实例共享一个伴随对象：
+
+```kotlin
+class A {
+    init {
+        println("Inatance created")
+    }
+    companion object {
+        var a: Int = 0
+        init {
+            println("companion object created")
+        }
+    }
+}
+//使用示例
+A()
+// 打印结果: companion object created
+//          Inatance created
+A() // 打印结果: Inatance created
+```
+
+伴随对象还可以像普通类那样包含函数，实现接口，以及继承类。我们之前用Java实现的静态成员大多可以通过伴随对象实现，便于管理且提高了可读性。
 
