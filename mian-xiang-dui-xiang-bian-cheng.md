@@ -1310,3 +1310,76 @@ enum class Suit (val imageUrl:String){
 
 ### 中缀调用
 
+中缀调用是一种特殊的函数调用方式，更接近自然语言。我们在第二章的时候介绍Pair类型的时候见过：
+
+```kotlin
+var pair = "Everest" to 8848
+```
+
+本质上，它还是一种函数调用，只不过用了不同的语法，我们仍然可以用`.`来进行常规调用：
+
+```kotlin
+val mountain = "Everest";
+var pair = mountain.to(8848)
+```
+
+之所以把中缀调用介绍放在了本节，是为了和枚举类合起来举例，我们以标准扑克牌52张牌（4种花色13个牌等）为例，让我们看看能达到怎样的效果。
+
+首先让我们枚举花色和牌等：
+
+```kotlin
+enum class Suit {
+    HEART,
+    SPADE,
+    CLUB,
+    DIAMOND
+}
+enum class Rank {
+    TWO, THREE, FOUR, FIVE,SIX, SEVEN, 
+    EIGHT, NINE,TEN, JACK, QUEEN, KING, ACE
+}
+```
+
+那么一张扑克牌就可以用牌等和花色来表示：
+
+```kotlin
+data class Card(val rank: Rank, val suit: Suit)
+```
+
+接下来让我们在枚举类`Rank`中自定义一个中缀调用函数，使用`infix`关键字：
+
+```kotlin
+enum class Rank {
+    TWO, THREE, FOUR, FIVE,SIX, SEVEN,
+    EIGHT, NINE,TEN, JACK, QUEEN, KING, ACE;
+    
+    infix fun of(suit: Suit) = Card(this, suit)
+}
+```
+
+那么我们可以用非常接近自然语言的方式表示一张扑克牌：
+
+```kotlin
+val card = Rank.FIVE of Suit.HEART
+//甚至可以再缩短语法
+import Rank.FIVE
+import Suit.HEART
+
+val card = FIVE of HEART
+```
+
+我们可以看到，扑克牌的表示变得非常简单、易读并且是类型安全的，我们不必担心因为失误创建了错误的卡牌。
+
+下面三种表示方式可以达到一样的效果：
+
+```kotlin
+import Rank.FIVE
+import Suit.HEART
+
+val card1 = FIVE of HEART // 中缀调用
+val card2 = FIVE.of(HEART) // 常规调用
+val card3 = Card(FIVE,HEART) // 构造器创建
+```
+
+那么中缀调用显而易见的优点是它的可读性，有些时候往我们的函数前加一个`infix`，可能会使我们的维护工作更加轻松。
+
