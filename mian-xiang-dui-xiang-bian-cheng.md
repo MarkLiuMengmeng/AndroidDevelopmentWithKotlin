@@ -1403,17 +1403,17 @@ Kotlin支持四种类型的可见性修饰符：`private`、`protected`、`publi
 
 `protected`：顶层元素不可使用该修饰符
 
-`internal`：在同一模组中任何地方可见，在同一模组中相当于`public`修饰符，不同模组则不可见
+`internal`：在同一模块中任何地方可见，在同一模块中相当于`public`修饰符，不同模块则不可见
 
 {% hint style="info" %}
-**模组**（Module）是指一同编译的代码文件集合，比如：
+**模块**（Module）是指一同编译的代码文件集合，比如：
 
-* IntelliJ IDEA 模组
+* IntelliJ IDEA 模块
 * Maven 项目
 * Gradle 源代码集（例外是 `test` 源代码集可以访问`main`的`internal`声明）
 * 一次Ant任务执行所编译的一套文件
 
-模组化的程序能够更好地分散职责，加速构建，因为仅需要重新编译修改过的模组。
+模块化的程序能够更好地分散职责，加速构建，因为仅需要重新编译修改过的模块。
 {% endhint %}
 
 

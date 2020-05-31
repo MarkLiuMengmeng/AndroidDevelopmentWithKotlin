@@ -302,7 +302,7 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 ![](.gitbook/assets/chapter1_3.jpg)
 
-最后选择所配置的**模组**（Module）的Kotlin版本：
+最后选择所配置的**模块**（Module）的Kotlin版本：
 
 ![](.gitbook/assets/chapter1_4.jpg)
 
@@ -310,7 +310,7 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 ![](.gitbook/assets/chapter1_5.jpg)
 
-这样，我们就可以在配置好的模组中编写Kotlin代码了。
+这样，我们就可以在配置好的模块中编写Kotlin代码了。
 
 ### 在新项目中使用Kotlin
 
