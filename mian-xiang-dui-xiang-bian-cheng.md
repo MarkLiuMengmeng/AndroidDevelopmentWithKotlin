@@ -358,7 +358,7 @@ user.setName("Mamun")
 user.setAge(27)
 ```
 
-* **建造者模式**（Builder pattern）：使用建造者对象（Builder）来逐步设置参数，每一步的设置都会返回当前生成的对象，最后使用一个无参的`build`方法完成对象的构造。建造者模式兼顾了伸缩式构造器模式的安全性和JavaBean模式的可读性，但是由于多了一个辅助对象的开销，某些情况下的性能会受到影响：
+* **构建者模式**（Builder pattern）：使用构建者对象（Builder）来逐步设置参数，每一步的设置都会返回当前生成的对象，最后使用一个无参的`build`方法完成对象的构造。构建者模式兼顾了伸缩式构造器模式的安全性和JavaBean模式的可读性，但是由于多了一个辅助对象的开销，某些情况下的性能会受到影响：
 
 ```kotlin
 Retrofit retrofit = new Retrofit.Builder()
