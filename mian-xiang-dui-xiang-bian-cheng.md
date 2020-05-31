@@ -437,7 +437,7 @@ class User() : PhoneNumProvider {
 }
 ```
 
-**重写**（`override`）属性可以放在主构造器中：
+**覆盖**（`override`）属性可以放在主构造器中：
 
 ```kotlin
 class User(override val phoneNum: String) : PhoneNumProvider {
@@ -556,7 +556,7 @@ open class Animal
 class Tiger:Animal() //正确
 ```
 
-需要注意的是，类中的属性和方法默认也是`final`的，我们需要给每一个想要重写的成员加上`open`关键字：
+需要注意的是，类中的属性和方法默认也是`final`的，我们需要给每一个想要覆盖的成员加上`open`关键字：
 
 ```kotlin
 open class Animal(){
@@ -640,7 +640,7 @@ public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAtt
 
 ## 数据类
 
-我们在开发工作经常会创建一些用于存储数据的类（存储来自数据库或者服务器的数据）。在Java中我们需要写出许多getter和setter，还经常会重写`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作仍然是一个问题。
+我们在开发工作经常会创建一些用于存储数据的类（存储来自数据库或者服务器的数据）。在Java中我们需要写出许多getter和setter，还经常会覆盖`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作仍然是一个问题。
 
 我们已经了解到Kotlin会为我们自动生成getter和setter方法。Kotlin实际上做了更多，我们可以使用`data`关键字来修饰一个类：
 
@@ -665,9 +665,9 @@ product.equals(product1)
 * 如果两个对象相等，则它们必须具有相同的哈希码。
 * 如果两个对象具有相同的哈希码，则它们可以相等也可以不相等（因为我们可以根据需要比较其它字段）。
 
-所以，我们重写`equals`方法就必须重写`hashCode`方法，否则会出现意料之外的行为。如果我们只想重写`hashCode`方法，`equals`方法则不必重写。
+所以，我们覆盖`equals`方法就必须覆盖`hashCode`方法，否则会出现意料之外的行为。如果我们只想覆盖`hashCode`方法，`equals`方法则不必覆盖。
 
-重写`hashCode`方法的一般做法是让两个相等（相等根据具体的需求来定，完全相等或是结构相等甚至别的需求）的对象有一样的哈希码。
+覆盖`hashCode`方法的一般做法是让两个相等（相等根据具体的需求来定，完全相等或是结构相等甚至别的需求）的对象有一样的哈希码。
 
 我们来看一下上面`Product`类的Java实现：
 
@@ -739,7 +739,7 @@ print(productA == productC) // 打印结果: false
 print(productB == productC) // 打印结果: false
 ```
 
-默认情况下，编译器生成的`equals`方法比较的是声明在主构造器中的属性，这适用于大多数情况。如果我们需要自定义实现，我们可以重写`equals`方法，编译器不会再生成默认实现。
+默认情况下，编译器生成的`equals`方法比较的是声明在主构造器中的属性，这适用于大多数情况。如果我们需要自定义实现，我们可以覆盖`equals`方法，编译器不会再生成默认实现。
 
 ### toString 方法
 
@@ -910,7 +910,7 @@ println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
 p1.plus(p2)
 ```
 
-在我们上面的例子中我们的`plus`的参数列表用了`Point`类型，但这并不是必须的，操作符重载并不像方法重写那样需要继承一个类，还有固定的参数和固定的数据类型，操作符重载对应的方法参数列表并不是固定的。不过，有些方法的返回值类型是固定的，比如`plusAssign`对应的`+=`操作符是一个语句，返回值类型需要是`Unit`。所以运算符重载的方法定义相当灵活，我们可以定义多个相同名称不同参数的重载方法：
+在我们上面的例子中我们的`plus`的参数列表用了`Point`类型，但这并不是必须的，操作符重载并不像方法覆盖那样需要继承一个类，还有固定的参数和固定的数据类型，操作符重载对应的方法参数列表并不是固定的。不过，有些方法的返回值类型是固定的，比如`plusAssign`对应的`+=`操作符是一个语句，返回值类型需要是`Unit`。所以运算符重载的方法定义相当灵活，我们可以定义多个相同名称不同参数的重载方法：
 
 ```kotlin
 data class Point(var x: Double, var y: Double) {
@@ -1055,7 +1055,7 @@ OnClickListener mClickListener = new View.OnClickListener(){
 };
 ```
 
-匿名类实现的功能和具名类是一样的，但是用匿名类更加简洁方便。形式上像是实例化了一个接口，但是接口是不能实例化的，它实际上是一个实现了接口的类，只是类名省略了，我们仍需要重写所实现接口中的方法后才能使用。
+匿名类实现的功能和具名类是一样的，但是用匿名类更加简洁方便。形式上像是实例化了一个接口，但是接口是不能实例化的，它实际上是一个实现了接口的类，只是类名省略了，我们仍需要覆盖所实现接口中的方法后才能使用。
 
 我们本章一开始就提到了在Kotlin中实例化对象不再使用`new`关键字，那么我们应该如何使用像Java一样使用简洁的匿名类语法呢？
 
@@ -1283,7 +1283,7 @@ Suit.DIAMOND.downloadImage() // 打印结果：downloading image from https://ww
 
 请注意，`DIAMOND`定义后面少见地用到了分号，这是为了区分枚举值定义和成员定义。
 
-我们还可以定义抽象成员，然后在每个枚举值定义中重写：
+我们还可以定义抽象成员，然后在每个枚举值定义中覆盖：
 
 ```kotlin
 enum class Suit (val imageUrl:String){
