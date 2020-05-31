@@ -90,7 +90,7 @@ class User {
 
 你或许会奇怪，上面并没有定义getter和setter方法，怎么说它们是等价的呢。实际上，Kotlin编译器会为我们自动生成默认的getter和setter方法，我们无需写任何代码。
 
-上面我们定义的构造器是**次构造器**（Secondary Constructor）。相对应的，自然有**主构造器**（Primary constructor），它定义在类头中。一个类可以有一个主构造器和多个次构造器，我们可以使用主构造器语法重新定义上面的类，代码会少一点点：
+上面我们定义的构造器是**次构造器**（Secondary Constructor）。相对应的，自然有**主构造器**（Primary constructor），它定义在类头中。一个类可以有一个主构造器和多个次构造器，我们可以使用主构造器语法重新定义上面的类，代码会少一点：
 
 ```kotlin
 class User constructor(name: String, age: Int) {
@@ -358,7 +358,7 @@ user.setName("Mamun")
 user.setAge(27)
 ```
 
-* **建造者模式**（Builder pattern）：使用建造者对象来逐步设置参数，每一步的设置都会返回当前生成的对象，最后使用一个无参的`build`方法完成对象的构造。建造者模式兼顾了伸缩式构造器模式的安全性和JavaBean模式的可读性，但是由于多了一个辅助对象的开销，某些情况下的性能会受到影响：
+* **建造者模式**（Builder pattern）：使用建造者对象（Builder）来逐步设置参数，每一步的设置都会返回当前生成的对象，最后使用一个无参的`build`方法完成对象的构造。建造者模式兼顾了伸缩式构造器模式的安全性和JavaBean模式的可读性，但是由于多了一个辅助对象的开销，某些情况下的性能会受到影响：
 
 ```kotlin
 Retrofit retrofit = new Retrofit.Builder()
@@ -1106,7 +1106,7 @@ open class VideoPlayer {
 }
 ```
 
-现在我们的问题是第三方的接口并没有实现我们的`Player`接口，也就不能和我们定义的`playWith`方法一起工作。我们知道适配器模式常用的实现方式就是继承所有需要的类和接口，不能继承的类采用代理。我们使用最新认识的对象表达式可以同时继承类和接口，很方便地实现适配器模式：
+现在我们的问题是第三方的接口并没有实现我们的`Player`接口，也就不能和我们定义的`playWith`方法一起工作。我们知道适配器模式常用的实现方式就是继承所有需要的类和接口，不能继承的类采用委托。我们使用最新认识的对象表达式可以同时继承类和接口，很方便地实现适配器模式：
 
 ```kotlin
 val player = object: VideoPlayer(), Player {}
