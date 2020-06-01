@@ -27,14 +27,14 @@ User user = new User()
 
 ## 属性
 
-一个**属性**（Property）由一个**幕后字段**（Backing field）和它的**访问器**（Accessor）组成。访问器指的是getter和setter。在Kotlin中，属性可以定义在顶层（文件中），也可以作为一个类的成员。
+一个**属性**（property）由一个**幕后字段**（backing field）和它的**访问器**（accessor）组成。访问器指的是getter和setter。在Kotlin中，属性可以定义在顶层（文件中），也可以作为一个类的成员。
 
 ```kotlin
 //Test.kt
 val name:String //定义在顶层的属性
 ```
 
-在Java中，我们考虑到类的**封装**（Encapsulation），常见的做法是把字段设为私有（`private`），把访问器（getter和setter）设为公有。
+在Java中，我们考虑到类的**封装**（encapsulation），常见的做法是把字段设为私有（`private`），把访问器（getter和setter）设为公有。
 
 {% hint style="info" %}
 Java中getter和setter的约定：
@@ -90,7 +90,7 @@ class User {
 
 你或许会奇怪，上面并没有定义getter和setter方法，怎么说它们是等价的呢。实际上，Kotlin编译器会为我们自动生成默认的getter和setter方法，我们无需写任何代码。
 
-上面我们定义的构造器是**次构造器**（Secondary Constructor）。相对应的，自然有**主构造器**（Primary constructor），它定义在类头中。一个类可以有一个主构造器和多个次构造器，我们可以使用主构造器语法重新定义上面的类，代码会少一点：
+上面我们定义的构造器是**次构造器**（secondary constructor）。相对应的，自然有**主构造器**（primary constructor），它定义在类头中。一个类可以有一个主构造器和多个次构造器，我们可以使用主构造器语法重新定义上面的类，代码会少一点：
 
 ```kotlin
 class User constructor(name: String, age: Int) {
@@ -105,7 +105,7 @@ class User constructor(name: String, age: Int) {
 }
 ```
 
-上面我们使用`init`关键字在**初始化块**（Initializer block）中进行初始化操作，初始化块会在类创建时执行，从而完成我们想要的赋值等操作。我们如果不需要其他操作（如上面例子中的打印语句），我们可以直接复制给变量来简化代码：
+上面我们使用`init`关键字在**初始化块**（initializer block）中进行初始化操作，初始化块会在类创建时执行，从而完成我们想要的赋值等操作。我们如果不需要其他操作（如上面例子中的打印语句），我们可以直接复制给变量来简化代码：
 
 ```kotlin
 class User constructor(name: String, age: Int) {
@@ -120,7 +120,7 @@ class User constructor(name: String, age: Int) {
 class User constructor (var name: String, var age: Int)
 ```
 
-如果主构造器没有任何注解（如`@Inject`），没有**可见性修饰符**（Visibility modifier）。这样`constructor`关键字也可以省略：
+如果主构造器没有任何注解（如`@Inject`），没有**可见性修饰符**（visibility modifier）。这样`constructor`关键字也可以省略：
 
 ```kotlin
 class User (var name: String, var age: Int)
@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-这时候确保它非空就是我们程序员的责任了，如果在未被初始化时访问它，会抛出**UninitializedPropertyAccessException**。
+这时候确保它非空就是我们程序员的责任了，如果在未被初始化时访问它，会抛出`UninitializedPropertyAccessException`。
 
 延迟初始化的应用场景很常见，不仅出现在视图相关的变量中，还经常出现在依赖注入库、单元测试库等的使用中：
 
@@ -660,7 +660,7 @@ data class Product(var name: String, var price: Double)
 product.equals(product1)
 ```
 
-`equals`方法内部实现用到了`hashCode`方法，它们之间有一个**合约**（Contract）用法：
+`equals`方法内部实现用到了`hashCode`方法，它们之间有一个**合约**（contract）用法：
 
 * 如果两个对象相等，则它们必须具有相同的哈希码。
 * 如果两个对象具有相同的哈希码，则它们可以相等也可以不相等（因为我们可以根据需要比较其它字段）。
@@ -726,7 +726,7 @@ public class Product {
 data class Product(var name: String, var price: Double)
 ```
 
-我们在使用**结构相等操作符**（Structural equality operator）`==`时，始终在幕后调用的是`equals`方法，有了如上定义之后：
+我们在使用**结构相等操作符**（structural equality operator）`==`时，始终在幕后调用的是`equals`方法，有了如上定义之后：
 
 ```kotlin
 val productA = Product("Glove", 19.9)
@@ -890,7 +890,7 @@ Kotlin有一组预定义的运算符，有固定的符号表示形式（例如+�
 
 当我们使用某个特定的操作符时（左列），编译器会将其转换为对应的函数调用（右列）。
 
-我们可以用`operator`关键字自定义对应的函数实现，这样的自定义实现称作**操作符重载**（Operator overloading）。
+我们可以用`operator`关键字自定义对应的函数实现，这样的自定义实现称作**操作符重载**（operator overloading）。
 
 让我们试着在一个`Point`类中重载一个`+`操作符：
 
@@ -1080,7 +1080,7 @@ val broadcastReceiver = object : BroadcastReceiver() {
 ```
 
 {% hint style="info" %}
- **适配器模式\(Adapter Pattern\)**：将一个接口转换成客户希望的另一个接口，使接口不兼容的类可以一起工作，其别名为包装器\(Wrapper\)。
+ **适配器模式\(Adapter pattern\)**：将一个接口转换成客户希望的另一个接口，使接口不兼容的类可以一起工作，其别名为包装器\(Wrapper\)。
 {% endhint %}
 
 假设我们像实现一个视频播放功能，我们可能定义这样的接口和方法来播放视频：
@@ -1385,7 +1385,7 @@ val card3 = Card(FIVE,HEART) // 构造器创建
 
 ## 可见性修饰符（访问修饰符）
 
-Kotlin支持四种类型的可见性修饰符：`private`、`protected`、`public`、和`internal`。Kotlin与Java在这方面的最大区别就是Kotlin的默认可见性修饰符是`public`，而Java是`default`（包内可见），它们在声明中都是可以省略的。根据顶层元素和成员元素的不同，修饰符产生的效果也不一样。
+**可见性修饰符**（visibility modifier），也叫访问修饰符（access modifier）。Kotlin支持四种类型的可见性修饰符：`private`、`protected`、`public`、和`internal`。Kotlin与Java在这方面的最大区别就是Kotlin的默认可见性修饰符是`public`，而Java是`default`（包内可见），它们在声明中都是可以省略的。根据顶层元素和成员元素的不同，修饰符产生的效果也不一样。
 
 {% hint style="info" %}
 顶层元素和成员元素的区分在于其声明的位置：
@@ -1397,16 +1397,16 @@ Kotlin支持四种类型的可见性修饰符：`private`、`protected`、`publi
 
 首先看可见性修饰符对顶层元素所起的效果：
 
-`public`：元素在任何地方可见
+`public`：元素在任何文件中可见
 
 `private`：元素在所声明的代码文件中可见
 
 `protected`：顶层元素不可使用该修饰符
 
-`internal`：在同一模块中任何地方可见，在同一模块中相当于`public`修饰符，不同模块则不可见
+`internal`：在同一模块中任何文件中可见，在同一模块中相当于`public`修饰符，不同模块则不可见
 
 {% hint style="info" %}
-**模块**（Module）是指一同编译的代码文件集合，比如：
+**模块**（module）是指一同编译的代码文件集合，比如：
 
 * IntelliJ IDEA 模块
 * Maven 项目
@@ -1416,7 +1416,17 @@ Kotlin支持四种类型的可见性修饰符：`private`、`protected`、`publi
 模块化的程序能够更好地分散职责，加速构建，因为仅需要重新编译修改过的模块。
 {% endhint %}
 
+下面我们来看一个示例：
 
+```kotlin
+//example.kt
+public val version: String = "2.4.0" // 该属性为public，默认情况下（不加任何修饰符）也具有同样的效果
+private class User // 仅在定义的文件中可访问
+nternal interlog
+internal fun doSomething() { // 相同模块中可访问
+    println("doSomething")
+}
+```
 
 
 

@@ -25,7 +25,7 @@ fun sum(a:Int,b:Int):Int{ // 与Java不同,返回值的类型定义在函数名�
 ```
 
 {% hint style="info" %}
-在Java中，我们把类似的结构称作**方法**（Method），现在我们称作**函数**（Function）。它们之间的区别是这样的：
+在Java中，我们把类似的结构称作**方法**（method），现在我们称作**函数**（function）。它们之间的区别是这样的：
 
 * 函数是指依照函数名调用的一段代码。而方法是和类（对象）的实例所关联的一个函数，有时又叫它成员函数。
 * 简而言之，类内部的函数被称为方法。 一般说来，在Java中只有方法，但是学者有时会说静态Java方法实际上是函数。 在Kotlin中，我们定义函数可以不与任何对象相关联。
@@ -109,7 +109,7 @@ fun findDuplicates(originList<Int>): List<Int> {
 ```
 
 {% hint style="info" %}
-我们一直在使用参数这个术语，实际上它是有两种类型的：**形参**（Parameters）和**实参**（Arguments）。以我们第一节末尾使用的`sum`函数来说：
+我们一直在使用参数这个术语，实际上它是有两种类型的：**形参**（parameters）和**实参**（arguments）。以我们第一节末尾使用的`sum`函数来说：
 
 * 形参指的是在函数声明中定义的变量，指的是`sum`函数声明时声明的`a`和`b`。
 * 实参指的是在调用函数时传进去的实际值，指的是在调用`sum`函数时传入的`12`和`24`.
@@ -320,15 +320,15 @@ fun textFormatted(text: String, name: String) = text
 可以看到这个特性能让我们的代码更加简洁，更具可读性。单表达式函数在Android开发和函数式编程中的应用十分广泛。
 
 {% hint style="info" %}
-**命令式编程**（Imperative programming）与**声明式编程**（Declarative programming）
+**命令式编程**（imperative programming）与**声明式编程**（declarative programming）
 
 * **命令式编程**：这种编程范式描述的是执行一个操作所需的确切的步骤，非常直观。
-* **声明式编程**：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（Functional programming）和**逻辑编程**（Logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
+* **声明式编程**：这种编程范式描述的是预期的结果而不是实现的步骤，这意味着这种编程风格大多使用表达式或者声明，而非语句来完成。**函数式编程**（functional programming）和**逻辑编程**（logic programming）都被视作声明式编程风格，声明式编程通常比命令式编程更短，更具可读性。
 {% endhint %}
 
 ## 尾递归函数（Tail-recursive function）
 
-**递归函数**（Recursive function）是指调用自身的函数，比如：
+**递归函数**（recursive function）是指调用自身的函数，比如：
 
 ```kotlin
 fun getState(state: State, n: Int): State =
@@ -420,7 +420,7 @@ fun printTexts() {
 layoutInflater.createView(context,name,null,null)
 ```
 
-Kotlin提供了**默认参数**（Default argument）和**命名参数语法**（named argument syntax），事情就变得不一样了。
+Kotlin提供了**默认参数**（default argument）和**命名参数语法**（named argument syntax），事情就变得不一样了。
 
 ### 默认参数
 

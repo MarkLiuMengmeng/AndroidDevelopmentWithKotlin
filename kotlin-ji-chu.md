@@ -370,7 +370,7 @@ val fragment: String = "ProductFragment"
 val productFragment: ProductFragment? = fragment as? ProductFragment ?: ProductFragment()
 ```
 
-当我们转换Kotlin中的**基本类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
+当我们转换Kotlin中的**原生类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
 
 ```kotlin
 val name: String
@@ -880,7 +880,7 @@ outer@ for(value in intRange) {
 
 ## 异常（Exception）
 
-大多数的Java编程指南（如：Effective Java）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
+大多数的Java编程指南（如：《Effective Java》）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
 
 未检验异常是指未被`try`... `catch`代码块包围的异常，当这种异常发生时会沿着调用栈依次传递，如果未找到`try`... `catch`来处理此异常就会终止线程的执行。
 
