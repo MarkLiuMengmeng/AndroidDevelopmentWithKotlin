@@ -1454,5 +1454,74 @@ fun main() {
 * `protected`：在包含成员元素的类、接口及其子类型中可见，不适用于声明在对象中的成员，因为对象无法被继承
 * `internal`：和顶层元素类似，`internal`在同一模块中相当于`public`修饰符，不同模块中不可见
 
-让我们看看代码中的应用是怎样
+让我们在一个类中声明一些成员，看看可见性修饰符对其成员的影响：
+
+```kotlin
+class User {
+    public val name: String = "MamunLiu"
+    private var age:Int = 27
+    protected fun login() {}
+    internal fun logout() {}
+}
+//main.kt 和User类定义在同一个模块
+val user = User()
+println(user.name) // 打印结果：MamunLiu
+println(user.age) // 错误，age仅能在User类中访问
+user.login() // 错误，login方法仅能在User类及其子类中访问
+user.logout() // 可以访问
+//another.kt 和User类定义在不同模块
+val user = User()
+println(user.name) // 打印结果：MamunLiu
+println(user.age) // 错误，age仅能在User类中访问
+user.login() // 错误，login方法仅能在User类及其子类中访问
+user.logout() // 错误，logout方法仅能模块内部访问
+```
+
+我们前面说过，Kotlin的默认可见性修饰符是`public`，但若是声明为`protected`的成员在子类覆盖后默认仍是`protected`：
+
+```kotlin
+open class User {
+    protected open fun login() {}
+}
+class Admin() : User() {
+    override fun login() {}
+}
+
+val user = User()
+user.login() // 错误，login方法只能在User类及其子类中访问
+val admin = Admin()
+admin.login() // 错误，login方法只能在Admin类及其子类中访问
+```
+
+不过我们主动更改覆盖后成员的可见性修饰符，以便削弱访问限制满足我们的具体需求：
+
+```kotlin
+class Admin() : User() {
+    public override fun login() {}
+}
+
+val admin = Admin()
+admin.login() // 可以访问
+```
+
+如果我们想修改构造器的可见性，我们需要显式写出`constructor`关键字并加上可见性修饰符：
+
+```kotlin
+class User private constructor (){}
+```
+
+之前我们说过Kotlin编译器会为我们自动生成getter和setter方法，这些方法的可见性默认是和属性的可见性一致的，如果我们想修改这些方法的可见性，那么我们需要显式地写出来：
+
+```kotlin
+class User {
+    var name:String = "MamunLiu"
+    private set // 如果仅仅是修改setter可见性则无需写出函数体，编译器依旧会为我们自动生成
+}
+
+ User().name = "SuperMan" //错误，setter是private修饰符，仅能在User类中访问
+```
+
+最后需要提一下的是，局部变量、函数和类不能使用可见性修饰符。
+
+
 
