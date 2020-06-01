@@ -1392,10 +1392,10 @@ val card3 = Card(FIVE,HEART) // 构造器创建
 
 **顶层元素**：直接声明在代码文件中的元素，Kotlin除类和接口外，对象、函数、变量等也可以直接定义在顶层。
 
-**成员元素**：声明在一个顶层元素中的元素，主要指方法、属性、构造器、对象、伴随对象甚至嵌套类和嵌套接口等。
+**成员元素**：声明在类、接口和对象（指Kotlin中特有的语言结构）中的元素，主要指方法、属性、构造器、对象、伴随对象甚至嵌套类和嵌套接口等。
 {% endhint %}
 
-首先看可见性修饰符对顶层元素所起的效果：
+首先看可见性修饰符对顶层元素的影响：
 
 `public`：元素在任何文件中可见
 
@@ -1420,15 +1420,39 @@ val card3 = Card(FIVE,HEART) // 构造器创建
 
 ```kotlin
 //example.kt
-public val version: String = "2.4.0" // 该属性为public，默认情况下（不加任何修饰符）也具有同样的效果
+public val tag: String = "example" // 该属性为public，默认情况下（不加任何修饰符）也具有同样的效果
 private class User // 仅在定义的文件中可访问
-nternal interlog
 internal fun doSomething() { // 相同模块中可访问
     println("doSomething")
 }
+
+fun main() {
+    println(tag) // 打印结果：example
+    User() // 可访问
+    doSomething() // 打印结果：doSomething
+}
+//another.kt(和example.kt处于同一模块)
+fun main() {
+    println(tag) // 可访问
+    User() // 错误，不可访问
+    doSomething() // 可访问
+}
+//main.kt(和example.kt处于不同模块)
+fun main() {
+    println(tag) // 可访问
+    User() // 错误，不可访问
+    doSomething() // 错误，不可访问
+}
 ```
 
+在Kotlin中，没有和**包**（package）相关的可见性修饰符。
 
+可见性修饰符对成员元素的影响：
 
+* `public`：在包含成员元素的类、接口或对象中及使用这些包含这些成员元素实例的代码文件中可见
+* `private`：仅在包含成员元素的类、接口或对象中可见
+* `protected`：在包含成员元素的类、接口及其子类型中可见，不适用于声明在对象中的成员，因为对象无法被继承
+* `internal`：和顶层元素类似，`internal`在同一模块中相当于`public`修饰符，不同模块中不可见
 
+让我们看看代码中的应用是怎样
 
