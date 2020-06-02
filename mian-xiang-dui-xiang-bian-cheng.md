@@ -1577,5 +1577,37 @@ sealed class Animal()
 object Human:Animal()
 ```
 
-密封类的特性在我们实现有限状态机、自定义的数据结构等方面很有帮助，有兴趣的朋友可自行延伸，本书主要讨论Kotlin在Android方面的运用。
+密封类的特性在我们实现有限状态机、自定义的数据结构等方面很有帮助，有兴趣的朋友可自行延伸。
+
+## 嵌套类（内部类）
+
+嵌套类指的是定义在类中的类，和Java一样，Kotlin也允许我们定义嵌套类，主要有两种方式，第一种是直接定义为类的一个成员：
+
+```kotlin
+class Outer {
+    private val count : Int = 0
+    class Nested {
+        fun test() = println("Outer.Nested.test()")
+    }
+}
+// 使用示例
+Outer.Nested().test() // 打印结果：Outer.Nested.test()
+```
+
+使用这种方式，我们可以不实例化外部类而直接实例化嵌套的类，此时嵌套类也不能直接引用外部类的变量和方法。这种方式和Java中的静态内部类类似，嵌套类和外部类都可直接单独拿出使用，我们往往是为了更好的组织类的分组（提高可读性和便于管理）采取此种方式。
+
+为了使嵌套类能够访问外部类的成员，我们需要加上`inner`关键字，这样嵌套类可以访问外部类声明的成员，但是使用嵌套类必须先实例化外部类：
+
+```kotlin
+class Outer {
+    private val count : Int = 0
+    inner class Nested {
+        fun test() = println("Count is $count")
+    }
+}
+// 使用示例
+Outer().Nested().test() // 打印结果：Count is 0
+```
+
+这种情况下内部类可以任意访问外部类的成员，
 
