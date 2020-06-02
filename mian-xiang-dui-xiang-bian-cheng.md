@@ -1631,34 +1631,3 @@ Outer().outerTest() // 打印结果：Count is 1
 
 ## 导入别名（Import aliases）
 
-我们知道，类名是有可能重复的，因此引入了包名来区分，包名加上类名构成完整类名（qualified class name，如com.example.Main），仅有类名是不完整类名（Main）。
-
-使用完整类名是可以解决问题的，但包名往往很长，难以阅读：
-
-```kotlin
-import com.facebook.ads.InterstitialAd
-
-val fbAd = InterstitialAd(context, "...")
-val googleAd = com.google.android.gms.ads.InterstitialAd(context)
-```
-
-这个例子中同时使用了Google和Facebook的广告库，它们都有`InterstitialAd`类型，当我们在同一个文件中使用时，我们不得不使用完整类名来明确指定类。这种情况是可能发生的，因为我们可能需要比较哪个平台能带来更高的广告收益。
-
-虽然最好的解决方式是重命名，但很多时候非常难操作，比如我们像前面例子中使用的是第三方库，又或者类名需要和数据库字段保持一致。这个时候我们可以使用导入别名，它不是引入了一个新的类型，而是将原类型改了一个名字，这个更改的名字仅仅在写代码的时候有效，在编译时，编译器会将其替换为实际的名字。
-
-使用导入别名，需要使用`as`关键字：
-
-```kotlin
-import com.facebook.ads.InterstitialAd as FbAd
-import com.google.android.gms.ads.InterstitialAd as GoogleAd
-```
-
-使用别名后我们的代码的可读性就大大提高了：
-
-```kotlin
-val fbAd = FbAd(context, "...")
-val googleAd = GoogleAd(context)
-```
-
-导入别名仅在定义的代码文件中有效。
-
