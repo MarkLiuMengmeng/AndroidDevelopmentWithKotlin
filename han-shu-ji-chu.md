@@ -380,7 +380,7 @@ public static final State getState(@NotNull State state, int n){
 * 不能在`try` / `catch` / `finally`代码块中使用
 * 在撰写本文时，仅允许Kotlin编译为JVM平台代码时使用
 
-## 本地函数（Local functions）
+## 本地函数
 
 和本地变量类似，定义在函数体中的函数称为本地函数。
 

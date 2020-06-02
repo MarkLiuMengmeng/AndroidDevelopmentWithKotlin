@@ -1521,7 +1521,61 @@ class User {
  User().name = "SuperMan" //错误，setter是private修饰符，仅能在User类中访问
 ```
 
-最后需要提一下的是，局部变量、函数和类不能使用可见性修饰符。
+最后，局部变量、函数和类不能使用可见性修饰符。
 
+## 密封类（Sealed class）
 
+密封类是限制了继承层级的类，在Kotlin1.1之前，密封类的子类要声明在密封类之内，1.1之后放宽了这个限制，但密封类及其子类也需要声明在同一个文件中，声明密封类只需要在`class`关键字之前加`sealed`关键字即可：
+
+```kotlin
+// Animal.kt
+sealed class Animal()
+class Tiger : Animal()
+class Cat : Animal()
+class Monkey : Animal()
+```
+
+我们可以在一个文件中看到所有可能的子类，在上面的例子中，我们在其他文件中将不能继承该`Animal`类。密封类对于继承的限制仅限于对它的直接继承，如果是对其子类的继承仍然是可以的：
+
+```kotlin
+// Animal.kt
+sealed class Animal()
+open class Tiger : Animal()
+// Zoo.kt
+class SiberianTiger : Tiger() 
+```
+
+如果我们不想让外部再继承子类可以继续给子类加上`sealed`关键字：
+
+```kotlin
+// Animal.kt
+sealed class Animal()
+sealed class Tiger : Animal()
+sealed class Cat : Animal()
+sealed class Monkey : Animal()
+```
+
+由于密封类这种对继承层级的保护，编译器可以确定所有可能的情况，搭配`when`使用时就不再需要`else`语句了：
+
+```kotlin
+when (animal) {
+    is Tiger -> println("Weighs 200-400 kg")
+    is Cat -> println("Weighs 2.5-5.5 kg")
+    is Monkey -> println("Weighs 20-300 kg")
+}
+```
+
+可以预见的是，如果我们以后添加了别的`Animal`的子类，上面的代码将不会通过编译。与Java的`switch`语句会通过编译但有可能崩溃相比，我们可以把一个运行时错误提前到编译时错误，这样会更加安全。
+
+密封类默认是抽象的，所以加`abstract`关键字是多余的，自然它也没有办法实例化。`sealed`关键字也不可以和`open`或者`final`关键字一起使用，因为它们三个代表的是三种继承限制，是同一功能的。
+
+`object`是可以继承密封类的，这样这个子类就成了一个单例：
+
+```kotlin
+// Animal.kt
+sealed class Animal()
+object Human:Animal()
+```
+
+密封类的特性在我们实现有限状态机、自定义的数据结构等方面很有帮助，有兴趣的朋友可自行延伸，本书主要讨论Kotlin在Android方面的运用。
 
