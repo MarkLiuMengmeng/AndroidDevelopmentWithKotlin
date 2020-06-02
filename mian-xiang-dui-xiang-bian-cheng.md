@@ -1609,5 +1609,25 @@ class Outer {
 Outer().Nested().test() // 打印结果：Count is 0
 ```
 
-这种情况下内部类可以任意访问外部类的成员，
+这种情况下嵌套类可以任意访问外部类的成员，但外部类访问嵌套类成员时需要先实例化嵌套类。同时一个外部类实例仅有一个内部类实例：
+
+```kotlin
+class Outer {
+    private var count : Int = 0
+    fun outerTest() = Nested().test() // 外部类访问嵌套类需要先进行实例化
+    inner class Nested {
+        init{
+            count++ // 每一次嵌套类的实例化都会使count加1
+        }
+        fun test() = println("Count is $count")
+    }
+}
+
+Outer().outerTest() // 打印结果：Count is 1
+Outer().outerTest() // 打印结果：Count is 1
+```
+
+如果我们定义的嵌套类有访问外部类的需求且一个内部实例可以满足需求，适合第二种方式。如果我们定义的嵌套类除了服务于所定义的外部类，还在别的场景中可能应用，适合第一种方式。在实际开发中需求可能更复杂一些，我们可以根据需求来选择采用何种方式。
+
+## 导入别名（Import aliases）
 
