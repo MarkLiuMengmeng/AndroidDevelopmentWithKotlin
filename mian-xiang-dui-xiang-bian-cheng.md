@@ -29,11 +29,10 @@ User user = new User()
 
 一个**属性**（property）由一个**幕后字段**（backing field）和它的**访问器**（accessor）组成。访问器指的是getter和setter。在Kotlin中，属性可以定义在顶层（文件中），也可以作为一个类的成员。
 
-{% code title="Test.kt" %}
 ```kotlin
+//Test.kt
 val name:String //定义在顶层的属性
 ```
-{% endcode %}
 
 在Java中，我们考虑到类的**封装**（encapsulation），常见的做法是把字段设为私有（`private`），把访问器（getter和setter）设为公有。
 
@@ -957,9 +956,8 @@ p1+=p2  //错误，Assignment operations ambiguity
 
 有个好消息是，虽然Java不支持操作符重载，但由于Kotlin和Java良好的互操作性，Kotlin可以使用Java中满足要求（方法名、返回值，可见性等）的操作符重载：
 
-{% tabs %}
-{% tab title="Java" %}
 ```kotlin
+// Java
 public class Point {
     private final int x;
     private final int y;
@@ -979,17 +977,11 @@ public class Point {
         return new Point(point.getX() + x, point.getY() + y);
     }
 }
-```
-{% endtab %}
-
-{% tab title="Kotlin" %}
-```kotlin
+//Kotlin
 var p1 = Point(5.8, 2.7)
 var p2 = Point(6.5, 4.2)
 println(p1 + p2) //打印结果：Point(x=12.3, y=6.9)
 ```
-{% endtab %}
-{% endtabs %}
 
 ## 对象声明（Object declaration）
 
@@ -1151,8 +1143,8 @@ val tiger3 = Tiger()
 
 让我们看一个常见的定义`start`方法的例子：
 
-{% code title="MainActivity.kt" %}
 ```kotlin
+//MainActivity.kt
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1172,7 +1164,6 @@ class MainActivity : AppCompatActivity() {
 // 使用示例
 MainActivity.start(context, user)
 ```
-{% endcode %}
 
 我们可以看到我们可以在`Acticity`创建之前就调用`start`方法，正如我们经常在Java中使用的静态方法。我们把它与所应用的类关联起来显然变得更易读和管理了。伴随类可以随意使用伴随对象的成员，伴随对象却不能随意使用伴随类的成员，就像在Java中静态成员不能使用非静态成员那样。
 
@@ -1427,10 +1418,8 @@ val card3 = Card(FIVE,HEART) // 构造器创建
 
 下面我们来看一个示例：
 
-{% tabs %}
-{% tab title="声明文件" %}
-{% code title="Example.kt" %}
 ```kotlin
+//example.kt
 public val tag: String = "example" // 该属性为public，默认情况下（不加任何修饰符）也具有同样的效果
 private class User // 仅在定义的文件中可访问
 internal fun doSomething() { // 相同模块中可访问
@@ -1442,34 +1431,19 @@ fun main() {
     User() // 可访问
     doSomething() // 打印结果：doSomething
 }
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="同模块的访问文件" %}
-{% code title="Another.kt\(和Example.kt处于同一模块\)" %}
-```kotlin
+//another.kt(和example.kt处于同一模块)
 fun main() {
     println(tag) // 可访问
     User() // 错误，不可访问
     doSomething() // 可访问
 }
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="不同模块的访问文件" %}
-{% code title="Main.kt\(和Example.kt处于不同模块\)" %}
-```kotlin
+//main.kt(和example.kt处于不同模块)
 fun main() {
     println(tag) // 可访问
     User() // 错误，不可访问
     doSomething() // 错误，不可访问
 }
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
 
 在Kotlin中，没有和**包**（package）相关的可见性修饰符。
 
@@ -1482,9 +1456,6 @@ fun main() {
 
 让我们在一个类中声明一些成员，看看可见性修饰符对其成员的影响：
 
-{% tabs %}
-{% tab title="声明文件" %}
-{% code title="Example.kt" %}
 ```kotlin
 class User {
     public val name: String = "MamunLiu"
@@ -1492,34 +1463,19 @@ class User {
     protected fun login() {}
     internal fun logout() {}
 }
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="同模块的访问文件" %}
-{% code title="Main.kt\(和User类定义在同一个模块\)" %}
-```kotlin
+//main.kt 和User类定义在同一个模块
 val user = User()
 println(user.name) // 打印结果：MamunLiu
 println(user.age) // 错误，age仅能在User类中访问
 user.login() // 错误，login方法仅能在User类及其子类中访问
 user.logout() // 可以访问
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="不同模块的访问文件" %}
-{% code title="Another.kt\(和User类定义在不同模块\)" %}
-```kotlin
+//another.kt 和User类定义在不同模块
 val user = User()
 println(user.name) // 打印结果：MamunLiu
 println(user.age) // 错误，age仅能在User类中访问
 user.login() // 错误，login方法仅能在User类及其子类中访问
 user.logout() // 错误，logout方法仅能模块内部访问
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
 
 我们前面说过，Kotlin的默认可见性修饰符是`public`，但若是声明为`protected`的成员在子类覆盖后默认仍是`protected`：
 
@@ -1571,47 +1527,33 @@ class User {
 
 密封类是限制了继承层级的类，在Kotlin1.1之前，密封类的子类要声明在密封类之内，1.1之后放宽了这个限制，但密封类及其子类也需要声明在同一个文件中，声明密封类只需要在`class`关键字之前加`sealed`关键字即可：
 
-{% code title="Animal.kt" %}
 ```kotlin
+// Animal.kt
 sealed class Animal()
 class Tiger : Animal()
 class Cat : Animal()
 class Monkey : Animal()
 ```
-{% endcode %}
 
 我们可以在一个文件中看到所有可能的子类，在上面的例子中，我们在其他文件中将不能继承该`Animal`类。密封类对于继承的限制仅限于对它的直接继承，如果是对其子类的继承仍然是可以的：
 
-{% tabs %}
-{% tab title="密封类声明文件" %}
-{% code title="Animal.kt" %}
 ```kotlin
+// Animal.kt
 sealed class Animal()
 open class Tiger : Animal()
+// Zoo.kt
+class SiberianTiger : Tiger() 
 ```
-{% endcode %}
-{% endtab %}
-
-{% tab title="其它文件" %}
-{% code title="Zoo.kt" %}
-```kotlin
-class SiberianTiger : Animal() // 错误，密封类的直接子类必须和密封类定义在同一个文件中
-class SiberianTiger : Tiger() //正确
-```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
 
 如果我们不想让外部再继承子类可以继续给子类加上`sealed`关键字：
 
-{% code title="Animal.kt" %}
 ```kotlin
+// Animal.kt
 sealed class Animal()
 sealed class Tiger : Animal()
 sealed class Cat : Animal()
 sealed class Monkey : Animal()
 ```
-{% endcode %}
 
 由于密封类这种对继承层级的保护，编译器可以确定所有可能的情况，搭配`when`使用时就不再需要`else`语句了：
 
@@ -1629,12 +1571,11 @@ when (animal) {
 
 `object`是可以继承密封类的，这样这个子类就成了一个单例：
 
-{% code title="Animal.kt" %}
 ```kotlin
+// Animal.kt
 sealed class Animal()
 object Human:Animal()
 ```
-{% endcode %}
 
 密封类的特性在我们实现有限状态机、自定义的数据结构等方面很有帮助，有兴趣的朋友可自行延伸。
 
@@ -1689,35 +1630,4 @@ Outer().outerTest() // 打印结果：Count is 1
 如果我们定义的嵌套类有访问外部类的需求且一个内部实例可以满足需求，适合第二种方式。如果我们定义的嵌套类除了服务于所定义的外部类，还在别的场景中可能应用，适合第一种方式。在实际开发中需求可能更复杂一些，我们可以根据需求来选择采用何种方式。
 
 ## 导入别名（Import aliases）
-
-我们知道，类名是有可能重复的，因此引入了包名来区分，包名加上类名构成完整类名（qualified class name，如com.example.Main），仅有类名是不完整类名（Main）。
-
-使用完整类名是可以解决问题的，但包名往往很长，难以阅读：
-
-```kotlin
-import com.facebook.ads.InterstitialAd
-
-val fbAd = InterstitialAd(context, "...")
-val googleAd = com.google.android.gms.ads.InterstitialAd(context)
-```
-
-这个例子中同时使用了Google和Facebook的广告库，它们都有`InterstitialAd`类型，当我们在同一个文件中使用时，我们不得不使用完整类名来明确指定类。这种情况是可能发生的，因为我们可能需要比较哪个平台能带来更高的广告收益。
-
-虽然最好的解决方式是重命名，但很多时候非常难操作，比如我们像前面例子中使用的是第三方库，又或者类名需要和数据库字段保持一致。这个时候我们可以使用导入别名，它不是引入了一个新的类型，而是将原类型改了一个名字，这个更改的名字仅仅在写代码的时候有效，在编译时，编译器会将其替换为实际的名字。
-
-使用导入别名，需要使用`as`关键字：
-
-```kotlin
-import com.facebook.ads.InterstitialAd as FbAd
-import com.google.android.gms.ads.InterstitialAd as GoogleAd
-```
-
-使用别名后我们的代码的可读性就大大提高了：
-
-```kotlin
-val fbAd = FbAd(context, "...")
-val googleAd = GoogleAd(context)
-```
-
-导入别名仅在定义的代码文件中有效。
 
