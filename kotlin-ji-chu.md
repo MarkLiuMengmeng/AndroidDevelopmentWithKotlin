@@ -222,8 +222,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 在Java代码中常常见到的嵌套空值检查，也可以用Kotlin中的安全调用操作符写得更简明：
 
-```kotlin
-//Java
+{% tabs %}
+{% tab title="Java" %}
+```java
 Boolean isCorrect;
 if(quiz != null ){
     if(quiz.currentQuestion != null) {
@@ -232,9 +233,15 @@ if(quiz != null ){
         }
     }
 }
-//Kotlin
+```
+{% endtab %}
+
+{% tab title="Kotlin" %}
+```kotlin
 val isCorrect= quiz?.currentQuestion?.answer?.isCorrect
 ```
+{% endtab %}
+{% endtabs %}
 
 在上面的调用链中，当任何一个安全调用操作符左侧为空就会返回空值。有时我们想在取得的对象为空时也能有一个默认值，除了经典的`if`-`else`解决方案，我们还可以用更简洁的**猫王操作符**（Elvis operator）。
 
@@ -288,6 +295,21 @@ override fun onCreate(savedInstanceState: Bundle?) {
 {% hint style="info" %}
 [关于非空断言操作符的一些使用建议](https://liumengtime.gitbook.io/translation/kotlin/jing-ti-shi-yong-fei-kong-duan-yan-cao-zuo-fu)
 {% endhint %}
+
+## 自增和自减操作符（Increment and decrement operators）
+
+和许多编程语言类似，Kotlin支持自增和自减操作符，以自增操作符为例，也分为**前增**（pre-increment）用法和**后增**（post-increment）用法：
+
+```kotlin
+var speed = 1.0
+println(++speed) // 前增用法，打印结果: 2.0
+println(speed) // 打印结果: 2.0
+speed = 1.0 //重新赋值
+println(speed++) // 后增用法，打印结果: 1.0
+println(speed) // 打印结果: 2.0
+```
+
+自减操作符与自增操作符工作方式类似。
 
 ## 平台类型（Platform type）
 
@@ -355,7 +377,7 @@ val fragment: String = "ProductFragment"
 val productFragment: ProductFragment? = fragment as? ProductFragment ?: ProductFragment()
 ```
 
-当我们转换Kotlin中的**基本类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
+当我们转换Kotlin中的**原生类型**（primitive type）时，我们可以直接使用标准库中自带的方法：
 
 ```kotlin
 val name: String
@@ -429,9 +451,9 @@ view.isShown() // 错误，view可能为空
 
 总之，无论通过类型检查还是逻辑语句，让编译器完全确定是这个类型后，编译器就会为我们执行隐式的智能类型转换。
 
-## 基础数据类型（Primitive data type）
+## 原生数据类型（Primitive data type）
 
-Java中`int`是基础数据类型，而`Integer`为`int`的**装箱类型**（boxed representation）。装箱（`Boxing`）是将一个基础数据类型包装为一个引用类型使其具有和对象一样的性质。
+Java中`int`是原生数据类型，而`Integer`为`int`的**装箱类型**（boxed representation）。装箱（`Boxing`）是将一个原生数据类型包装为一个引用类型使其具有和对象一样的性质。
 
 在Kotlin中，一切都是对象。`Int`、`Long`、`Char`等在内也不例外。这样一来就简化了代码的复杂性。我们可以直接像使用一个普通对象一样对`Int`类型进行操作：
 
@@ -440,19 +462,19 @@ val code: Int = 25
 code.toChar()
 ```
 
-为了优化性能，Kotlin在编译为JVM字节码时仍然会尽可能的优化为Java对应的基础数据类型。但我们知道Kotlin中非空类型`Int`是有一个对应的可空类型`Int?`的，那么可空类型就会被转译为Java中对应的装箱类型。举个例子：Kotlin中的`Int`存储为Java中的`int`，Kotlin中的`Int?`存储为Java中的`Integer`。
+为了优化性能，Kotlin在编译为JVM字节码时仍然会尽可能的优化为Java对应的原生数据类型。但我们知道Kotlin中非空类型`Int`是有一个对应的可空类型`Int?`的，那么可空类型就会被转译为Java中对应的装箱类型。举个例子：Kotlin中的`Int`存储为Java中的`int`，Kotlin中的`Int?`存储为Java中的`Integer`。
 
 ```kotlin
-var a: Int = 1 // 被存储为基础数据类型
+var a: Int = 1 // 被存储为原生数据类型
 var b: Int? = null // 被存储为装箱数据类型
 b = 24 // 即使有值也被存储为装箱数据类型
 ```
 
-我们可以看到Kotlin虽然将基础数据类型也视作对象来对待和使用，但Java中的装箱概念仍然在默默影响着Kotlin代码的实际性能。装箱类型会比基础数据类型消耗更多的资源，如果是仅仅数个变量，那我们无需担心它的影响，但在拥有海量数据的列表和数组中可能是影响其性能的关键。所以我们来看一下这些“基础数据类型”。
+我们可以看到Kotlin虽然将原生数据类型也视作对象来对待和使用，但Java中的装箱概念仍然在默默影响着Kotlin代码的实际性能。装箱类型会比原生数据类型消耗更多的资源，如果是仅仅数个变量，那我们无需担心它的影响，但在拥有海量数据的列表和数组中可能是影响其性能的关键。所以我们来看一下这些“原生数据类型”。
 
 ### 数字
 
-Kotlin用于存储数字的数据类型等同于Java的基础数据类型：
+Kotlin用于存储数字的数据类型等同于Java的原生数据类型：
 
 | 数据类型 | 存储位宽\(Bit\) |
 | :--- | :--- |
@@ -465,15 +487,22 @@ Kotlin用于存储数字的数据类型等同于Java的基础数据类型：
 
 与Java中不同的一点是，Kotlin中不会为数字类型提供隐式的转换，需要显式地通过标准库的方法转换：
 
-```kotlin
-//Java
+{% tabs %}
+{% tab title="Java" %}
+```java
 int myWeight = 88;
 long rocketWeight = myWeight;
-//Kotlin
+```
+{% endtab %}
+
+{% tab title="Kotlin" %}
+```kotlin
 var myWeight : Int = 88
 var rocketWeight: Long = myWeight // 错误，数据类型不一致
 var rocketWeight: Long = myWeight.toLong()//正确
 ```
+{% endtab %}
+{% endtabs %}
 
 表面上看，它增加了代码的冗余度，但它同时也防止了可能因隐式转换导致数据丢失等意料之外的错误，变得更加安全。
 
@@ -510,7 +539,7 @@ val array1: Array<Short> = arrayOf(1,2,3) //显式声明类型为Array<Short>
 val array2: Array<Long> = arrayOf(1,2,3) //显式声明类型为Array<Long>
 ```
 
-因为`Array`是泛型类，它创建时会使用装箱类型。我们知道装箱类型会影响性能，所以Kotlin也准备了基础数据类型的数组类来减少对性能的损耗，如：`IntArray`、`ShortArray`、`LongArray`等，他们之间和`Array`类并无继承关系。我们同样是通过标准库的函数去创建它们：
+因为`Array`是泛型类，它创建时会使用装箱类型。我们知道装箱类型会影响性能，所以Kotlin也准备了原生数据类型的数组类来减少对性能的损耗，如：`IntArray`、`ShortArray`、`LongArray`等，他们之间和`Array`类并无继承关系。我们同样是通过标准库的函数去创建它们：
 
 ```kotlin
 val array0 = intArrayOf(1, 2, 3) //创建IntArray
@@ -527,10 +556,10 @@ println(array[1]) //打印结果: 2
 
 ### 布尔类型
 
-在Kotlin中布尔类型同样被视为对象，使用方式和其它的基础数据类型相似：
+在Kotlin中布尔类型同样被视为对象，使用方式和其它的原生数据类型相似：
 
 ```kotlin
-val isCorrect: Boolean = true //对应Java中的基础数据类型
+val isCorrect: Boolean = true //对应Java中的原生数据类型
 val isCorrect: Boolean? = null //对应Java中的装箱类型
 ```
 
@@ -589,9 +618,9 @@ val message = "My name has ${name.length} characters"
 println(message) //打印结果: My name has 5 characters
 ```
 
-### 范围（Range）
+### 区间（Range）
 
-Range是定义一组连续的值的新方式，它由第一个值和最后一个值来表示这组序列。它的操作符由两个点（`..`）表示：
+`Range`是定义一组连续的值的新方式，它由第一个值和最后一个值来表示这组序列，类似于数学中的区间概念。它的操作符由两个点（`..`）表示：
 
 ```kotlin
 val intRange = 1..5
@@ -605,7 +634,7 @@ for (i in intRange) print(i) // Prints: 12345
 for (i in charRange) print(i) // Prints: abcde
 ```
 
-某个特定的值可以用`in`关键字检查是否在范围之内：
+某个特定的值可以用`in`关键字检查是否在区间之内：
 
 ```kotlin
 val BMI0 = 20
@@ -617,13 +646,13 @@ if (BMI1 !in healthy)
 println("$BMI1 is not in $healthy range") //Prints: 24 is not in 18..23 range
 ```
 
-范围默认是升序的，如果想用降序的范围，我们可以使用`downTo`操作符：
+区间默认是升序的，如果想用降序的区间，我们可以使用`downTo`操作符：
 
 ```kotlin
 for (i in 5 downTo 1) print(i) // 打印结果: 54321
 ```
 
-默认步进为1，即范围元素间差值为1，我们可以使用`step`关键字设置步进，且步进必须为正数：
+默认步进为1，即区间元素间差值为1，我们可以使用`step`关键字设置步进，且步进必须为正数：
 
 ```kotlin
 for (i in 1..9 step 2) print(i) // 打印结果: 13579
@@ -865,7 +894,7 @@ outer@ for(value in intRange) {
 
 ## 异常（Exception）
 
-大多数的Java编程指南（如：Effective Java）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
+大多数的Java编程指南（如：《Effective Java》）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
 
 未检验异常是指未被`try`... `catch`代码块包围的异常，当这种异常发生时会沿着调用栈依次传递，如果未找到`try`... `catch`来处理此异常就会终止线程的执行。
 
@@ -950,11 +979,11 @@ class Test
 
 使用`const`修饰符有三点限制：
 
-* 必须初始化为基础数据类型或`String`类型。
+* 必须初始化为原生数据类型或`String`类型。
 * 必须声明在最顶层或作为一个对象的成员。
 * 不能有自定义的getter。
 
-## 代理（Delegate）
+## 委托（Delegate）
 
-Kotlin对代理提供了内置的支持，并相对Java做了许多改进。代理在程序的开发过程中应用频繁，因此我们单开一章来介绍（第八章）。
+Kotlin对委托提供了语言级别的支持，并相对Java做了许多改进。委托在程序的开发过程中应用频繁，因此我们单开一章来介绍（第八章）。
 
