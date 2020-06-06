@@ -42,3 +42,21 @@ for (task in todoList) task()
 
 ### 函数类型的底层实现
 
+函数类型实际上是一个泛型接口的语法糖，让我们看一些例子：
+
+* `()->Int`：对应的是`Function0<Int>`接口，之所以是`Function0`是因为它有0个参数，之所以是`Int`是因为返回类型是`Int`。
+* `Int->Int`：对应的是`Function1<Int,Int>`接口，之所以是`Function1`是因为它有一个参数
+* `()->(Int, Int)->String`：对应的是`Function0<Function2<Int,Int,String>>`。
+
+所有的接口都只有一个方法`invoke`，同时它也是一个操作符，允许一个对象像函数那样使用。下面两种使用方式是等价的：
+
+```kotlin
+val a: (Int) -> Unit = //...
+a(10) // 写法1
+a.invoke(10) // 写法2
+```
+
+`Function`接口不存在于标准库中，它是一个**编译器合成类型**（synthetic compilergenerated type），在编译的时候才会生成，因此没有人为地限制参数的数目，同时也没有增加标准库的体量。
+
+
+
