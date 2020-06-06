@@ -56,7 +56,64 @@ a(10) // 写法1
 a.invoke(10) // 写法2
 ```
 
+主要注意的是写法2可以结合使用安全调用操作符，当存储函数的变量可能为空时，我们最好这么使用它：
+
+```kotlin
+var a: ((Int) -> Int)? = null
+if (false) a = fun(i: Int) = i * 2
+print(a?.invoke(4)) // 打印结果: null
+```
+
 `Function`接口不存在于标准库中，它是一个**编译器合成类型**（synthetic compilergenerated type），在编译的时候才会生成，因此没有人为地限制参数的数目，同时也没有增加标准库的体量。
 
+## 匿名函数
 
+匿名函数和普通函数的作用一样，区别是匿名函数定义的时候在`fun`关键字和参数列表声明之间没有函数名，一般把它当成对象来看待：
+
+```kotlin
+val a: (Int) -> Int = fun(i: Int) = i * 2 // 单表达式匿名函数
+val b: ()->Int = fun(): Int { return 4 } // 带函数体的匿名函数
+val c: (String)->Unit = fun(str: String){ println(str) }
+//使用示例
+// Usage
+println(a(4)) // 打印结果: 8
+println(b()) // 打印结果: 4
+c("Kotlin") // 打印结果: Kotlin
+```
+
+我们提到过的Kotlin的类型推断在这里也能发挥作用，我们可以省略变量的类型声明：
+
+```kotlin
+var a = fun(i: Int) = i * 2
+var b = fun(): Int { return 4 }
+var c = fun(str: String){ println(str) }
+```
+
+甚至可以反过来使用：
+
+```kotlin
+val a: (Int) -> Int = fun(i) = i * 2 
+val b: ()->Int = fun() = 4 //这里没有用函数体的花括号，如果用了将会推断为()->Unit类型
+val c: (String)->Unit = fun(str){ println(str) }
+```
+
+让我们看一个在Android项目中使用匿名函数记录程序产生的异常的例子：
+
+```kotlin
+val TAG = "MainActivity"
+val errorHandler = fun (error: Throwable) {
+    if(BuildConfig.DEBUG) {
+        Log.e(TAG, error.message, error)
+    }
+    toast(error.message)
+    Crashlytics.logException(error)
+}
+// 使用示例
+val error = Error("ExampleError")
+errorHandler(error) // 输出结果: MainActivity: ExampleError
+```
+
+匿名函数提供了一种简单的方式像对象那样传递和使用一个函数，不过我们可以用lambda表达式更简单地实现相同的行为。
+
+## Lambda表达式
 
