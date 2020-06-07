@@ -12,7 +12,7 @@ description: >-
 
 由于Kotlin是静态类型语言，我们需要一种函数类型的记法来实现函数作为一等公民的操作，记法由函数的参数类型列表加上`->`和返回类型表示：
 
-`参数类型列表(types of parameters)->返回类型return type`
+`参数类型列表(types of parameters)->返回类型(return type)`
 
 ```kotlin
 lateinit var a: (Int) -> Int // 以Int(数据类型)为参数并返回Int的函数
@@ -116,4 +116,85 @@ errorHandler(error) // 输出结果: MainActivity: ExampleError
 匿名函数提供了一种简单的方式像对象那样传递和使用一个函数，不过我们可以用lambda表达式更简单地实现相同的行为。
 
 ## Lambda表达式
+
+最简单地定义匿名函数的方法是使用Kotlin的lambda表达式特性，Kotlin中的lambda表达式和Java8中的很相似，但最大的区别是Kotlin中的lambda表达式是[闭包](https://blog.csdn.net/wuwenxiang91322/article/details/9092569)（closure），允许我们在创建的上下文中修改变量，Java8中则不行。Kotlin中lambda表达式的记法如下：
+
+`{ 参数列表(arguments) -> 函数体(function body) }`
+
+lambda表达式会返回表达式的最后一句来作为`return`语句的替代：
+
+* `{ 1 }`：没有参数返回1的lambda表达式，它的是`()->Int`。
+* `{ s: String -> println(s) }`：以一个`String`类型为参数并打印出来lambda表达式，它的类型是 `(String)->Unit`。
+* `{ a: Int, b: Int -> a + b }`：以两个`Int`类型为参数计算它们之和的lambda表达式，它的类型是`(Int, Int)->Int`。
+
+我们在前一节定义的匿名函数同样可以使用lambda表达式定义：
+
+```kotlin
+var a: (Int) -> Int = { i: Int -> i * 2 }
+var b: ()->Int = { 4 }
+var c: (String)->Unit = { str: String -> println(str) }
+```
+
+由于默认情况下lambda表达式会采用最后一句作为返回值，因此除非和标签一起使用，否则不允许使用`return`语句：
+
+```kotlin
+var a: (Int) -> Int = { i: Int -> return i * 2 } // 错误，这里不允许使用return语句
+var l: (Int) -> Int = l@ { i: Int -> return@l i * 2 } // 正确
+```
+
+我们可以写多行的lambda表达式：
+
+```kotlin
+val sum = { i: Int, j: Int ->
+    println("calculate $i + $j")
+    i + j // 该语句会作为返回值
+}
+```
+
+上面的表达式非常简单，我们如果把多行的表达式写到一行，我们需要用分号隔开每条语句：
+
+```kotlin
+val sum = {i: Int, j: Int -> println("calculate $i + $j");i + j }
+```
+
+lambda表达式不仅可以使用传进来的参数，还可以访问创建上下文的数据：
+
+```kotlin
+var i = 1
+val a: () -> Int = { ++i }
+println (i) // 打印结果: 1
+println (a()) // 打印结果: 2
+println (i) // 打印结果: 2
+```
+
+Java8中的lambda表达式也可以引用上下文中的变量，但不允许改变（必须是final修饰的变量）。
+
+Kotlin的类型推断机制同样适用于lambda表达式，我们可以指定变量的类型来推断lambda的参数类型，也可以指定lambda的参数类型推断变量的类型：
+
+```kotlin
+val c: (String)->Unit = { s -> println(s) } // 推断参数s为String类型
+val c = { s: String -> println(s) } // 推断变量c的类型是(String)->Unit
+```
+
+### 单参数的隐式名称
+
+如果lambda表达式仅有一个参数，我们可以省去lambda的参数声明并在函数体部分使用`it`关键字指代该参数：
+
+```kotlin
+val c: (String)->Unit = { println(it) } // 等同于{ s -> println(s) }
+```
+
+使用这项特性需要满足两个条件：
+
+* lambda表达式仅有一个参数
+* 参数类型可以从上下文中推断出来
+
+隐式名称的使用可以使我们写出**LINQ**（Language Integrated Query）风格的代码，像下面这样：
+
+```kotlin
+val strings = arrayOf("a","b","abcde")
+strings.filter { it.length == 5 }.map { it.toUpperCase() }// 从列表中筛选出长度为5的字符串并转换为大写
+```
+
+LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第七章展开。
 
