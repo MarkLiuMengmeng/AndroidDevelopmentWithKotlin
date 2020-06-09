@@ -289,5 +289,52 @@ fun invokeListeners() {
 }
 ```
 
+### 为函数提供操作
 
+正如我们本节一开始的例子所展示的，我们可以提取出公有的行为并进行重用，我们将操作作为参数传递进去，假设我们想从列表中按照一定条件筛选出一些元素，我们一般的做法是当判断条件命题为真的时候收集它们：
+
+```kotlin
+var visibleTasks = emptyList<Task>()
+for (task in tasks) {
+    if (task.active)
+    visibleTasks += task
+}
+```
+
+这种筛选操作是相当普遍的操作，我们可以使用高阶函数来写出所有根据命题真假筛选元素的操作：
+
+```kotlin
+fun <T> filter(list: List<T>, predicate: (T)->Boolean) {
+    var resultList = emptyList<T>()
+    for (elem in list) {
+    if (predicate(elem))
+        resultList += elem
+    }
+}
+//使用示例
+var visibleTasks = filter(tasks, { it.active })
+```
+
+### 线程操作后的回调
+
+我们在执行一些耗时操作时，为了避免用户等待，我们经常要新开一个线程，并在操作结束后回调返回结果。我们同样可以用高阶函数做到这一点：
+
+```kotlin
+fun longOperationAsync(longOperation: ()->Unit, callback: ()->Unit) {
+    Thread({ // 创建线程，将lambda表达式传入构造器
+        longOperation() // 执行耗时操作的函数
+        callback() // 回调函数
+    }).start() // 启动线程
+}
+//使用示例
+longOperationAsync(
+        longOperation = { Thread.sleep(1000L) },
+        callback = { print("After one second") }//一秒后打印，打印结果: After one second
+    )
+println("Now") // 立即打印, 打印结果: Now
+```
+
+实际上还有很多使用回调的可选项，比如RxJava，又或者使用经典的接口实现。
+
+这三个场景是常见的使用高阶函数的场景，在实际开发中我们可以灵活运用减少代码中的冗余，便于维护。
 
