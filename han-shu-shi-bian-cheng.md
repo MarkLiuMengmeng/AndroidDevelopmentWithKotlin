@@ -198,7 +198,7 @@ strings.filter { it.length == 5 }.map { it.toUpperCase() }// 从列表中筛选�
 
 LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第七章展开。
 
-### 高阶函数
+## 高阶函数
 
 **高阶函数**（Higher-order function）指的是以至少一个函数类型作为参数或者返回类型是参数类型的函数。Kotlin提供了对高阶函数的完整支持。
 
@@ -269,7 +269,7 @@ longOperation({ notifyHeaderView() }, { notifyFooterView() })
 
 接下来我们详细看一下。
 
-#### 观察者模式
+### 观察者模式
 
 **观察者模式**（Observer pattern）是我们常用的一种设计模式，将对象分为观察者和被观察者，当被观察者状态发生改变时通知被观察者，观察者模式解除了两者之间的耦合，它们之间的依赖通过抽象而非具体实现。在Android开发中，观察者模式常见于视图的点击、触摸等事件监听之中，我们可以用lambda表达式写出没有更为简洁的监听实现：
 
@@ -289,7 +289,7 @@ fun invokeListeners() {
 }
 ```
 
-#### 为函数提供操作
+### 为函数提供操作
 
 正如我们本节一开始的例子所展示的，我们可以提取出公有的行为并进行重用，我们将操作作为参数传递进去，假设我们想从列表中按照一定条件筛选出一些元素，我们一般的做法是当判断条件命题为真的时候收集它们：
 
@@ -315,7 +315,7 @@ fun <T> filter(list: List<T>, predicate: (T)->Boolean) {
 var visibleTasks = filter(tasks, { it.active })
 ```
 
-#### 线程操作后的回调
+### 线程操作后的回调
 
 我们在执行一些耗时操作时，为了避免用户等待，我们经常要新开一个线程，并在操作结束后回调返回结果。我们同样可以用高阶函数做到这一点：
 
@@ -449,4 +449,117 @@ val tooMuchAttemptsError = repeatUntilError {
 ```
 
 我们可以发挥想象，自定义任何想要的控制结构。
+
+### Kotlin对Java中SAM的支持
+
+高阶函数的使用在Kotlin中确实非常方便，但问题是Java中并不支持高阶函数，我们可能需要常常使用Kotlin和Java进行互操作。解决的方法是使用只有一个方法的接口，叫做**单抽象方法**（SAM，Single Abstract Method）或者称之为**函数接口**（functional interface）。对于SAM，Kotlin会自动生成一个接收那个唯一函数参数的构造器，称之为SAM构造器，这样我们就可以在Kotlin中使用高阶函数的特性了。
+
+我们很熟悉的View类中的`OnClickListener`就是一个SAM，只有一个方法`onClick`。通过这一特性在Kotlin中使用`OnClickListener`，需要在接口名称之后传入一个**函数字面量**（function literal）作为参数，让我们比较一下它们的实现：
+
+{% tabs %}
+{% tab title="Java" %}
+```java
+button.setOnClickListener(new OnClickListener() {
+    @Override public void onClick(View v) {
+        // Operation
+    }
+});
+```
+{% endtab %}
+
+{% tab title="Kotlin" %}
+```kotlin
+button.setOnClickListener(OnClickListener {
+    // Operation
+})
+```
+{% endtab %}
+{% endtabs %}
+
+{% hint style="info" %}
+函数字面量指的是定义了一个未命名的函数的表达式，在Kotlin中有两种函数字面量：
+
+* 匿名函数：`val a = fun() {}`
+* lambda表达式：`val b = {}`
+{% endhint %}
+
+需要注意的是Kotlin编译器只为Java的SAM生成构造器，不会为Kotlin的SAM生成构造器，因为Kotlin已经原生支持函数类型了。但是SAM有比函数类型有优势的地方，它的函数参数是有名字的，在仅靠数据类型无法清楚表达参数含义的时候，缺少函数名会使代码难以阅读。
+
+别担心，在函数类型之内的参数列表部分，我们依然可以使用为参数命名。以我们常用的设置列表中单个项的点击监听为例：
+
+```kotlin
+fun setOnItemClickListener(listener: (Int, View, View)->Unit) {
+    // code
+}
+```
+
+`listener`中的各个变量的意义不甚明朗，我们给它加上名字：
+
+```kotlin
+fun setOnItemClickListener(listener: (position: Int, view: View, parent: View)->Unit) {
+    // code
+}
+```
+
+现在的样子看起来，它和我们之前在Java中使用的方法就很相似了。
+
+### 类型别名
+
+自Kotlin1.1版本之后，新增了一个叫类型别名的特性，可以为已经存在的类型选择一个可选的名称：
+
+```kotlin
+data class User(val firstName: String, val lastName: String)
+typealias Users = List<User>
+```
+
+原生数据类型也可使用该特性：
+
+```kotlin
+typealias Weight = Double
+typealias Length = Float
+```
+
+类型别名必须定义在顶层，可以用可见性修饰符调整其作用域，默认的可见性是`public`，也就是说我们前面定义的类型别名可以在任何代码文件中使用。
+
+需要注意的是类型别名仅仅是为了提高可读性，原来的类型可以与它进行任意交换赋值：
+
+```kotlin
+typealias Length = Float
+var floatLength: Float = 180.08
+val length: Length = floatLength
+intLength = length
+```
+
+我们还可以用类型别名来缩短复杂泛型的名称，以提高它的可读性和一致性：
+
+```kotlin
+typealias Dictionary<V> = Map<String, V>
+typealias Array2D<T> = Array<Array<T>>
+```
+
+类型别名还可以用于函数类型：
+
+```kotlin
+typealias Action<T> = (T) -> Unit
+typealias OnElementClicked = (position: Int, view: View, parent:View)->Unit
+```
+
+类型接口命名过的函数类型还可以像接口那样被某个类实现：
+
+```kotlin
+typealias OnElementClicked = (position: Int, view: View, parent:View)->Unit
+class MainActivity: Activity(), OnElementClicked {
+    override fun invoke(position: Int, view: View, parent: View) {
+        // ...
+    }
+}
+```
+
+我们经常需要给函数类型加上别名，主要的理由有：
+
+* 别名通常比函数定义更短更易读
+* 当我们重构改变函数定义时，使用别名会发生更少的修改
+* 在函数类型作为参数声明时更加简洁
+
+看到这里我们大概可以知道为何Kotlin中不需要定义SAM，因为所有SAM的优点我们可以通过使用类型别名加上命名参数实现。
 
