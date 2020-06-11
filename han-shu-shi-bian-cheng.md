@@ -198,7 +198,7 @@ strings.filter { it.length == 5 }.map { it.toUpperCase() }// 从列表中筛选�
 
 LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第七章展开。
 
-## 高阶函数
+### 高阶函数
 
 **高阶函数**（Higher-order function）指的是以至少一个函数类型作为参数或者返回类型是参数类型的函数。Kotlin提供了对高阶函数的完整支持。
 
@@ -269,7 +269,7 @@ longOperation({ notifyHeaderView() }, { notifyFooterView() })
 
 接下来我们详细看一下。
 
-### 观察者模式
+#### 观察者模式
 
 **观察者模式**（Observer pattern）是我们常用的一种设计模式，将对象分为观察者和被观察者，当被观察者状态发生改变时通知被观察者，观察者模式解除了两者之间的耦合，它们之间的依赖通过抽象而非具体实现。在Android开发中，观察者模式常见于视图的点击、触摸等事件监听之中，我们可以用lambda表达式写出没有更为简洁的监听实现：
 
@@ -289,7 +289,7 @@ fun invokeListeners() {
 }
 ```
 
-### 为函数提供操作
+#### 为函数提供操作
 
 正如我们本节一开始的例子所展示的，我们可以提取出公有的行为并进行重用，我们将操作作为参数传递进去，假设我们想从列表中按照一定条件筛选出一些元素，我们一般的做法是当判断条件命题为真的时候收集它们：
 
@@ -315,7 +315,7 @@ fun <T> filter(list: List<T>, predicate: (T)->Boolean) {
 var visibleTasks = filter(tasks, { it.active })
 ```
 
-### 线程操作后的回调
+#### 线程操作后的回调
 
 我们在执行一些耗时操作时，为了避免用户等待，我们经常要新开一个线程，并在操作结束后回调返回结果。我们同样可以用高阶函数做到这一点：
 
@@ -336,5 +336,117 @@ println("Now") // 立即打印, 打印结果: Now
 
 实际上还有很多使用回调的可选项，比如RxJava，又或者使用经典的接口实现。
 
-这三个场景是常见的使用高阶函数的场景，在实际开发中我们可以灵活运用减少代码中的冗余，便于维护。
+这三个场景是常见的使用高阶函数的场景，在实际开发中我们可以灵活运用减少代码中的冗余以便于维护。
+
+### 和命名参数语法结合使用
+
+让我们以一个从通过网络访问获取数据的例子来展示一下在Android项目中的应用：
+
+```kotlin
+fun getAndFillData(
+    onStart: () -> Unit = {},// 网络访问开始前调用
+    onFinish: () -> Unit = {})// 网络访问结束后调用
+    {
+    // ...
+}
+```
+
+假设我们使用了下拉刷新，那么我们可以在上面的函数具体调用时控制进度条的展示：
+
+```kotlin
+getAndFillData(
+    onStart = { view.swipeRefresh.isRefreshing = true } ,
+    onFinish = { view.swipeRefresh.isRefreshing = false }
+)
+```
+
+我们也可以让它静默刷新：
+
+```kotlin
+getAndFillData()
+```
+
+一般来说，我们在遇到多个有默认值的参数都应该使用命名参数语法，特别是像lambda表达式这样的函数类型，如果在传参时不加上参数名，我们不容易看出它的具体作用。
+
+### 处于参数列表末尾时的使用惯例
+
+高阶函数在Kotlin中是非常重要的组成部分，因此有必要让它的使用更简单。如果函数的最后一个参数是函数，那么我们在使用lambda表达式传参时可以写在圆括号之外。我们先定义一个尾参数是函数的高阶函数：
+
+```kotlin
+fun longOperationAsync(timeout: Long, callback: ()->Unit) {
+    // ...
+}
+```
+
+对于这样的函数，我们在使用时就可以将作为尾参数的lambda表达式写在圆括号外：
+
+```kotlin
+longOperationAsync(1000) {
+    hideProgress()
+}
+```
+
+这看起来像一个外部的参数，这么使用可以帮助我们提升可读性，以Kotlin标准库创建线程的的`thread`函数为例，它的定义是这样的：
+
+```kotlin
+public fun thread(
+    start: Boolean = true,
+    isDaemon: Boolean = false,
+    contextClassLoader: ClassLoader? = null,
+    name: String? = null,
+    priority: Int = -1,
+    block: () -> Unit): Thread {
+    // implementation
+}
+```
+
+我们可以看到除`block`参数外，其它参数都有默认值，且block参数处于参数列表末尾，我们可以这样用：
+
+```kotlin
+thread { /* code */ }
+```
+
+这样看起来我们放在线程中执行的操作像是放在一个叫thread的代码块之中，这种使用惯例只是一个语法糖，但是我们可以看到这样创建线程比在Java之中简化了许多，清除了冗余代码之后，可读性也大大提高了。
+
+在Android开发中，为了支持更多的设备以获取更多的用户群，我们开发的程序常常最低支持版本和目标版本是不一致的，因此我们常常会加上判断Android版本的代码来确保我们使用的特性在设备上是支持的：
+
+```kotlin
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    // Operations
+}
+```
+
+如果我们把这样的代码写成高阶函数，并结合lambda处于参数列表末尾时的使用惯例，我们可以让这段代码可读性大大提高，同时提取成函数也便于我们代码重用：
+
+```kotlin
+fun ifSupportsLolipop(f:()->Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        f()
+    }
+}
+//使用示例
+ifSupportsLollipop {
+    // Operation
+}
+```
+
+利用这个特性，我们甚至可以定义自己的控制结构。比如我们可以写出一个不断重复直到抛出错误控制结构：
+
+```kotlin
+fun repeatUntilError(code: ()->Unit): Throwable {
+    while (true) {
+        try {
+            code()
+        } catch (t: Throwable) {
+            return t
+        }
+    }
+}
+//使用示例
+val tooMuchAttemptsError = repeatUntilError {
+    attemptLogin()
+}
+```
+
+我们可以发挥想象，自定义任何想要的控制结构。
 
