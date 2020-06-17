@@ -198,6 +198,22 @@ strings.filter { it.length == 5 }.map { it.toUpperCase() }// 从列表中筛选�
 
 LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第七章展开。
 
+### 省略不使用的参数
+
+有些时候我们并不需要lambda表达式中的所有参数，如果我们仍然将其写出，可能分散阅读者的注意力或者使阅读者尝试理解其意义。
+
+假设我们有这样一个lambda表达式：
+
+```kotlin
+list.filterIndexed { index, value -> index % 2 == 0 }
+```
+
+Kotlin中引入了下划线记法，来替换不使用的参数，这样避免了我们关注无关的细节，也提升了可读性：
+
+```kotlin
+list.filterIndexed { index, _ -> index % 2 == 0 }
+```
+
 ## 高阶函数
 
 **高阶函数**（Higher-order function）指的是以至少一个函数类型作为参数或者返回类型是参数类型的函数。Kotlin提供了对高阶函数的完整支持。
