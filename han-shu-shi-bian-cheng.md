@@ -214,6 +214,44 @@ Kotlin中引入了下划线记法，来替换不使用的参数，这样避免�
 list.filterIndexed { index, _ -> index % 2 == 0 }
 ```
 
+### 在参数列表中使用解构
+
+在第四章中，我们已经看到了一个对象如何解构为多个变量：
+
+```kotlin
+data class Product(val name:String, val price:Double)
+val productA = Product("Glove", 19.9)
+var (name,price) = productA
+```
+
+自Kotlin1.1开始，我们可以在lambda表达式中的参数列表中使用解构声明。在使用时用括号括住想要解构的参数：
+
+```kotlin
+val showProductInfo: (Product) -> Unit = { (name, price) ->
+    println("the price of $name is $price")
+}
+val productA = Product("Glove", 19.9)
+showProductInfo(productA) // 打印结果： the price of Glove is 19.9
+```
+
+{% hint style="info" %}
+我们在第四章中已经了解到，Kotlin中的解构声明是基于位置的，与TypeScript语言中的基于名称的解构声明不同，它们各有优缺点：
+
+基于位置的解构声明对于属性的名称不敏感，对属性的排序敏感；
+
+基于名称的解构声明对于属性的排序不敏感，对属性的名称敏感。
+{% endhint %}
+
+省略记法同样可以在解构声明中使用，也可以指定解构声明的类型及其中参数的类型，剩下的交给类型推断机制：
+
+```kotlin
+val f: (Product)->Unit = { (name, _) -> /* code */ }
+val f = { (name, price): Product -> /* code */ }
+val f = { (name:String, price:Double): Product -> /* code */ }
+```
+
+解构声明和省略记法的结合使用简化了数据对象的处理步骤，让我们可以用更少的代码更快地使用自己想要的数据。
+
 ## 高阶函数
 
 **高阶函数**（Higher-order function）指的是以至少一个函数类型作为参数或者返回类型是参数类型的函数。Kotlin提供了对高阶函数的完整支持。
@@ -579,5 +617,5 @@ class MainActivity: Activity(), OnElementClicked {
 
 看到这里我们大概可以知道为何Kotlin中不需要通过定义SAM来使用高阶函数，因为所有SAM的优点我们可以通过使用类型别名加上命名参数实现。
 
-
+## 内联函数
 
