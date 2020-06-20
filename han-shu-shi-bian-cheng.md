@@ -621,5 +621,77 @@ class MainActivity: Activity(), OnElementClicked {
 
 高阶函数具有非常强大的功能并且提高了代码的重用性，但是我们仍要考虑代码的效率问题。lambda表达式会被编译为类，而在Java中类的创建是开销较大的操作。
 
-我们可以将函数标记为内联函数，在享有函数带来的优点同时提升代码效率。
+我们可以将函数标记为内联函数，在享有函数带来的好处的同时提升代码效率。内联函数的概念最早可追溯至C和C++，当一个函数被标记为内联函数时，在编译时编译器会将所有函数调用替换为函数体中的代码，它们将会被视为代码而不是函数，这会生成更多的字节码，换来的是运行时的效率提升。
+
+让我们以一个测量执行时间的函数为例：
+
+```kotlin
+inline fun printExecutionTime(f: () -> Unit) {
+    val startTime = System.currentTimeMillis()
+    f()
+    val endTime = System.currentTimeMillis()
+    println("It took " + (endTime - startTime))
+}
+
+fun measureOperation() {
+    printExecutionTime {
+        someOperation()
+    }
+}
+```
+
+当我们对`measureOperation`函数进行编译时，`printExecutionTime`函数调用将被替换为实际的函数体：
+
+```kotlin
+fun measureOperation() {
+    val startTime = System.currentTimeMillis()
+    someOperation()
+    val endTime = System.currentTimeMillis()
+    println("It took " + (endTime - startTime))
+}
+```
+
+由于省去了为lambda表达式创建类的开销，使用内联函数可以提升高阶函数的执行效率，因此推荐所有简短的高阶函数标记为内联。
+
+不过使用内联函数也有不好的一面，除了我们上面提到的会产生更多的字节码之外，内联函数不能递归，也不能使用比内联函数更为严格的可见性修饰符修饰的函数，例如`public`修饰的内联函数不能使用`private`修饰的函数，因为这个`privete`修饰的函数有可能被注入到没有权限访问它的函数之中。
+
+```kotlin
+private fun someFun() {}
+inline fun inlineFun() {
+    someFun() // 错误
+}
+```
+
+还有一个限制是当一个函数标记为内联之后，它的参数不能传递给非内联参数：
+
+```kotlin
+fun someFun(f: ()->Int) {
+    //...
+}
+inline fun inlineFun(f: () -> Int) {
+    someFun (f) // 错误
+}
+```
+
+原因在于上面内联函数的参数`f`没有被创建，调用它的地方将被替换为它的函数体，而非内联函数不支持这种替换。解决的方法就是使用**非内联**（`noinline`）修饰符。
+
+非内联修饰符修饰的函数将被视为普通函数，它的调用将不会用它的函数体来替代，使用它我们可以修正上面的错误：
+
+```kotlin
+fun someFun(f: ()->Int) {
+    //...
+}
+inline fun inlineFun(noinline f: () -> Int) {
+    someFun (f) // 正确
+}
+```
+
+除了上面的传参的使用场景外，如果我们需要频繁调用一个lambda表达式而不想让代码膨胀过大，我们也应该使用`noinline`修饰符。不过，使用了noinline修饰符后自然也没有了性能的提升，因此如果所有的参数都标记为`noinline`，编译器会显示警告。一般来说，`noinline`修饰符只会用在内联函数的一部分参数上。
+
+虽然内联函数会帮助我们提升性能，但我们可能不会频繁的使用它们，因为：
+
+* 内联函数应当用在较小的函数上，如果我们标记的内联函数还调用了别的内联函数，那么编译后会产生相当庞大的字节码，导致编译时间变长，生成的代码变多。
+* 内联函数无法使用更严格的修饰符修饰的函数，因此在大量需要`private`保护API的库中，它的使用会造成一些问题。
+
+## 非局部返回
 
