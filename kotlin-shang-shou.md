@@ -22,7 +22,7 @@ Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
 
 Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
-Kotlin API文档：[https://kotlinlang.org/api/latest/jvm/stdlib/](https://kotlinlang.org/api/latest/jvm/stdlib/)
+Kotlin API文档：[https://kotlinlang.org/docs/reference/android-overview.html](https://kotlinlang.org/docs/reference/android-overview.html)
 
 Kotlin bug跟踪:：[https://youtrack.jetbrains.com/issues/KT](https://youtrack.jetbrains.com/issues/KT)
 
@@ -228,7 +228,7 @@ println(ball) // prints: Ball(size=12, color=Red)
 
 可以看到我们可以很容易地处理不可变的对象。
 
-Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需委托。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，`StringUtils`类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android Framework类添加扩展。
+Kotlin有一个非常棒的特性——**扩展**（extensions）。它让我们可以为一个已经存在的类添加新的行为（属性或方法），无需更改其原本的实现，无需继承，也无需代理。有时当我们使用一个库或框架，想为一个特定的类添加额外的方法或属性时，扩展是一个非常好的选择。扩展减少了代码的冗余，是以前Java中大量存在的工具类（例如，`StringUtils`类）更好的实现方式。我们可以很容易地为自定义类、第三方库、Android Framework类添加扩展。
 
 Android `ImageView`没有从网络加载图像的功能，因此我们可以使用Picasso库（一个Android平台的图片加载库）为`ImageView`添加扩展方法来实现此功能：
 
@@ -260,7 +260,7 @@ interface UserData {
 }
 ```
 
-在许多Android程序中，我们希望将对象的初始化延迟到第一次使用它的时候。为了做到这一点，我们可以使用**委托**（delegate）：
+在许多Android程序中，我们希望将对象的初始化延迟到第一次使用它的时候。为了做到这一点，我们可以使用**代理**（delegate）：
 
 ```kotlin
 val retrofit by lazy {
@@ -302,7 +302,7 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 ![](.gitbook/assets/chapter1_3.jpg)
 
-最后选择所配置的**模块**（Module）的Kotlin版本：
+最后选择所配置的**模组**（Module）的Kotlin版本：
 
 ![](.gitbook/assets/chapter1_4.jpg)
 
@@ -310,7 +310,7 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 ![](.gitbook/assets/chapter1_5.jpg)
 
-这样，我们就可以在配置好的模块中编写Kotlin代码了。
+这样，我们就可以在配置好的模组中编写Kotlin代码了。
 
 ### 在新项目中使用Kotlin
 

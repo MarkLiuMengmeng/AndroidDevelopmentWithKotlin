@@ -422,7 +422,7 @@ getAndFillData()
 
 一般来说，我们在遇到多个有默认值的参数都应该使用命名参数语法，特别是像lambda表达式这样的函数类型，如果在传参时不加上参数名，我们不容易看出它的具体作用。
 
-### lambda表达式处于参数列表末尾时的使用惯例
+### 处于参数列表末尾时的使用惯例
 
 高阶函数在Kotlin中是非常重要的组成部分，因此有必要让它的使用更简单。如果函数的最后一个参数是函数，那么我们在使用lambda表达式传参时可以写在圆括号之外。我们先定义一个尾参数是函数的高阶函数：
 
@@ -619,7 +619,7 @@ class MainActivity: Activity(), OnElementClicked {
 
 ## 内联函数
 
-高阶函数具有非常强大的功能并且提高了代码的重用性，但是我们仍要考虑代码的效率问题。lambda表达式会被编译为类，而在Java中类的对象创建是开销较大的操作。
+高阶函数具有非常强大的功能并且提高了代码的重用性，但是我们仍要考虑代码的效率问题。lambda表达式会被编译为类，而在Java中类的创建是开销较大的操作。
 
 我们可以将函数标记为内联函数，在享有函数带来的好处的同时提升代码效率。内联函数的概念最早可追溯至C和C++，当一个函数被标记为内联函数时，在编译时编译器会将所有函数调用替换为函数体中的代码，它们将会被视为代码而不是函数，这会生成更多的字节码，换来的是运行时的效率提升。
 
@@ -694,78 +694,4 @@ inline fun inlineFun(noinline f: () -> Int) {
 * 内联函数无法使用更严格的修饰符修饰的函数，因此在大量需要`private`保护API的库中，它的使用会造成一些问题。
 
 ## 非局部返回
-
-我们在前面已经提到过可以使用高阶函数来定义控制结构，比如我们前面的`ifSupportsLolipop`函数和`repeatUntilError`函数。让我们再来定义一个应用更普遍的`forEach`控制结构作为遍历的另一种方案：
-
-```kotlin
-fun forEach(list: List<Int>, body: (Int) -> Unit) {
-    for (i in list) body(i)
-}
-// 使用示例
-val list = listOf(1, 2, 3, 4, 5)
-forEach(list) { print(it) } // 打印结果: 12345
-```
-
-这样实现最大的问题是我们无法返回到外部的函数当中去，让我们比较一下使用`for`和`forEach`实现的求最大界值：
-
-{% tabs %}
-{% tab title="使用for实现" %}
-```kotlin
-fun maxBounded(list: List<Int>, upperBound: Int, lowerBound: Int): Int {
-    var currentMax = lowerBound
-    for(i in list) {
-        when {
-            i > upperBound -> return upperBound
-            i > currentMax -> currentMax = i
-        }
-    }
-    return currentMax
-}
-```
-{% endtab %}
-
-{% tab title="使用forEach实现" %}
-```kotlin
-fun maxBounded(list: List<Int>, upperBound: Int, lowerBound: Int): Int {
-    var currentMax = lowerBound
-    forEach(list) { i->
-        when {
-            i > upperBound -> return upperBound //错误，此处不允许使用返回语句
-            i > currentMax -> currentMax = i
-        }
-    }
-    return currentMax
-}
-```
-{% endtab %}
-{% endtabs %}
-
-同样的代码逻辑如果使用`forEach`实现就会产生错误，无法通过编译。原因是lambda表达式编译时会编译成一个类的匿名对象，其中包含有定义的函数，这样一来lambda表达式和外部不是同一个上下文，自然无法直接返回。
-
-解决的方法之一是将`forEach`标记为内联，这样在编译时会将函数体直接替换而不会创建对象：
-
-```kotlin
-inline fun forEach(list: List<Int>, body: (Int) -> Unit) {
-    for (i in list) body(i)
-}
-
-fun maxBounded(list: List<Int>, upperBound: Int, lowerBound: Int): Int {
-    var currentMax = lowerBound
-    forEach(list) { i->
-        when {
-            i > upperBound -> return upperBound //正确
-            i > currentMax -> currentMax = i
-        }
-    }
-    return currentMax
-}
-```
-
-在内联函数的lambda表达式中使用的返回语句称为**非局部返回**（Non-local returns）。
-
-## lambda表达式中带标签的返回
-
-让我们直接来看带标签返回的示例：
-
-
 
