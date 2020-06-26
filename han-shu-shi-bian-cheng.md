@@ -22,7 +22,7 @@ lateinit var d: (Int,Int)->String //以两个Int为参数并返回String的函�
 
 fun printInt(value:Int) = println(value)
 
-c = ::printInt // 此操作符用来引用该函数
+val c = ::printInt // 此操作符用来引用该函数
 c(10) // 可以像调用函数那样使用这个变量，打印结果：10
 ```
 
@@ -65,6 +65,43 @@ print(a?.invoke(4)) // 打印结果: null
 ```
 
 `Function`接口不存在于标准库中，它是一个**编译器合成类型**（synthetic compilergenerated type），在编译的时候才会生成，因此没有人为地限制参数的数目，同时也没有增加标准库的体量。
+
+### 函数引用
+
+有些时候我们需要将某个函数作为值来传递，我们在本节一开始已经用过一次，表示函数引用的语法是：
+
+`::函数名(function name)`
+
+来看一个简单的例子：
+
+```kotlin
+fun printInt(value:Int) = println(value)
+
+val c = ::printInt
+```
+
+函数的引用使用的是反射，这就是为什么引用中还包含着函数的其他信息：
+
+```kotlin
+val c = ::printInt
+val annotations = c.annotations
+val parameters = c.parameters
+println(annotations.size) // 打印结果: 0
+println(parameters.size) // 打印结果: 1
+```
+
+我们还可以引用某个类的方法，其语法是：
+
+`类型名(type name)::函数名(functionName)`
+
+下面是一个示例：
+
+```kotlin
+val nonEmpty = listOf("A", "", "B", "").filter(String::isNotEmpty)
+print(nonEmpty) // 打印结果: ["A", "B"]
+```
+
+
 
 ## 匿名函数
 
@@ -843,4 +880,50 @@ inline fun runOnUiThread(crossinline action: () -> Unit) {
 使用跨内联修饰符可以让我们享受内联所带来的性能提升的同时，不影响函数在复杂上下文中的执行。
 
 ## 内联属性
+
+自Kotlin1.1起，内联修饰符可以用在没有幕后字段的属性上。我们可以用于修饰整个属性，也可以用于修饰单个访问器。修饰整个属性，相当于该属性的每个访问器都标为内联，以下两种写法是等价的：
+
+{% tabs %}
+{% tab title="修饰单个访问器" %}
+```kotlin
+var viewIsVisible: Boolean
+inline get() = findViewById(R.id.view).visibility == View.VISIBLE
+inline set(value) {
+    findViewById(R.id.view).visibility = if (value) View.VISIBLE else View.GONE
+}
+```
+{% endtab %}
+
+{% tab title="修饰整个属性" %}
+```kotlin
+inline var viewIsVisible: Boolean
+get() = findViewById(R.id.view).visibility == View.VISIBLE
+set(value) {
+    indViewById(R.id.view).visibility = if (value) View.VISIBLE else View.GONE
+}
+```
+{% endtab %}
+{% endtabs %}
+
+标记为内联的属性或属性的访问器，在编译时会将对应函数的调用替换为函数体：
+
+{% tabs %}
+{% tab title="代码中" %}
+```kotlin
+if (!viewIsVisible)
+viewIsVisible = true
+```
+{% endtab %}
+
+{% tab title="编译后" %}
+```kotlin
+if (!(findViewById(R.id.view).getVisibility() == View.VISIBLE))
+{
+    findViewById(R.id.view).setVisibility(true?View.VISIBLE:View.GONE);
+}
+```
+{% endtab %}
+{% endtabs %}
+
+内联属性也会增加编译后的字节码量以换取性能的提升，对于大多数的属性来说，使用内联修饰符是有利的。
 
