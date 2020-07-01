@@ -30,5 +30,38 @@ var userLsit : List<User>
 
 ## 类型形参和类型实参
 
+在函数基础那一章我们提到过函数的参数有形参（函数声明时定义的变量）和实参（函数调用时传入的变量值）之分。类似地，在泛型中也有类型形参（泛型定义时的类型参数）和类型实参（泛型初始化时指定的实际类型）之分。
 
+我们可以把类型形参用在方法中，以确保传入我们希望的数据类型或返回一个我们期望的类型：
+
+```kotlin
+class List<T> {
+    fun add(item:T) { 
+        // code
+    }
+    fun get(intex: Int): T { 
+        // code
+    }
+}
+```
+
+而传入的数据类型以及返回的数据类型取决于我们使用这些方法时的类型实参：
+
+```kotlin
+class User(val name: String)
+
+val userList = List<User>()
+userList.add(User("Mamun"))
+println(userList.getItemAt(0).name) 
+```
+
+当我们使用类型实参指定好数据类型后，编译器会为我们进行类型检查，以确保所有的对象都是我们指定的数据类型，因此，当我们尝试传入其它数据类型时，编译器会报错：
+
+```kotlin
+val userList = List<User>()
+userList.add(User("Mamun"))
+userList.add(true) // 错误，已经指定为User类型后，不能接收Boolean类型参数
+```
+
+## 泛型的约束
 
