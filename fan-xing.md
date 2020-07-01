@@ -72,3 +72,18 @@ class List<T>
 class List<T: Any?>
 ```
 
+当我们显式地指定上界时就可以限定我们使用参数类型的范围：
+
+```kotlin
+class List<T: Number>
+//使用示例
+var numberList = List<Number>()
+var intList = List<Int>()
+var doubleList = List<Double>()
+var stringList = List<String>() // 错误，不符合泛型约束
+```
+
+上面的例子中`Number`类是一个抽象类，是Kotlin中数字类型（如`Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`）的超类。我们可以使用`Number`类及其所有子类作为类型参数，但是我们无法使用`String`类型，因为它不是`Number`类的子类，任何不符合指定类型的声明都会被IDE和编译器拒绝。类型参数同样有类型可空性的区分。
+
+### 可空性
+
