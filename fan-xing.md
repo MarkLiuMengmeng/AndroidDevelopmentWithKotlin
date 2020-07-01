@@ -63,5 +63,12 @@ userList.add(User("Mamun"))
 userList.add(true) // 错误，已经指定为User类型后，不能接收Boolean类型参数
 ```
 
-## 泛型的约束
+## 泛型约束
+
+默认情况下，我们可以使用任何类型作为类型参数，同时我们也可以限定我们使用参数类型的范围，要做到这一点，需要定义**参数类型边界**（type parameter bound），最常见的**泛型约束**（generic constraints）是**上界**（upper bound），`Any?`是所有的类型参数的隐式上界，这就是为什么下面两种声明是等价的：
+
+```kotlin
+class List<T>
+class List<T: Any?>
+```
 
