@@ -1,6 +1,6 @@
 ---
 description: >-
-  泛型是一种编程风格，指的是类，函数，数据结构或算法可以以某种方式编写，从而以后我们可以指定确切的类型。
+  s泛型是一种编程风格，指的是类，函数，数据结构或算法可以以某种方式编写，从而以后我们可以指定确切的类型。
   通常泛型提供类型安全性以及针对各种数据重用特定代码结构的能力。在本章，我们将了解泛型为什么会存在及如何定义泛型类、接口及函数。讨论如何在运行时处理泛型，以及泛型的继承关系，还有如何处理泛型的可空性。Kotlin中的泛型和Java很类似，不过Kotlin有一些新的改进，让我们开始吧～
 ---
 
@@ -86,4 +86,69 @@ var stringList = List<String>() // 错误，不符合泛型约束
 上面的例子中`Number`类是一个抽象类，是Kotlin中数字类型（如`Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`）的超类。我们可以使用`Number`类及其所有子类作为类型参数，但是我们无法使用`String`类型，因为它不是`Number`类的子类，任何不符合指定类型的声明都会被IDE和编译器拒绝。类型参数同样有类型可空性的区分。
 
 ### 可空性
+
+当我们定义了一个无界的类型参数时，我们可以指定可空类型和非空类型作为类型参数，因为上面我们提到无界的隐式上界就是`Any?`。有时，我们需要避免可空类型作为我们的类型参数，那么，我们需要显式声明一个非空类型的参数类型上界：
+
+```kotlin
+class View (val name:String)
+class ViewGroup<T : View>
+
+var viewGroupA: ViewGroup<View>
+var viewGroupB: ViewGroup<View?> // 错误，该类不接收可空类型的参数
+```
+
+假设我们的`ViewGroup`类有一个取最后一个`View`的函数：
+
+```kotlin
+class ViewGroup<T : View>(private val list: List<T>) {
+    fun last(): T = list.last()
+}
+```
+
+我们如果给构造器传入一个空的列表，那么我们的程序将崩溃，因为当索引对应的列表元素不存在时，`last`方法会抛出一个异常：
+
+```kotlin
+val viewGroup = ViewGroup<View>(listOf())
+//...
+val view = viewGroup.last()//错误: java.util.NoSuchElementException: List is empty.
+println(view.name)
+```
+
+相比于程序崩溃，我们可能更希望当列表为空时返回一个空值，Kotlin标准库中已经有对应的方法`lastOrNull`：
+
+```kotlin
+class ViewGroup<T : View>(private val list: List<T>) {
+    fun lastOrNull(): T = list.lastOrNull() //错误，类型推断为可空类型，但函数返回类型要求不可空
+}
+```
+
+但程序不会通过编译，因为推断类型与函数指定的返回类型不一致。为了解决这个冲突，我们可以在**使用端**（use-site）的类型参数加一个`?`来声明参数类型是可空的：
+
+```kotlin
+class ViewGroup<T : View>(private val list: List<T>) {
+    fun lastOrNull(): T? = list.lastOrNull()
+}
+```
+
+请注意`ViewGroup`的类型参数的上界是非空类型`View`，而使用`T?`意味着类型参数是否为空，返回类型都视为可空类型。让我们使用修改后的`ViewGroup`类：
+
+```kotlin
+val viewGroup = ViewGroup<View>(listOf())
+//...
+val view = viewGroup.lastOrNull()
+println(view?.name) // 打印结果：null
+```
+
+同时，在使用端声明可空的类型参数不影响我们在**声明端**（declaration-site）声明可空的类型参数，使用端和声明端的类型参数的可空性都可分别指定：
+
+```kotlin
+class ViewGroup<T : View?>(private val list: List<T>) {
+    fun lastOrNull(): T? = list.lastOrNull()
+}
+
+val viewGroup = ViewGroup(listOf(View("First"),null))
+//...
+val view = viewGroup.lastOrNull()
+println(view?.name) // 打印结果：null
+```
 
