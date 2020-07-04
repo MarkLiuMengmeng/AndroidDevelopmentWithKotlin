@@ -18,6 +18,21 @@ description: >-
 class List<T> // T 是类型参数
 ```
 
+`T`只是一个占位符，并不是固定的写法，换成别的字母声明也可以：
+
+```kotlin
+class List<E> // T换成E后，声明和前面的是等价的
+```
+
+{% hint style="info" %}
+虽然类型参数的名称可以随意指定，但我们在代码中经常能看到有以下常见的名称，是一种编码规范：
+
+* **？**：表示不确定的类型
+*  **T \(type\)** ：表示具体的一个类型
+*  **K ,V \(key ,value\)** ：分别代表键和值
+*  **E \(element\)** ：代表元素
+{% endhint %}
+
 类型参数的含义是我们定义的类会使用一种特定的类型，但该类型会延后在创建时指定，这样一个`List`类可以初始化为多种数据类型：
 
 ```kotlin
@@ -150,5 +165,38 @@ val viewGroup = ViewGroup(listOf(View("First"),null))
 //...
 val view = viewGroup.lastOrNull()
 println(view?.name) // 打印结果：null
+```
+
+### 型变
+
+在面向对象编程规范中，继承是很常见的概念，被继承的类是继承类的超类，继承类是被继承类的子类：
+
+```kotlin
+open class Animal(val name: String)
+class Dog(name: String): Animal(name)
+```
+
+`Dog`类继承自`Animal`类，`Dog`类是`Animal`类的子类。这意味着我们可以在所有要求使用`Animal`类的地方使用`Dog`类：
+
+```kotlin
+fun present(animal: Animal) {
+    println( "This is ${ animal. name } " )
+}
+present(Dog( "Pipi" )) // 打印结果: This is Pipi
+```
+
+**类型**（type）相比于**类**（class）而言，是一个更为广泛的概念，类型可由类或接口定义，或者由语言内置提供（原生数据类型）。每个Kotlin类（以`Dog`类为例）都至少有两种数据类型——可空类型（`Dog?`）和非空类型（`Dog`），泛型类（以`class Box<T>`）就更多了——`Box<Dog>`，`Box<Dog?>`，`Box<Animal>`，`Box<Box<Animal>>`等等。
+
+上面我们所说的继承关系（`Dog`和`Animal`）放在泛型中又如何呢？在默认情况下，Kotlin中的泛型是**不型变**（invariant）的，这意味着，`Box<Dog>`类型和`Box<Animal>`类型没有继承关系:
+
+```kotlin
+class Box<T>
+open class Animal
+class Dog : Animal()
+var animalBox = Box<Animal>()
+var dogBox = Box<Dog>()
+
+animalBox = dogBox // 错误，类型不符
+dogBox = animalBox // 错误，类型不符
 ```
 
