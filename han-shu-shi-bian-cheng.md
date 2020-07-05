@@ -101,7 +101,29 @@ val nonEmpty = listOf("A", "", "B", "").filter(String::isNotEmpty)
 print(nonEmpty) // 打印结果: ["A", "B"]
 ```
 
+在引用伴随对象中的函数时，还必须显式地在类型名中把`Companion`写出：
 
+```kotlin
+class Printer{
+    companion object{
+        fun printInt(value:Int) = println(value)
+    }
+}
+
+val c = Printer.Companion::printInt
+```
+
+另外比较常见的使用场景可能是引用构造器，在Kotlin中引用构造器就像引用普通函数一样，也是双冒号加上函数名，构造器的名称和类名相同。比如当我们想将一个**数据传输对象**（DTO,data transfer object）转换成另一种类型时：
+
+```kotlin
+fun toUsers(usersDto: List<UserDto>) = usersDto.map(::User)
+```
+
+{% hint style="info" %}
+数据传输对象DTO一般用于承载沟通外部API和本地数据模型的数据，解耦接口调用者和接口实现者，在保持与外部接口一致性的同时，放开了对本地数据模型的限制。
+{% endhint %}
+
+使用函数引用往往要比匿名函数和lambda表达式更简短，特别是在函数的实现比较长或者被多次作为参数传递时，对于可读性的提升更为显著。
 
 ## 匿名函数
 

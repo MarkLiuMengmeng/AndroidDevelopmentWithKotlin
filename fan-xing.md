@@ -200,3 +200,15 @@ animalBox = dogBox // 错误，类型不符
 dogBox = animalBox // 错误，类型不符
 ```
 
+在Kotlin中，超类和子类的关系在应用到泛型上时可以得到保留（**协变**——covariant），也可以反转（**逆变**——contravariant），还可以忽略（**不型变**——invariant）。
+
+协变的含义是，当`Dog`是`Animal`的子类时，`Box<Dog>`也是`Box<Animal>`的子类。
+
+反协变的含义是，当`Dog`是`Animal`的子类时，`Box<Animal>`是`Box<Dog>`的子类。
+
+可以用一个图描述这三种协变关系：
+
+![](.gitbook/assets/chapter6_1.jpg)
+
+定义协变和反协变，需要使用**型变修饰符**（variance modifiers）。
+
