@@ -212,3 +212,18 @@ dogBox = animalBox // 错误，类型不符
 
 定义协变和反协变，需要使用**型变修饰符**（variance modifiers）。
 
+### 型变修饰符
+
+泛型在Kotlin中默认是不型变的，所以默认情况下，我们在函数的参数列表中或者变量中定义是什么类型就只能使用定义的类型：
+
+```kotlin
+public class Box<T> { }
+fun sum(list: Box<Number>) { /* ... */ }
+// 使用示例
+sum(Box<Any>()) // 错误
+sum(Box<Number>()) // 正确
+sum(Box<Int>()) // 错误
+```
+
+即使`Int`是`Number`的子类型，也不能用在`sum`函数中；`Any`是`Number`类型的超类，也同样不能使用。我们可以使用型变修饰符来放松这个限制，在Java中我们使用**通配符**`?`（wildcard notation）来代表一个未知的类型，使用它来定义带有上界或者带有下界的参数类型。在Kotlin中，我们可以使用`in`和`out`修饰符同样可以达到相似的效果。
+
