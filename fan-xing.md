@@ -227,3 +227,27 @@ sum(Box<Int>()) // 错误
 
 即使`Int`是`Number`的子类型，也不能用在`sum`函数中；`Any`是`Number`类型的超类，也同样不能使用。我们可以使用型变修饰符来放松这个限制，在Java中我们使用**通配符**`?`（wildcard notation）来代表一个未知的类型，使用它来定义带有上界或者带有下界的参数类型。在Kotlin中，我们可以使用`in`和`out`修饰符同样可以达到相似的效果。
 
+在Java中，一个带上界的通配符意味着可以接受上界类型及其所有的子类型：
+
+```kotlin
+//Java
+public void sum(Box<? extends Number> list) { /* ... */ }
+// 使用示例
+sum(new Box<Any>()) // 错误
+sum(new Box<Number>()) // 正确
+sum(new Box<Int>()) // 正确
+```
+
+对应到Kotlin中，我们应该使用`out`修饰符，它用来表示协变行为，允许特定类型及其子类型参数化泛型：
+
+```kotlin
+//Kotlin
+fun sum(list: Box<out Number>) { /* ... */ }
+// 使用示例
+sum(Box<Any>()) // 错误
+sum(Box<Number>()) // 正确
+sum(Box<Int>()) // 正确
+```
+
+在Java中，带有下界的通配符代表
+
