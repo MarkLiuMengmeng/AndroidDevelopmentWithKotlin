@@ -249,5 +249,64 @@ sum(Box<Number>()) // 正确
 sum(Box<Int>()) // 正确
 ```
 
-在Java中，带有下界的通配符代表
+在Java中，带有下界的通配符意味着可以接受指定类型及其超类：
+
+```kotlin
+//Java
+public void sum(Box<? super Number> list) { /* ... */ }
+// 使用示例
+sum(new Box<Any>()) // 正确
+sum(new Box<Number>()) // 正确
+sum(new Box<Int>()) // 错误
+```
+
+对应到Kotlin中，我们应该使用`in`修饰符，它用来表示逆变行为，允许特定类型及其超类型参数化泛型：
+
+```kotlin
+//Kotlin
+fun sum(list: Box<in Number>) { /* ... */ }
+//使用示例
+sum(Box<Any>()) // 正确
+sum(Box<Number>()) // 正确
+sum(Box<Int>()) // 错误
+```
+
+需要注意的是，修饰符`in`和`out`是不允许同时使用的。
+
+我们还可以在两种不同的位置（声明端和使用端）定义型变。我们回顾一下我们前面提过的例子：
+
+```kotlin
+class Box<T>
+open class Animal
+class Dog : Animal()
+var animalBox = Box<Animal>()
+var dogBox = Box<Dog>()
+
+animalBox = dogBox // 错误，类型不符
+dogBox = animalBox // 错误，类型不符
+```
+
+有些时候，子类型参数化的泛型也能适用于我们的功能逻辑，那么我们需要完成子类型参数化的泛型对超类型参数化的泛型赋值，可以在使用端定义型变：
+
+```kotlin
+class Box<T>
+open class Animal
+class Dog : Animal()
+
+var animal:Box<out Animal> = Box<Animal>() //使用端使用型变修饰符
+animal = Box<Dog>() // 正确
+```
+
+我们在少量需要这样赋值时可以这样做，但如果我们有大量变量需要这样赋值，那么我们每个变量都要使用型变修饰符，并且要明确写出类型而不能使用类型推断，这显然增加了代码冗余。为了改善这一点，我们可以将使用端定义型变改为声明端：
+
+```kotlin
+class Box<out T> //声明端使用型变修饰符
+open class Animal
+class Dog : Animal()
+
+var animal = Box<Animal>()
+animal = Box<Dog>() // 正确
+```
+
+
 
