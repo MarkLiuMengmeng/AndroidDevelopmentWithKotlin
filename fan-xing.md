@@ -308,5 +308,5 @@ var animal = Box<Animal>()
 animal = Box<Dog>() // 正确
 ```
 
-
+在Java中，数组是协变的
 
