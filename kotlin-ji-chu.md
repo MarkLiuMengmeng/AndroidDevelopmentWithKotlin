@@ -15,7 +15,7 @@ fun main() {
 }
 ```
 
-`val`是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带`final`修饰符的变量。但它不能保证引用的对象中的值不会被修改（重新赋值）：
+`val`是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带`final`修饰符的变量。但它不能保证引用的对象中的值不会被修改：
 
 ```kotlin
 class Fruit(var name:String)//类的声明会在第四章中说明
@@ -66,7 +66,7 @@ var fruit: Any = "orange"
 fruit = 10
 ```
 
-`Any`相当于`Java`中的Object，处于继承层级的顶端。
+`Any`相当于`Java`中的`Object`，处于继承层级的顶端。
 
 编译器同样可以从函数进行类型推断：
 
@@ -76,7 +76,7 @@ val total = sum(16, 64)
 
 有时候我们自己并不确定编译器到底给这个变量设置了什么数据类型，这个类型可能是`Int`，也可能是`Double`或者`Float`，我们可以将插入符置于变量名上，按快捷键（Windows中的是**Shift + Ctrl + P**，macOS中的是**arrow key + control + P**）显示具体推断成何种数据类型：
 
-![](.gitbook/assets/chapter2_1.jpg)
+![](.gitbook/assets/chapter2\_1.jpg)
 
 类型推断同样适用于泛型：
 
@@ -103,7 +103,7 @@ var map = mapOf("Everest" to 8848, "Mont Blanc" to "4810")
 
 `Map`的类型由`Pair`的类型推断而来，`Pair`的类型由传进去参数的类型推断而来。当传入不同类型的参数时，编译器会寻找最近的共有类型。在上面的例子中编译器选择了`Any`，因为`String`和`Int`都继承自`Any`：
 
-![](.gitbook/assets/chapter2_2.jpg)
+![](.gitbook/assets/chapter2\_2.jpg)
 
 我们可以看到，类型推断可以很好地帮我们精简一部分代码，减少一些工作。但我们有时还是需要手动明确声明数据类型：
 
@@ -112,10 +112,6 @@ var time = 18 //使用整数时，默认的推断类型是Int
 var time: Long = 18 //显示声明数据类型为Long
 var time = 18L //用字面常量（literal constant）声明数据类型为Long
 ```
-
-{% hint style="info" %}
-[关于字面常量是什么及译法](http://blog.sina.com.cn/s/blog_5d29ee450102w85l.html)
-{% endhint %}
 
 因为Kotlin是强类型语言，当编译器缺少信息确定变量的数据类型时，我们就需要显式声明它，否则将被视为错误：
 
@@ -146,7 +142,7 @@ name.toUpperCase() // 错误，引用可能为空
 
 每一个非空类型都有一个对应的可空类型：`Int`对应`Int?`、`String`对应`String?`等。这个规则也适用于所有Android Framework中的类（`View`对应`View?`）、第三方库中的类（`OkHttpClient`对应`OkHttpClient?`）、自定义的类（`MyCustomClass`对应`MyCustomClass?`），也就是说每个非泛型类都定义两种类型：可空类型和非空类型，非空类型是它对应的可空类型的子类：
 
-![](.gitbook/assets/chapter2_3.jpg)
+![](.gitbook/assets/chapter2\_3.jpg)
 
 `Nothing`是一个虚类型（uninhabited type），无法拥有实例。这样的继承结构也说明了为什么非空类型可以复制给它对应的可空类型，反之则不行：
 
@@ -159,12 +155,12 @@ view = nullableView // 错误，nullableView和view类型不一致，也不是�
 
 泛型类则有更多的可能，以`ArrayList`为例：
 
-| 类型声明 | ArrayList自身是否可空 | ArrayList中的元素是否可空 |
-| :--- | :--- | :--- |
-| ArrayList&lt;Int&gt; | 否 | 否 |
-| ArrayList&lt;Int&gt;? | 是 | 否 |
-| ArrayList&lt;Int?&gt; | 否 | 是 |
-| ArrayList&lt;Int?&gt;? | 是 | 是 |
+| 类型声明              | ArrayList自身是否可空 | ArrayList中的元素是否可空 |
+| ----------------- | --------------- | ----------------- |
+| ArrayList\<Int>   | 否               | 否                 |
+| ArrayList\<Int>?  | 是               | 否                 |
+| ArrayList\<Int?>  | 否               | 是                 |
+| ArrayList\<Int?>? | 是               | 是                 |
 
 让我们来看一个使用Java开发Android时常见的错误：
 
@@ -391,7 +387,7 @@ name = age.toString()
 
 我们假设两个类有这样一个继承关系：
 
-![](.gitbook/assets/chapter2_4.jpg)
+![](.gitbook/assets/chapter2\_4.jpg)
 
 如果我们需要把一个`Animal`变量进行类型转换为`Tiger`然后调用其成员方法，在Java中我们需要这样做：
 
@@ -434,7 +430,7 @@ animal.isHungry() //执行到这里编译器同样能确定animal是Tiger类的�
 在条件表达式使用中，由于`&&`和`||`具有短路效果。以`condition1() && condition2()`为例，当左侧`conditon1()`为返回true时，右侧`candition2()`才会执行。因此智能类型转换在此处也有效：
 
 ```kotlin
-if (animal is Tiger&& animal.isHungry()) {
+if (animal is Tiger && animal.isHungry()) {
     println("Tiger is hungry")
 }
 ```
@@ -476,14 +472,14 @@ b = 24 // 即使有值也被存储为装箱数据类型
 
 Kotlin用于存储数字的数据类型等同于Java的原生数据类型：
 
-| 数据类型 | 存储位宽\(Bit\) |
-| :--- | :--- |
-| Int | 32 |
-| Short | 16 |
-| Long | 64 |
-| Float | 32 |
-| Double | 64 |
-| Byte | 8 |
+| 数据类型   | 存储位宽(Bit) |
+| ------ | --------- |
+| Int    | 32        |
+| Short  | 16        |
+| Long   | 64        |
+| Float  | 32        |
+| Double | 64        |
+| Byte   | 8         |
 
 与Java中不同的一点是，Kotlin中不会为数字类型提供隐式的转换，需要显式地通过标准库的方法转换：
 
@@ -517,17 +513,17 @@ val string = "a" // 声明一个String类型
 
 常见的特殊字符：
 
-| 转义方式 | 含义 |
-| :--- | :--- |
-| \t | 制表符 |
-| \b | 退格符 |
-| \n | 换行符 |
-| \r | 回车 |
-| \' | 单引号 |
-| \" | 双引号 |
-| \\ | 反斜杠 |
-| \$ | 美元符 |
-| \u | Unicode转义序列 |
+| 转义方式 | 含义          |
+| ---- | ----------- |
+| \t   | 制表符         |
+| \b   | 退格符         |
+| \n   | 换行符         |
+| \r   | 回车          |
+| \\'  | 单引号         |
+| \\"  | 双引号         |
+| \\\\ | 反斜杠         |
+| \\$  | 美元符         |
+| \u   | Unicode转义序列 |
 
 ### 数组
 
@@ -724,7 +720,7 @@ when (x) {
 
 ```kotlin
 val animal = "Tiger"
-val message= when (vehicle) {
+val message= when (animal) {
     "Tiger" -> {
         // Some code
         "Four legs"
@@ -894,11 +890,11 @@ outer@ for(value in intRange) {
 
 ## 异常（Exception）
 
-大多数的Java编程指南（如：《Effective Java》）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**已检验异常**（checked exception）和**未检验异常**（unchecked exception）。
+大多数的Java编程指南（如：《Effective Java》）都建议进行有效性验证，即经常检查参数和对象和有效性并在出问题的时候抛出异常。Java的异常系统有两种异常：**受检异常**（checked exception）和**非受检异常**（unchecked exception）。
 
-未检验异常是指未被`try`... `catch`代码块包围的异常，当这种异常发生时会沿着调用栈依次传递，如果未找到`try`... `catch`来处理此异常就会终止线程的执行。
+非受检异常是指未被`try`... `catch`代码块包围的异常，当这种异常发生时会沿着调用栈依次传递，如果未找到`try`... `catch`来处理此异常就会终止线程的执行。
 
-已检验异常是指被`try`... `catch`代码块包围的异常，当我们用一个声明会抛出异常的方法时，如果不把可能出现的异常用关键字`throw`抛出，那么就必须使用`try`... `catch`代码块，我们有时认为我们的代码逻辑是没有漏洞的，会将`catch`包围的语句置空：
+受检异常是指被`try`... `catch`代码块包围的异常，当我们用一个声明会抛出异常的方法时，如果不把可能出现的异常用关键字`throw`抛出，那么就必须使用`try`... `catch`代码块，我们有时认为我们的代码逻辑是没有漏洞的，会将`catch`包围的语句置空：
 
 ```kotlin
 try {
@@ -910,7 +906,7 @@ try {
 
 这种代码会使异常发生时不再传递，只是简单的消失。但这种安全只是假象，它可能会把关键的异常隐藏起来，使程序产生难以预料的行为和难以定位的bug。
 
-在Kotlin中这种情况将不会发生，因为在Kotlin中所有异常都被视为未检验异常，即使使用在Java中声明会抛出异常的类，我们也不需要加上`try`... `catch`代码块才能让程序通过编译：
+在Kotlin中这种情况将不会发生，因为在Kotlin中所有异常都被视为非受检异常，即使使用在Java中声明会抛出异常的类，我们也不需要加上`try`... `catch`代码块才能让程序通过编译：
 
 ```kotlin
 fun makeTroubles() {
@@ -950,7 +946,7 @@ val result = try {
 
 ## 编译时常量（Compile-time constant）
 
-我们知道`val`变量是已读的，很多时候我们可以把它当作常量来处理，但有些时候在编译时并不知道它的值：
+我们知道`val`变量是不变的，很多时候我们可以把它当作常量来处理，但有些时候在编译时并不知道它的值：
 
 ```kotlin
 val name:String = getName()
@@ -958,13 +954,13 @@ val name:String = getName()
 
 它将会在运行时被赋值。我们有时需要在编译时就使用它们，比如注解中的赋值，而注解是在编译时进行的操作：
 
-![](.gitbook/assets/chapter2_5.jpg)
+![](.gitbook/assets/chapter2\_5.jpg)
 
 {% hint style="info" %}
 [上图的一些名词的解释](http://blog.itpub.net/26246674/viewspace-706703/)
 {% endhint %}
 
-为了确保值在编译时能够使用，我们要使用`const`修饰符来标记变量：
+为了确保值在编译时能够使用，我们需要使用`const`修饰符：
 
 ```kotlin
 const val MAX_LOG_ENTRIES = 100
@@ -986,4 +982,3 @@ class Test
 ## 委托（Delegate）
 
 Kotlin对委托提供了语言级别的支持，并相对Java做了许多改进。委托在程序的开发过程中应用频繁，因此我们单开一章来介绍（第八章）。
-

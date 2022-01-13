@@ -4,7 +4,7 @@ description: Kotlin是一门非常出色的语言，能让Android开发更轻松
 
 # Kotlin上手
 
-## 来和Kotlin认识一下
+## 初识Kotlin
 
 让我们看看Kotlin的一些优势：
 
@@ -18,7 +18,7 @@ description: Kotlin是一门非常出色的语言，能让Android开发更轻松
 Kotlin团队致力于使Kotlin插件变得越来越好。Kotlin大多数错误都已快速修复并且实现了开发者社区要求的许多功能。
 
 {% hint style="info" %}
-Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
+Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net)
 
 Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
@@ -142,7 +142,7 @@ view.setOnClickListener {
 }
 ```
 
-Kotlin标准库\(stdlib\)包含着很多可以高效简洁地处理集合的函数，使我们可以轻松地在列表上进行**流处理**（stream processing）：
+Kotlin标准库(stdlib)包含着很多可以高效简洁地处理集合的函数，使我们可以轻松地在列表上进行**流处理**（stream processing）：
 
 ```kotlin
 val text = capitals.map { (_, country) -> country.toUpperCase() }
@@ -270,12 +270,12 @@ val retrofit by lazy {
 }
 ```
 
-Retrofit（一个非常受欢迎的Android网络框架）属性初始化将被延迟到第一次访问该值时。延迟初始化可能会加快Android程序的启动。这是初始化一个类中多个对象的好方法，特别是（根据应用使用情况）某个对象不是一直需要或者不是所有的对象都需要的时候。
+Retrofit（一个非常流行的Android网络框架）属性初始化将被延迟到第一次访问该值时。延迟初始化可能会加快Android程序的启动。这是初始化一个类中多个对象的好方法，特别是某个对象不是一直需要或者不是所有的对象都需要的时候。
 
 管中窥豹，可见一斑。以上是Kotlin特性的简单介绍，我们会在本书的余下部分详细讨论如何更好地利用Kotlin的能力。
 
 {% hint style="info" %}
-运行Kotlin最快的方法是使用[Kotlin Playground](https://play.kotlinlang.org/)。点击链接，无需下载任何软件，而且可以方便地在各个Kotlin版本之间切换，很容易在上面测试Kotlin的各种语言特性。
+运行Kotlin最快的方法是使用[Kotlin Playground](https://play.kotlinlang.org)。点击链接，无需下载任何软件，而且可以方便地在各个Kotlin版本之间切换，很容易在上面测试Kotlin的各种语言特性。
 
 与Java类似，main函数是Kotlin应用程序的入口。而Android应用程序具有多个入口， main函数是被Android Framework隐式调用的，因此我们无法使用它来运行Android平台上的Kotlin代码。
 {% endhint %}
@@ -290,25 +290,25 @@ Android应用程序具有多个入口（不同的`inetnt`可以启动程序中�
 
 Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下载安装任何软件包。
 
-在Android Studio 2.x版本中使用Kotlin必须手动安装Kotlin插件，在Android Studio中选择 **File \| Settings \| Plugins \| Install JetBrains plugin**，输入Kotlin并点击install：
+在Android Studio 2.x版本中使用Kotlin必须手动安装Kotlin插件，在Android Studio中选择 **File | Settings | Plugins | Install JetBrains plugin**，输入Kotlin并点击install：
 
-![](.gitbook/assets/chapter1_1.jpg)
+![](.gitbook/assets/chapter1\_1.jpg)
 
-安装完成需要重启，待重启之后我们需要在项目中配置Kotlin，进行**Configure Kotlin in project** 操作（Windows中的快捷键是 **Ctrl+Shift+A**，macOS中是 **command + shift + A**），也可以在菜单中点击**Tools \| Kotlin \| Configure Kotlin in Project**：
+安装完成需要重启，待重启之后我们需要在项目中配置Kotlin，进行**Configure Kotlin in project** 操作（Windows中的快捷键是 **Ctrl+Shift+A**，macOS中是 **command + shift + A**），也可以在菜单中点击**Tools | Kotlin | Configure Kotlin in Project**：
 
-![](.gitbook/assets/chapter1_2.jpg)
+![](.gitbook/assets/chapter1\_2.jpg)
 
 然后选择**Android with Gradle**：
 
-![](.gitbook/assets/chapter1_3.jpg)
+![](.gitbook/assets/chapter1\_3.jpg)
 
 最后选择所配置的**模块**（Module）的Kotlin版本：
 
-![](.gitbook/assets/chapter1_4.jpg)
+![](.gitbook/assets/chapter1\_4.jpg)
 
 点击 **Sync Now** 同步一下就完成了：
 
-![](.gitbook/assets/chapter1_5.jpg)
+![](.gitbook/assets/chapter1\_5.jpg)
 
 这样，我们就可以在配置好的模块中编写Kotlin代码了。
 
@@ -316,15 +316,15 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 只需要在创建时勾选 **Include Kotlin support** 即可：
 
-![](.gitbook/assets/chapter1_6.jpg)
+![](.gitbook/assets/chapter1\_6.jpg)
 
 我们可以看到Kotlin的代码源文件放在Java的源文件夹下，我们可以另建一个Kotlin源文件夹，但这不是必需的：
 
-![](.gitbook/assets/chapter1_7.jpg)
+![](.gitbook/assets/chapter1\_7.jpg)
 
 ### 用转换器将Java转换为Kotlin（J2K）
 
-使用 **Java to Kotlin converter \(J2K\)** 有两种方式：
+使用 **Java to Kotlin converter (J2K)** 有两种方式：
 
 第一种是使用快捷键（Windows中的是 **Alt + Shift + Ctrl + K ，**macOS中的是 **option + shift + command + K**）。
 
@@ -334,13 +334,12 @@ Android Studio 3.0起提供了对Kotlin完整的工具支持，无需额外下�
 
 Kotlin REPL是一个Shell，可以快速地帮你验证Kotlin代码。当你需要运行一段独立于Android Framework的Kotlin代码时，它就非常趁手了，因为它比进行App调试快得多：
 
-![](.gitbook/assets/chapter1_8.jpg)
+![](.gitbook/assets/chapter1\_8.jpg)
 
-### 简介Kotlin编译原理
+### 简介Kotlin编译流程
 
 Kotlin可以被编译为**Java字节码**（Java bytecode）然后转成**Dalvik字节码**（Dalvik bytecode）。Kotlin是跨平台的，但我们主要看一下在Android平台的编译流程：
 
-![](.gitbook/assets/chapter1_9.png)
+![](.gitbook/assets/chapter1\_9.png)
 
 也就是说，Java编译器的编译结果和Kotlin编译器的编译结果会在字节码层面合并到一起。在纯Java项目或纯Kotlin项目中，就只有一个对应的编译器工作了。
-
