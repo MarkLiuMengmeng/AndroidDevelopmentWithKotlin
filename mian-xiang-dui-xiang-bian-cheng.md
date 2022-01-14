@@ -76,7 +76,7 @@ public class User {
 }
 ```
 
-我们可以看到仅仅有两个属性的类，代码还是不少。虽然许多IDE可以使用快捷键来生成getter和setter，但较多的代码会影响我们的阅读效率，较多的方法增加了重构中出错的可能性。让我们看看使用Kotlin对这个类的等价定义：
+我们可以看到仅仅有两个属性的类，代码已经不少了。虽然许多IDE可以使用快捷键来生成getter和setter，但较多的代码会影响我们的阅读效率，较多的方法增加了重构中出错的可能性。让我们看看使用Kotlin对这个类的等价定义：
 
 ```kotlin
 class User {
@@ -149,7 +149,7 @@ Java和Kotlin的属性访问语法
 
 **Kotlin**：直接使用`.`来访问属性，如`val name = user.name`，`user.name = "Mamun"`。虽然看起来好像失去了封装性，但实际上Kotlin使用的是getter和setter，所以Kotlin相当于在语言层面内置了面向对象的封装。并且在访问属性的同时可以使用自增和自减操作符，如`user.age++`。
 
-由于Kotlin和Java有良好的互操作性，和上节提到的类的实例化语法类似，使用的地点（Java文件还是Kotlin文件中）决定你应该使用哪种语法。
+由于Kotlin和Java有良好的互操作性，和上节提到的类的实例化语法类似，使用的地点（Java文件还是Kotlin文件）决定你应该使用哪种语法。
 {% endhint %}
 
 ### 自定义getter和setter
@@ -159,7 +159,7 @@ Java和Kotlin的属性访问语法
 我们知道年龄如果为负数是不合理的，让我们给上面的`User`类中的`age`属性加上负值验证：
 
 ```kotlin
-class User(var name: String,age:Int) {
+class User(var name: String, age:Int) {
     var age = age
     get() {
         println("getter value retrieved")
@@ -641,7 +641,7 @@ public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAtt
 
 ## 数据类
 
-我们在开发工作经常会创建一些用于存储数据的类（存储来自数据库或者服务器的数据）。在Java中我们需要写出许多getter和setter，还经常会覆盖`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作仍然是一个问题。
+我们在开发工作经常会创建一些用于存储数据的类（比如存储来自数据库或者服务器的数据）。在Java中我们需要写出许多getter和setter，还经常会覆盖`hashCode`、`equals`等方法。虽然Android Studio可以生成其中的大部分代码，但维护工作仍然是一个问题。
 
 我们已经了解到Kotlin会为我们自动生成getter和setter方法。Kotlin实际上做了更多，我们可以使用`data`关键字来修饰一个类：
 
@@ -655,7 +655,7 @@ data class Product(var name: String, var price: Double)
 
 ### equals和hashCode方法
 
-在处理数据类时，我们经常需要比较两个实例是否数据相等**据**，意思是验证它们是否包含同样的数据而非验证它们是否是同一个实例。常见的做法是使用`equals`方法：
+在处理数据类时，我们经常需要比较两个实例是否数据相等，意思是验证它们是否包含同样的数据而非验证它们是否是同一个实例。常见的做法是使用`equals`方法：
 
 ```kotlin
 product.equals(product1)
@@ -781,7 +781,7 @@ println(productC) // 打印结果：Product(name=Earphone, price=39.9)
 `copy`方法产生的副本是浅拷贝（只复制当前对象，不复制对象中的对象），拷贝前后两个对象中的对象仍是共用一个：
 
 ```kotlin
-data class Producer(val name:String,var address:String)
+data class Producer(val name:String, var address:String)
 data class Product(val name:String, val price:Double, val producer:Producer)
 
 val productA = Product("Glove", 19.9,Producer("A","China"))
@@ -1015,7 +1015,7 @@ public class Singleton {
 
 这种解决方案有的大多是固定的部分，而我们每次实现的时候都要全部写出来，代码有冗余。Kotlin有一种特殊的语言结构叫做对象声明，可以简化单例的创建。
 
-或许你会好奇为何根对象在Kotlin中变成了`Any`而不是`Object`，请考虑一下两点：
+或许你会好奇为何根对象在Kotlin中变成了`Any`而不是`Object`，请考虑以下两点：
 
 * Kotlin不仅支持面向对象编程，而且支持函数式编程
 * 对象声明使用了`object`关键字
@@ -1074,7 +1074,7 @@ val mClickListener = object : View.OnClickListener{
      override fun onClick(v : View){
          println("Click")
      }
-};
+}
 ```
 
 不仅可以用匿名类实现接口，也可以继承类：
