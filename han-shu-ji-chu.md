@@ -168,7 +168,7 @@ printSum() // 打印结果: 0
 
 实参中所包含的数据可以在函数体内部视为一个数组，数组的类型对应着参数的数据类型，一般来说，数组的数据类型会是泛型类`Array<T>，`但在上例中我们使用的是`Int`类型的参数，Kotlin有一个优化过的数组类型`IntArray`，Kotlin会自动使用这个更佳的选择：
 
-![](.gitbook/assets/chapter3_1.jpg)
+![](.gitbook/assets/chapter3\_1.jpg)
 
 我们仍然可以在可变参数之前声明普通的参数：
 
@@ -203,7 +203,7 @@ fun printSum(a: Int, b: Int): Unit {//在实际编码中，可以省略Unit声�
 }
 ```
 
-`Unit`对象等价于Java中的`void`，可以被视作为一个普通的对象，可以赋值给其他变量：
+`Unit`对象等价于Java中的`Void`，可以被视作为一个普通的对象，可以赋值给其他变量：
 
 ```kotlin
 val v = printSum(12, 24)
@@ -257,7 +257,7 @@ fun sumPositive(a: Int, b: Int): Int {
 
 有些时候我们希望定义一个永远抛出异常的函数，比如：
 
-* 在异常处理系统比较重要的项目中，并且需要在异常发生的时候提供更多的信息
+* 在异常处理系统比较重要的项目中，并且需要在异常发生的时候提供更多的信息时
 * 在单元测试中抛出异常，以测试我们代码的异常处理能力
 
 这时候我们可以用到一个特殊类`Nothing`，`Nothing`是一个虚类型（uninhabited type），无法拥有实例。一个返回类型为`Nothing`的函数将不会返回任何值并永远无法运行到`return`语句，只会抛出异常。
@@ -280,7 +280,7 @@ val enclosingElement = element.enclosingElement
 
 为什么这个函数能被赋值为`char`、`String`以及自定义的各种类型呢？这是因为`Nothing`是所有数据类型的子类：
 
-![](.gitbook/assets/chapter2_3.jpg)
+![](.gitbook/assets/chapter2\_3.jpg)
 
 ## 单表达式函数
 
@@ -495,7 +495,6 @@ printValue ("test", inBracket = true, prefix = "") // 正确
 printValue ("test", inBracket = true, "") // 错误
 ```
 
-需要注意的是，命名参数语法也为我们带来了一些额外的考虑，如果我们更改参数的名称，可能会使项目产生一些错误，特别是我们在做一个库的时候，更应该小心更改参数名称。
+需要注意的是，命名参数语法也为我们带来了一些额外的约束，如果我们更改参数的名称，可能会使项目产生一些错误，特别是我们在做一个库的时候，更应该小心更改参数名称。
 
 命名参数语法不能在调用Java函数时使用，因为Java字节码并不总是保留参数的名称（Java8引入了编译器保留参数名称的新特性）。
-

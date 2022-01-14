@@ -1,6 +1,6 @@
 ---
 description: >-
-  书名《Kotlin-Android开发手册》，开源书籍，使用gitbook平台进行编辑和发布。https://liumengtime.gitbook.io/androiddevelopmentwithkotlin/
+  书名《Kotlin安卓开发手册》，开源书籍，使用gitbook平台进行编辑和发布。https://liumengtime.gitbook.io/androiddevelopmentwithkotlin/
 ---
 
 # 作者序
