@@ -13,7 +13,7 @@ Google IO 2017宣布Kotlin成为 Android 官方开发语言，Kotlin在Android�
 
 ## 内容有什么？
 
-1. **Kotlin上手**：介绍Kotlin的特性和使用它的理由，以及如何在Android开发中使用它。
+1. **初识Kotlin**：介绍Kotlin的特性和使用它的理由，以及如何在Android开发中引入它。
 2. **Kotlin基础**：详细呈现Kotlin的基础要素，如各种结构、数据类型等。
 3. **函数基础**：展示用多种方法和在不同位置定义和调用函数。
 4. **面向对象编程**：探索Kotlin面向对象编程相关的特性、各种类。
@@ -31,6 +31,4 @@ Google IO 2017宣布Kotlin成为 Android 官方开发语言，Kotlin在Android�
 
 * Java和面向对象的编程概念，包括对象、类、构造器、接口、方法、getter和setter及泛型等。
 * Android Platform API，这部分知识会帮助你更深入了解示例和Kotlin所解决的问题。即使不是很了解这部分内容，仍然不影响理解本书的绝大部分内容，而且Kotlin也可以应用在数据科学、桌面程序、Web端等领域的开发上。
-
-
 

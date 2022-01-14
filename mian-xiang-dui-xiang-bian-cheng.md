@@ -1,6 +1,6 @@
 ---
 description: >-
-  Kotlin提供了对面向对象编程（OOP）的完整支持。面向对象程序设计以对象为核心，该方法认为程序由一系列对象组成，类是对现实世界的抽象，对象是类的实例。本章将介绍Kotlin中面向对象编程相关的部分，主要是类和对象，Kotlin简化了数据模型类的定义和操作，还支持Java中不支持的操作符重载以及Java8才引入的接口默认实现。
+  Kotlin提供了对面向对象编程（OOP）的完整支持。面向对象程序设计以对象为核心，该方法认为程序由一系列对象组成，类是对现实世界的抽象，对象是类的实例。本章将介绍Kotlin中面向对象编程相关的部分，主要是类和对象，Kotlin简化了数据模型类的定义和操作，还支持Java中不支持的操作符重载以及Java8引入的接口默认实现。
 ---
 
 # 面向对象编程
@@ -333,11 +333,11 @@ println(user.age) // 错误，age只是一个构造器参数
 
 下面这个表格列出了他们之间的主要区别：
 
-| 类的声明 | 是否生成getter | 是否生成setter | 类型 |
-| :--- | :--- | :--- | :--- |
-| `class User(name:String)` | 否 | 否 | 构造器参数 |
-| `class User(var name:String)` | 是 | 是 | 属性 |
-| `class User(val name:String)` | 是 | 否 | 属性 |
+| 类的声明                          | 是否生成getter | 是否生成setter | 类型    |
+| ----------------------------- | ---------- | ---------- | ----- |
+| `class User(name:String)`     | 否          | 否          | 构造器参数 |
+| `class User(var name:String)` | 是          | 是          | 属性    |
+| `class User(val name:String)` | 是          | 否          | 属性    |
 
 ### 构造器的默认参数
 
@@ -855,39 +855,39 @@ for ((name, price) in products) {
 
 Kotlin有一组预定义的运算符，有固定的符号表示形式（例如+， 和\*）和固定的优先级。大多数运算符被直接转换为方法调用，一些被翻译成复杂一些的表达式，详见下表：
 
-| 操作符示例 | 对应的方法/表达式 |
-| :--- | :--- |
-| `a + b` | `a.plus(b)` |
-| `a - b` | `a.minus(b)` |
-| `a * b` | `a.times(b)` |
-| `a / b` | `a.div(b)` |
-| `a % b` | `a.rem(b`\) |
-| `a..b` | `a.rangeTo(b)` |
-| `a += b` | `a.plusAssign(b)` |
-| `a -= b` | `a.minusAssign(b)` |
-| `a *= b` | `a.timesAssign(b)` |
-| `a /= b` | `a.divAssign(b)` |
-| `a %= b` | `a.remAssign(b)` |
-| `a++` | `a.inc()` |
-| `a--` | `a.dec()` |
-| `a in b` | `b.contains(a)` |
-| `a !in b` | `!b.contains(a)` |
-| `a[i]` | `a.get(i)` |
-| `a[i, j]` | `a.get(i, j)` |
-| `a[i, ..., n]` | `a.get(i, ..., n)` |
-| `a[i] = b` | `a.set(i, b)` |
-| `a[i, j] = b` | `a.set(i, j, b)` |
-| `a[i, ..., n] = b` | `a.set(i_1, ..., i_n, b)` |
-| `a()` | `a.invoke()` |
-| `a(i)` | `a.invoke(i)` |
-| `a(i, j)` | `a.invoke(i, j)` |
-| `a(i, ..., n)` | `a.invoke(i, ..., n)` |
-| `a == b` | `a?.equals(b) ?: (b === null)` |
-| `a != b` | `!(a?.equals(b) ?: (b === null))` |
-| `a > b` | `a.compareTo(b) > 0` |
-| `a < b` | `a.compareTo(b) < 0` |
-| `a >= b` | `a.compareTo(b) >= 0` |
-| `a <= b` | `a.compareTo(b) <= 0` |
+| 操作符示例              | 对应的方法/表达式                         |
+| ------------------ | --------------------------------- |
+| `a + b`            | `a.plus(b)`                       |
+| `a - b`            | `a.minus(b)`                      |
+| `a * b`            | `a.times(b)`                      |
+| `a / b`            | `a.div(b)`                        |
+| `a % b`            | `a.rem(b`)                        |
+| `a..b`             | `a.rangeTo(b)`                    |
+| `a += b`           | `a.plusAssign(b)`                 |
+| `a -= b`           | `a.minusAssign(b)`                |
+| `a *= b`           | `a.timesAssign(b)`                |
+| `a /= b`           | `a.divAssign(b)`                  |
+| `a %= b`           | `a.remAssign(b)`                  |
+| `a++`              | `a.inc()`                         |
+| `a--`              | `a.dec()`                         |
+| `a in b`           | `b.contains(a)`                   |
+| `a !in b`          | `!b.contains(a)`                  |
+| `a[i]`             | `a.get(i)`                        |
+| `a[i, j]`          | `a.get(i, j)`                     |
+| `a[i, ..., n]`     | `a.get(i, ..., n)`                |
+| `a[i] = b`         | `a.set(i, b)`                     |
+| `a[i, j] = b`      | `a.set(i, j, b)`                  |
+| `a[i, ..., n] = b` | `a.set(i_1, ..., i_n, b)`         |
+| `a()`              | `a.invoke()`                      |
+| `a(i)`             | `a.invoke(i)`                     |
+| `a(i, j)`          | `a.invoke(i, j)`                  |
+| `a(i, ..., n)`     | `a.invoke(i, ..., n)`             |
+| `a == b`           | `a?.equals(b) ?: (b === null)`    |
+| `a != b`           | `!(a?.equals(b) ?: (b === null))` |
+| `a > b`            | `a.compareTo(b) > 0`              |
+| `a < b`            | `a.compareTo(b) < 0`              |
+| `a >= b`           | `a.compareTo(b) >= 0`             |
+| `a <= b`           | `a.compareTo(b) <= 0`             |
 
 当我们使用某个特定的操作符时（左列），编译器会将其转换为对应的函数调用（右列）。
 
@@ -1088,7 +1088,7 @@ val broadcastReceiver = object : BroadcastReceiver() {
 ```
 
 {% hint style="info" %}
- **适配器模式\(Adapter pattern\)**：将一个接口转换成客户希望的另一个接口，使接口不兼容的类可以一起工作，其别名为包装器\(Wrapper\)。
+&#x20;**适配器模式(Adapter pattern)**：将一个接口转换成客户希望的另一个接口，使接口不兼容的类可以一起工作，其别名为包装器(Wrapper)。
 {% endhint %}
 
 假设我们像实现一个视频播放功能，我们可能定义这样的接口和方法来播放视频：
@@ -1134,7 +1134,7 @@ println(player.length) // 打印结果：0
 
 前面的对象声明展示了如何像Java那样定义和访问静态成员。Kotlin还允许我们定义一种与类关联的对象，这个对象也是单例的，并与所有关联类的实例分享其状态。该对象是所关联类的伴随对象，对应的，被关联的类是该对象的伴随类。
 
-![](.gitbook/assets/chapter4_1.jpg)
+![](.gitbook/assets/chapter4\_1.jpg)
 
 前面的图示表示了三个`Tiger`类的实例关联同一个伴随对象。这样的示例用代码表示如下：
 
@@ -1447,7 +1447,7 @@ fun main() {
 {% endtab %}
 
 {% tab title="同模块的访问文件" %}
-{% code title="Another.kt\(和Example.kt处于同一模块\)" %}
+{% code title="Another.kt(和Example.kt处于同一模块)" %}
 ```kotlin
 fun main() {
     println(tag) // 可访问
@@ -1459,7 +1459,7 @@ fun main() {
 {% endtab %}
 
 {% tab title="不同模块的访问文件" %}
-{% code title="Main.kt\(和Example.kt处于不同模块\)" %}
+{% code title="Main.kt(和Example.kt处于不同模块)" %}
 ```kotlin
 fun main() {
     println(tag) // 可访问
@@ -1497,7 +1497,7 @@ class User {
 {% endtab %}
 
 {% tab title="同模块的访问文件" %}
-{% code title="Main.kt\(和User类定义在同一个模块\)" %}
+{% code title="Main.kt(和User类定义在同一个模块)" %}
 ```kotlin
 val user = User()
 println(user.name) // 打印结果：MamunLiu
@@ -1509,7 +1509,7 @@ user.logout() // 可以访问
 {% endtab %}
 
 {% tab title="不同模块的访问文件" %}
-{% code title="Another.kt\(和User类定义在不同模块\)" %}
+{% code title="Another.kt(和User类定义在不同模块)" %}
 ```kotlin
 val user = User()
 println(user.name) // 打印结果：MamunLiu
@@ -1720,4 +1720,3 @@ val googleAd = GoogleAd(context)
 ```
 
 导入别名仅在定义的代码文件中有效。
-
