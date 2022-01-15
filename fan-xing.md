@@ -212,7 +212,7 @@ dogBox = animalBox // 错误，类型不符
 
 定义协变和反协变，需要使用**型变修饰符**（variance modifiers）。
 
-### 型变修饰符
+#### 型变修饰符
 
 泛型在Kotlin中默认是不型变的，所以默认情况下，我们在函数的参数列表中或者变量中定义是什么类型就只能使用定义的类型：
 
@@ -308,4 +308,128 @@ var animal = Box<Animal>()
 animal = Box<Dog>() // 正确
 ```
 
-在Java中，数组是协变的
+相对于在Java中PECS原则（_Producer `extends` and Consumer `super`_），Kotlin中应该叫POCI原则（_Producer `out` and Consumer `in`_）,
+
+{% hint style="info" %}
+[什么是PECS？](https://stackoverflow.com/questions/2723397/what-is-pecs-producer-extends-consumer-super)
+{% endhint %}
+
+根据这个原则，Kotlin做了更多，编译器会对类型参数的使用位置，也进行了限制。
+
+泛型的类型参数的使用位置分为传入位（`in` position）和返回位（`out` position）：
+
+```kotlin
+// Kotlin
+interface Stack<T> {
+    fun push(t:T) // 在传入位使用泛型
+    fun pop():T // 在返回位使用泛型
+    fun swap(t:T):T // 在传入位和返回位使用泛型
+    val last: T // 在返回位使用泛型
+    Kotlinvar special: T // 在返回位使用泛型
+}
+```
+
+经过型变的类型参数，仅能在对应位置使用，用英文名称更能说明它们之间的对应关系——`in` position对应着型变修饰符`in`：
+
+```kotlin
+// Kotlin
+class ConsumerProducer<in T, out R> {
+    fun consumeItemT(t: T): Unit { } 
+    fun consumeItemR(r: R): Unit { } // 错误，在in position使用了out型变后的类型参数
+    fun produceItemT(): T { // 错误，在out position使用了in型变后的类型参数
+        // Return instance of type T
+    }
+    fun produceItemR(): R {
+        //Return instance of type R
+    }
+}
+```
+
+我们已经知道Kotlin中默认的可见性修饰符是`public`，对泛型类型参数使用位置的限制也仅限于外部可见的成员，包括`protected`和`internal`，对`private`成员没有使用位置限制，以下代码可以通过编译：
+
+```kotlin
+// Kotlin
+class ConsumerProducer<in T, out R> {
+    private fun consumeItemT(t: T): Unit { }
+    private fun consumeItemR(r: R): Unit { }
+    private fun produceItemT(): T {
+        // Return instance of type T
+    }
+    private fun produceItemR(): R {
+        //Return instance of type R
+    }
+}
+```
+
+对类型参数使用位置限制的总结如下：
+
+|                           |                 |                 |                 |
+| ------------------------- | --------------- | --------------- | --------------- |
+| 可见性修饰符                    | 不型变             | 协变（`in`修饰）      | 反协变（`out`修饰）    |
+| public、protected、internal | in/out position | in position     | out position    |
+| private                   | in/out position | in/out position | in/out position |
+
+#### 集合型变
+
+在Java中，数组是协变的。默认情况下，我们可以向一个`Object`数组赋值一个`String`数组：
+
+```java
+// Java
+public class Computer {
+     public Computer() {
+         String[] stringArray = new String[]{"a", "b", "c"};
+         printArray(stringArray); 
+     }
+     void printArray(Object[] array) {
+         System.out.print(array);
+     }
+ }
+```
+
+在泛型出现前的早期版本Java中需要这样操作来处理不同情况下传参，但这样使用数组将会有潜在的运行时异常风险：
+
+```java
+// Java
+public class Computer {
+     public Computer() {
+         Number[] numberArray = new Number[]{1, 2, 3};
+         updateArray(numberArray);
+     }
+     void updateArray(Object[] array) {
+         array[0] = "abc"; // 抛出java.lang.ArrayStoreException: java.lang.String
+     }
+ }
+```
+
+由于在Java中数组是协变的，编译器不会阻止编译通过，将这个错误遗留到了运行时。
+
+而在Kotlin中，数组是不型变的，因此同样的写法将不会通过编译。
+
+Kotlin标准库中有两种List接口，其一是`List`，是协变的，因为它不可被修改：
+
+```kotlin
+// Kotlin
+fun printElements(list: List<Any>) {
+    for(e in list) print(e)
+}
+
+val intList = listOf(1, 2, 3, 4)
+val anyList = listOf<Any>(1, 'A')
+printElements(intList) // 打印结果: 1234
+printElements(anyList) // 打印结果: 1A
+```
+
+另一种是`MutableList`，它可以被修改，所以它是不协变的：
+
+```
+// Kotlin
+fun addElement(mutableList: MutableList<Any>) {
+    mutableList.add("Cat")
+}
+
+val mutableIntList = mutableListOf(1, 2, 3, 4)
+val mutableAnyList = mutableListOf<Any>(1, 'A')
+addElement(mutableIntList) // 错误: 类型不匹配
+addElement(mutableAnyList)
+```
+
