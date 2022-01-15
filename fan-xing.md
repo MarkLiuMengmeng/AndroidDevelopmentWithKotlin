@@ -369,6 +369,29 @@ class ConsumerProducer<in T, out R> {
 | public、protected、internal | in/out position | in position     | out position    |
 | private                   | in/out position | in/out position | in/out position |
 
+有个重要的例外是上述使用参数类型的位置限制中，不包含构造器。
+
+虽然构造器方法的可见性是`public`，以下使用仍是正确的：
+
+```kotlin
+// Kotlin
+class Producer<out T>(t: T)
+ // 示例
+val stringProducer = Producer("A")
+val anyProducer: Producer<Any> = stringProducer
+```
+
+一个重要的原因是构造器仅在创建类的实例时调用，在类的实例使用期间无法调用。
+
+另一个原因是因为，Kotlin限制了此种情形仅能声明不变量的public字段，以确保类型安全：
+
+```kotlin
+// Kotlin
+class Producer<out T>(val t: T) // 正确, 类型安全
+class Producer<out T>(var t: T) // 错误, 类型不安全
+class Producer<out T>(private var t:T) // 正确，类型安全，private修饰的变量外界无法访问
+```
+
 #### 集合型变
 
 在Java中，数组是协变的。默认情况下，我们可以向一个`Object`数组赋值一个`String`数组：
