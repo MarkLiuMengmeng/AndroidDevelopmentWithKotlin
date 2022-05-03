@@ -11,9 +11,9 @@ description: >-
 
 限于本人精力有限，欢迎愿意一起群策群力的朋友\~
 
-| 作者         | 邮箱                    |
-| ---------- | --------------------- |
-| MalachiLiu | liumengtime@gmail.com |
+| 作者      | 邮箱                    |
+| ------- | --------------------- |
+| MarkLiu | liumengtime@gmail.com |
 
 
 
