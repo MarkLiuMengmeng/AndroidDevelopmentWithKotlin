@@ -1,6 +1,6 @@
 ---
 description: >-
-  泛型是一种编程风格，指的是类，函数，数据结构或算法可以以某种方式编写，从而以后我们可以指定确切的类型。
+  泛型是一种编程风格，指的是类，函数，数据结构或算法可以以某种方式编写，从而可以让我们之后可以指定确切的类型。
   通常泛型提供类型安全性以及针对各种数据重用特定代码结构的能力。在本章，我们将了解泛型为什么会存在及如何定义泛型类、接口及函数。讨论如何在运行时处理泛型，以及泛型的继承关系，还有如何处理泛型的可空性。Kotlin中的泛型和Java很类似，不过Kotlin有一些新的改进，让我们开始吧～
 ---
 
@@ -25,12 +25,19 @@ class List<E> // T换成E后，声明和前面的是等价的
 ```
 
 {% hint style="info" %}
-虽然类型参数的名称可以随意指定，但我们在代码中经常能看到有以下常见的名称，是一种编码规范：
+虽然类型参数的名称可以随意指定，但我们在代码中经常能看到有以下常见的名称，是一种常用的命名惯例：
 
-* **？**：表示不确定的类型
+* &#x20;**？**：表示不确定的类型
 * &#x20;**T (type)** ：表示具体的一个类型
 * &#x20;**K ,V (key ,value)** ：分别代表键和值
 * &#x20;**E (element)** ：代表元素
+* &#x20;**N(Number)**：代表数字
+
+良好的命名可以提高代码的可读性，相关的编程规范可参考：
+
+[Oracle的泛型命名规范](https://docs.oracle.com/javase/tutorial/java/generics/types.html)
+
+[Google的泛型命名规范](https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names)
 {% endhint %}
 
 类型参数的含义是我们定义的类会使用一种特定的类型，但该类型会延后在创建时指定，这样一个`List`类可以初始化为多种数据类型：
@@ -369,7 +376,7 @@ class ConsumerProducer<in T, out R> {
 | public、protected、internal | in/out position | in position     | out position    |
 | private                   | in/out position | in/out position | in/out position |
 
-有个重要的例外是上述使用参数类型的位置限制中，不包含构造器。
+有个重要的例外是上述使用参数类型的位置限制中，不包含构造器，构造器永远是不型变的。
 
 虽然构造器方法的可见性是`public`，以下使用仍是正确的：
 
@@ -456,3 +463,108 @@ addElement(mutableIntList) // 错误: 类型不匹配
 addElement(mutableAnyList)
 ```
 
+### 类型擦除
+
+类型擦除是进程移除了泛型类型（generic type）的类型参数（type argument），因此在运行时泛型类型会丢失它的类型参数信息。
+
+类型擦除曾被引入JVM以解决Java字节码向后兼容问题，在Android平台上，Java和Kotlin都会编译为JVM字节码，因此它们都有类型擦除的弱点。
+
+类型擦除会带来一些限制，比如在JVM语言中，我们无法以不同类型参数、相同泛型数据类型来重载方法：
+
+```kotlin
+// java.lang.ClassFormatError: Duplicate method name&signature...
+ fun sum(ints: List<Int>) {
+     println("Ints")
+ }
+ 
+ fun sum(strings: List<String>) {
+     println("Ints")
+ }
+```
+
+我们可以使用`JvmName`注解来重新制定JVM中生成的方法名称，从而解决这个问题：
+
+{% code title="Test.kt" %}
+```kotlin
+@JvmName("intSum") 
+fun sum(ints: List<Int>) {
+    println("Ints")
+}
+fun sum(strings: List<String>) {
+    println("Ints")
+}
+```
+{% endcode %}
+
+当这么做了之后，在Java端中使用这个方法就需要用它的新名字了：
+
+```java
+// Java
+ TestKt.intSum(listOfInts);
+```
+
+有些时候，我们希望在运行时保留类型参数，这就需要用到重置类型参数（Reified type parameters）。
+
+#### 重置类型参数
+
+有些情况下，在运行时获取类型参数是有用的，例如检查传进来的数据类型，但由于类型擦除限制而无法做到：
+
+```kotlin
+fun <T> typeCheck(type: Any) {
+    if(s is T){
+        // 错误，无法检查擦除类型的实例: T
+        println("The same types")
+    } else {
+        println("Different types")
+    }
+}
+```
+
+为了克服JVM中类型擦除带来的限制，Kotlin允许我们使用一种特殊的修饰符来在运行时保留类型参数——`reified`：
+
+```kotlin
+interface View
+class HomeView: View
+class ProfileView: View
+
+inline fun <reified T> typeCheck(s: Any) {
+    if(s is T){
+        println("The same types")
+    } else {
+        println("Different types")
+    }
+}
+
+// 使用
+typeCheck<ProfileView>(ProfileView()) // 打印: The same types
+typeCheck<HomeView>(ProfileView()) // 打印: Different types
+typeCheck<View>(ProfileView()) // 打印: The same types
+```
+
+我们看到这个函数被声明为了内联函数，那是因为重置类型参数只能和内联函数一起使用，在编译期，Kotlin编译器会替换重置类型参数的`class`，从而避免了类型擦除。在字节码层面，重置类型参数会是一个运行时实际要执行的数据类型，或者是原生类型的包装类型。
+
+重置数据类型提供了一种写方法的全新方式，我们如果想在Android中启动一个Activity，在Java中，我们会这么写：
+
+```java
+startActivity(Intent(this, ProductActivity::class.java));
+```
+
+而在Kotlin中，我们可以定义一个`startActivity`的工具方法，以更简单的方式导航：
+
+```kotlin
+inline fun <reified T : Activity> startActivity(context: Context) {
+    context.startActivity(Intent(context, T::class.java))
+}
+ // 使用
+ startActivity<MainActivity>(context)
+```
+
+需要注意的是，不能使用重置类型参数来创建一个类的实例（除非使用反射），原因是构造函数依赖于确定的类型，它永远不会被继承，对于一个类型参数所有可能的具体类型，没有一个确切的构造函数可以在这里安全的调用。
+
+在Java中我们可以定义一个泛型类型的**原始类型**（raw type），但在Kotlin不能这样做，而需要使用**星号投影**（star-projection），来表示类型参数丢失或不重要：
+
+```java
+SimpleList<> // Java: 正确
+SimpleList<> // Kotlin: 错误
+SimpleList<*> // Kotlin: 正确
+```
