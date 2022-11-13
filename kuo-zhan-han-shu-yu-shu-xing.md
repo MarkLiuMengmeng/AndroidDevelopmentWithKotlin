@@ -229,6 +229,214 @@ val userFromJson: User = json.fromJson<User>()
 
 globalGson是一种常见做法，因为我们经常需要序列化与反序列化JSON数据，只定义和实例化一次是一种简单并有效的做法。
 
+### 扩展函数在集合中的应用
+
+集合接口在Kotlin中只定义了少量的方法，Kotlin标准库通过扩展为它们又增添了些有用的功能。
+
+#### map、filter、flatMap函数
+
+`map`函数提供了根据传入的函数参数改变集合元素的功能：
+
+```kotlin
+val list = listOf(1,2,3 ).map { it * 2 }
+println(list) // 打印结果: [2, 4, 6]
+```
+
+`filter`函数只允许满足入参断言（predicate）的元素返回：
+
+```kotlin
+val list = listOf(1,2,3,4,5).map { it > 2 }
+println(list) // 打印结果: [3, 4, 5]
+```
+
+`flatmap`函数将会返回一个给定`transform`函数生成的所有元素的单列表，经常用于合并多个集合列表：
+
+```kotlin
+val list = listOf(10, 20).flatMap { listOf(it, it+1, it + 2) }
+println(list) // 打印结果: [10, 11, 12, 20, 21, 22]
+```
+
+让我们看下这些扩展函数的简易实现：
+
+```kotlin
+inline fun <T, R> Iterable<T>.map(transform: (T) -> R): List<R> {
+    val destination = ArrayList<R>()
+    for (item in this) destination.add(transform(item))
+    return destination
+}
+
+inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> {
+    val destination = ArrayList<T>()
+    for (item in this) if(predicate(item)) destination.add(item)
+    return destination
+}
+
+inline fun <T, R> Iterable<T>.flatMap(transform: (T) -> Collection<R>):List<R> {
+    val destination = ArrayList<R>()
+    for (item in this) destination.addAll(transform(item))
+    return destination
+}
+```
+
+大多数Kotlin标准库的扩展函数的函数类型是内联，因为这样可以使lambda表达式使用起来更有效率。
+
+#### forEach和onEach函数
+
+`forEach`函数是`for`循环语句的替代选择：
+
+```kotlin
+listOf("A", "B", "C").forEach { print(it) } // 打印结果: ABC
+```
+
+自Kotlin1.1起，新增了一个相似的`onEach`函数，用于处理流过程中的遍历，常用于日志打印：
+
+```kotlin
+(1..10).filter { it % 3 == 0 }
+    .onEach(::print) // 打印结果: 369
+    .map { it / 3 }
+    .forEach(::print) // 打印结果: 123
+```
+
+#### withIndex与indexed变体
+
+有时，如何处理集合中的元素取决于元素的序号，我们可以使用`withIndex`函数返回包含序号的列表：
+
+```kotlin
+listOf(9,8,7,6).withIndex()
+    .filter { (i, _) -> i % 2 == 0 } 
+    .forEach { (i, v) -> print("$v at $i,") }
+    // 打印结果: 9 at 0, 7 at 2,
+```
+
+我们也可以使用其他提供序号的变体：
+
+```kotlin
+val list1 = listOf(2, 2, 3, 3)
+    .filterIndexed { index, _ -> index % 2 == 0 }
+    println(list1) // 打印结果: [2, 3]
+    
+val list2 = listOf(10, 10, 10)
+    .mapIndexed { index, i -> index * i }
+    println(list2) // 打印结果: [0, 10, 20]
+    
+val list3 = listOf(1, 4, 9)
+    .forEachIndexed { index, i -> print("$index: $i,") }
+    println(list3) // 打印结果: 0: 1, 1: 4, 2: 9
+```
+
+#### sum、count、min、max和sorted等函数
+
+`sum`函数用于计算所有元素的和，可用于`List<Int>`,  `List<Long>`,  `List<Short>`,  `List<Double>`,  `List<Float>` 和`List<Byte>`:
+
+```kotlin
+val sum = listOf(1,2,3,4).sum()
+println(sum) // 打印结果: 10
+```
+
+有时我们如果想计算列表的某个属性值相加，比如用户分数的和，可能会这么做：
+
+```kotlin
+class User(val points: Int)
+val users = listOf(User(10), User(1_000), User(10_000))
+
+val points = users.map { it.points }. sum()
+println(points) // 打印结果: 11010
+
+
+```
+
+实际上，我们不需要调用`map`函数处理集合，而使用`sumBy`函数指定一个适宜的选择器：
+
+```kotlin
+val points = users.sumBy { it.points }
+println(points) // 打印结果: 11010
+```
+
+`sumBy`函数默认要求Int返回类型，对于`Double`数据类型的相加需要使用对应的`sumByDouble`函数。
+
+`count`函数可以对元素进行计数：
+
+```kotlin
+val evens = (1..5).count { it % 2 == 1 }
+val odds = (1..5).count { it % 2 == 0 }
+println(evens) // 打印结果: 3
+println(odds) // 打印结果: 2
+val nums = (1..5).count()
+println(nums) // 打印结果: 5
+```
+
+`min`和`max`函数可以返回列表中的最大最小值，前提是列表中的元素有自然顺序（实现了`Comparable<T>`接口）：
+
+```kotlin
+val list = listOf(4, 2, 5, 1)
+println(list.min()) // 打印结果: 1
+println(list.max()) // 打印结果: 5
+println(listOf("koki", "adai", "bali", "mall").min()) // 打印结果: ada
+```
+
+`sorted`函数同样也需要有自然顺序，返回一个排序好的结果：
+
+```kotlin
+val strs = listOf("c", "d", "b", "a").sorted()
+println(strs) // 打印结果: [a, b, c, d]
+```
+
+但是，如果遇到元素不可比较怎么办，下面举例三种解决方式：
+
+```kotlin
+// 1.按照元素中的某个可比较的属性处理
+students.filter { it.passing }.sortedByDescending { it.grade }
+
+val minByLen = listOf("ppp", "z", "as").minBy { it.length }
+println(minByLen) // 打印结果: "z"
+
+val maxByLen = listOf("ppp", "z", "as").maxBy { it.length }
+println(maxByLen) // 打印结果: "ppp"
+
+// 2.转换为字符串处理
+val list = listOf(14, 31, 2)
+print(list.sortedBy { "$it" }) // 打印结果: [14, 2, 31]
+
+// 3.使用sortedWith函数指定一个比较器实现
+val comparator = Comparator<String> { e1, e2 ->
+    e2.length - e1.length
+}
+val minByLen = listOf("ppp", "z", "as").sortedWith(comparator)
+println(minByLen) // 打印结果: [ppp, as, z]
+
+
+```
+
+而创建比较器，Kotlin标准库中也有对应的函数实现（`compareBy`、`compareByDescending`等）。另外有一个重要的函数`groupBy`，传入生成key的方法，返回一个对应的`Map`数：
+
+```kotlin
+val grouped = listOf("ala", "alan", "mulan", "malan")
+    .groupBy { it.first() }
+println(grouped) // 打印结果: {'a': ["ala", "alan"], "m": ["mulan", "malan"]}
+```
+
+让我们再看一个复杂的例子，给出一个学生列表，返回这些学生所在班级上成绩最好的学生：
+
+```kotlin
+class Student(val name: String, val classCode: String, val meanGrade:Float)
+
+val students = listOf(
+    Student("Homer", "1", 1.1F),
+    Student("Carl", "2", 1.5F),
+    Student("Donald", "2", 3.5F),
+    Student("Alex", "3", 4.5F),
+    Student("Marcin", "3", 5.0F),
+    Student("Max", "1", 3.2F)
+)
+
+val bestInClass = students
+    .groupBy { it.classCode }
+    .map { (_, students) -> students.maxBy { it.meanGrade }!! }
+    .map { it.name }
+print(bestInClass) // 打印结果: [Max, Donald, Marcin]
+
+```
+
 ## 扩展属性
 
 我们还可以为某个类定义扩展属性:

@@ -626,8 +626,8 @@ val charRange = 'a'..'e'
 我们可以用`in`关键字和for each循环来遍历该数据类型：
 
 ```kotlin
-for (i in intRange) print(i) // Prints: 12345
-for (i in charRange) print(i) // Prints: abcde
+for (i in intRange) print(i) // 打印结果: 12345
+for (i in charRange) print(i) // 打印结果: abcde
 ```
 
 某个特定的值可以用`in`关键字检查是否在区间之内：
@@ -637,9 +637,9 @@ val BMI0 = 20
 val BMI1 = 24
 val healthy = 18..23
 if (BMI0  in healthy)
-println("$BMI0 is in $healthy range") //Prints: 20 is in 18..23 range
+println("$BMI0 is in $healthy range") // 打印结果: 20 is in 18..23 range
 if (BMI1 !in healthy)
-println("$BMI1 is not in $healthy range") //Prints: 24 is not in 18..23 range
+println("$BMI1 is not in $healthy range") // 打印结果: 24 is not in 18..23 range
 ```
 
 区间默认是升序的，如果想用降序的区间，我们可以使用`downTo`操作符：
@@ -657,7 +657,34 @@ for (i in 9 downTo 1 step 3) print(i) // 打印结果: 963
 
 ### 集合（Collection）
 
-Kotlin引入了许多新特性，集合类的新特性与这些新特性密切相关，我们将在稍后的章节（第七章）讨论它们。
+Kotlin中的集合设计和层级结构与Java中的类似，最通用的一个接口是`Iterable`，它代表了一个可以被遍历的元素序列，循环控制语句将在本章稍后说明。
+
+需要注意的是，在Kotlin中，集合默认是不可变的：
+
+```kotlin
+val list = listOf('a', 'b', 'c')
+println(list[0]) // 打印结果: a
+println(list.size) // 打印结果: 3
+list.add('d') // 错误，集合默认不可变
+list.removeAt(0) // 错误，集合默认不可变
+
+```
+
+当我们在Android中使用一个`List`实例，它通常是`ArrayList`，`ArrayList`是一个可变集合，在Kotlin中不可变的原因是List接口默认是没有暴露相关的修改方法，除非我们向下转型到实际可变的类型。
+
+除此之外，所有不可变的集合接口（`Collection`、`List`、`Set`）都有一个对应的可变版本（`MutableCollection`、`MutableList`、`MutableSet`），我们可以通过使用对应的可变版本来对集合进行修改：
+
+```kotlin
+val list = mutableListOf('a', 'b', 'c')
+println(list[0]) // 打印结果: a
+println(list.size) // 打印结果: 3
+list.add('d')
+println(list) // 打印结果: [a, b, c, d]
+list.removeAt(0)
+println(list) // 打印结果: [b, c, d]
+
+
+```
 
 ## 语句和表达式
 
