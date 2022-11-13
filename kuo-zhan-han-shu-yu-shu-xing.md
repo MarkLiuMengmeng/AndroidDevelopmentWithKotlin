@@ -191,7 +191,58 @@ subscriptions += repository
     .subscribe(this::charactersLoaded, view::showError)
 ```
 
+### 泛型扩展函数
+
+在Android开发中，启动一个Activity是一个很普遍的行为，用Kotlin我们可能会这么写：
+
+```kotlin
+startActivity(Intent (this, SettingsActivity::class.java))
+```
+
+我们有时也在项目中会写关于启动Activity的工具类，如果我们用泛型扩展函数来写，事情会变得更简单：
+
+```kotlin
+inline fun <reified T : Any> Context.getIntent()
+    = Intent(this, T::class.java)
+inline fun <reified T : Any> Context.startActivity()
+    = startActivity(getIntent<T>())
+    
+// 使用
+startActivity<SettingsActivity>()
+
+```
+
+在开发工作中还有一项很常见的工作是序列化与反序列化JSON数据，以我们常用的Gson库来举例，经过泛型扩展后也更加易用：
+
+```kotlin
+inline fun Any.toJson() = globalGson.toJson(this)!!
+inline fun <reified T : Any> String.fromJson()
+    = globalGson.fromJson(this, T::class.java)
+
+// 用法
+val user = User("Mark", "Liu")
+val json: String = user.toJson()
+val userFromJson: User = json.fromJson<User>()
+
+
+```
+
+globalGson是一种常见做法，因为我们经常需要序列化与反序列化JSON数据，只定义和实例化一次是一种简单并有效的做法。
+
 ## 扩展属性
 
+我们还可以为某个类定义扩展属性:
 
+```kotlin
+val TextView.trimmedText:String
+get() = text.toString.trim()
 
+// 用法
+textView.trimmedText
+```
+
+唯一的限制是，扩展属性不能有幕后字段（backing field）, 因此也没有对应的字段存储状态，下面的赋值无法完成：
+
+```kotlin
+val TextView.trimmedText:String = "test" // 错误
+```
