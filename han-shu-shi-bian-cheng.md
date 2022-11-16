@@ -255,7 +255,7 @@ val strings = arrayOf("a","b","abcde")
 strings.filter { it.length == 5 }.map { it.toUpperCase() }// 从列表中筛选出长度为5的字符串并转换为大写
 ```
 
-LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第七章展开。
+LINQ风格的语法在函数式编程语言中相当受欢迎，它可以使我们处理集合和字符串的代码变得非常精简。更多的示例将在第《扩展函数与属性》章节展开。
 
 ### 省略不使用的参数
 
@@ -275,7 +275,7 @@ list.filterIndexed { index, _ -> index % 2 == 0 }
 
 ### 在参数列表中使用解构
 
-在第四章中，我们已经看到了一个对象如何解构为多个变量：
+在前一章中，我们已经看到了一个对象如何解构为多个变量：
 
 ```kotlin
 data class Product(val name:String, val price:Double)
@@ -294,7 +294,7 @@ showProductInfo(productA) // 打印结果： the price of Glove is 19.9
 ```
 
 {% hint style="info" %}
-我们在第四章中已经了解到，Kotlin中的解构声明是基于位置的，与TypeScript语言中的基于名称的解构声明不同，它们各有优缺点：
+我们在前一章中已经了解到，Kotlin中的解构声明是基于位置的，与TypeScript语言中的基于名称的解构声明不同，它们各有优缺点：
 
 基于位置的解构声明对于属性的名称不敏感，对属性的排序敏感；
 

@@ -18,7 +18,7 @@ fun main() {
 `val`是不可变的，即在初始化赋值之后不能被重新赋值，相当于Java中带`final`修饰符的变量。但它不能保证引用的对象中的值不会被修改：
 
 ```kotlin
-class Fruit(var name:String)//类的声明会在第四章中说明
+class Fruit(var name:String)//类的声明会在《面向对象编程》章节中说明
 fun main() {
     val fruit = Fruit("orange")//创建变量fruit并初始化
     fruit = Fruit("banana")//错误，不能进行重新赋值
@@ -30,7 +30,7 @@ fun main() {
 
 ```kotlin
 val random: Int
-get() = Random().nextInt()//自定义getter将会在第四章中说明
+get() = Random().nextInt()//自定义getter将会在《面向对象编程》章节中说明
 ```
 
 {% hint style="info" %}
@@ -1008,4 +1008,4 @@ class Test
 
 ## 委托（Delegate）
 
-Kotlin对委托提供了语言级别的支持，并相对Java做了许多改进。委托在程序的开发过程中应用频繁，因此我们单开一章来介绍（第八章）。
+Kotlin对委托提供了语言级别的支持，并相对Java做了许多改进。委托在程序的开发过程中应用频繁，因此我们单开一章来介绍。

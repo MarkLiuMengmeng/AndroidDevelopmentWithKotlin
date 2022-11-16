@@ -1319,7 +1319,7 @@ enum class Suit (val imageUrl:String){
 
 ### 中缀调用
 
-中缀调用是一种特殊的函数调用方式，更接近自然语言。我们在第二章的时候介绍Pair类型的时候见过：
+中缀调用是一种特殊的函数调用方式，更接近自然语言。我们在《Kotlin基础》章节介绍Pair类型的时候见过：
 
 ```kotlin
 var pair = "Everest" to 8848
