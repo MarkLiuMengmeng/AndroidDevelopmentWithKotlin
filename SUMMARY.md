@@ -9,3 +9,4 @@
 * [函数式编程](han-shu-shi-bian-cheng.md)
 * [泛型](fan-xing.md)
 * [扩展函数与属性](kuo-zhan-han-shu-yu-shu-xing.md)
+* [委托](wei-tuo.md)
