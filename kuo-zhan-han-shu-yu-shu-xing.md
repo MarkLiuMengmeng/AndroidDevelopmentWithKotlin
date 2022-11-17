@@ -191,6 +191,24 @@ subscriptions += repository
     .subscribe(this::charactersLoaded, view::showError)
 ```
 
+#### 扩展函数可以帮助实现中缀调用吗？
+
+答案是可以。在《面向对象编程》章节中我们介绍了中缀调用，利用扩展函数也可以实现这一点：
+
+```kotlin
+infix fun <A, B> A.to(that: B): Pair<A, B> = Pair(this, that)
+
+println( 1 to 2 == Pair(1, 2) ) // 打印结果: true
+```
+
+甚至可以定义适用于任意类型的中缀函数：
+
+```kotlin
+infix fun <T> List<T>.intersection(other: List<T>) = filter { it in other }
+
+listOf(1, 2, 3) intersection listOf(2, 3, 4) // 打印结果: [2,3]
+```
+
 ### 泛型扩展函数
 
 在Android开发中，启动一个Activity是一个很普遍的行为，用Kotlin我们可能会这么写：
@@ -454,3 +472,218 @@ textView.trimmedText
 ```kotlin
 val TextView.trimmedText:String = "test" // 错误
 ```
+
+## 标准库中的扩展函数
+
+在Kotlin的标准库中，定义了一组以泛型作为接收者的扩展函数，这意味着任何类都可以使用他们，比如针对可空类型的另一项选择就是使用`let`函数：
+
+```kotlin
+ savedInstanceState?.let{ state ->
+     println(state.getBoolean("isFinished"))
+ }
+```
+
+`let`函数的拥有一个函数类型的参数，功能是调用一个指定的函数并返回它的结果，请看下它的实现：
+
+```kotlin
+inline fun <T, R> T.let(block: (T) -> R): R = block(this)
+```
+
+在标准库中，还有更多和let函数功能相似的函数，比如`apply`，`also`， `with`和`run`等：
+
+```kotlin
+inline fun <T> T.apply(block: T.() -> Unit): T {
+    block();
+    return this
+}
+
+inline fun <T> T.also(block: (T) -> Unit): T {
+    block(this);
+    return this
+}
+
+inline fun <T, R> T.run(block: T.() -> R): R = block()
+
+inline fun <T, R> with(receiver: T, block: T.() -> R): R = receiver.block()
+
+
+
+```
+
+让我们看下他们应该如何使用：
+
+```kotlin
+val mutableList = mutableListOf(1)
+
+val letResult = mutableList.let {
+    it.add(2)
+    listOf("A", "B", "C")
+}
+println(letResult) // 打印结果: [A, B, C]
+ 
+val applyResult = mutableList.apply {
+    add(3)
+    listOf("A", "B", "C")
+}
+println(applyResult) // 打印结果: [1, 2, 3]
+
+val alsoResult = mutableList.also {
+    it.add(4)
+    listOf("A", "B", "C")
+}
+println(alsoResult) // Prints: [1, 2, 3, 4]
+ 
+val runResult = mutableList.run {
+    add(5)
+    listOf("A", "B", "C")
+}
+println(runResult) // Prints: [A, B, C]
+
+val withResult = with(mutableList) {
+    add(6)
+    listOf("A", "B", "C")
+}
+println(withResult) // 打印结果: [A, B, C]
+println(mutableList) // 打印结果: [1, 2, 3, 4, 5, 6]
+```
+
+它们之间的区别如下方表格所示：
+
+| 返回对象/参数函数类型 | 带接收者的函数参数（使用this访问接收者对象） | 函数参数（使用it访问接收者对象） |
+| ----------- | ------------------------ | ----------------- |
+| 返回接收者对象     | apply                    | also              |
+| 返回入参函数的执行结果 | run/with                 | let               |
+
+这些函数非常相似，而且很多情况下可以互换，下面我们详细介绍下它们各自常见的使用场景。
+
+### let函数
+
+`let`函数的一个常见的使用场景是用于流处理：
+
+```kotlin
+val newNumber = number.plus(2.0)
+    .let { pow(it, 2.0) }
+    .times(2)
+```
+
+在链式转换中，也常用`let`函数：
+
+```kotlin
+val text = "hello {name}"
+
+fun correctStyle(text: String) = text.replace("hello", "Greetings,")
+
+fun greet(name: String) {
+    text.replace("{name}", name)
+    .let { correctStyle(it) }
+    .capitalize()
+    .let { print(it) }
+}
+// 使用
+greet("reader") // 打印结果: Greetings, reader
+```
+
+我们可以用更简单的函数引用语法替换上面的lambda：
+
+```kotlin
+text.replace("{name}", name)
+    .let(::correctStyle)
+    .capitalize()
+    .let(::print)
+```
+
+当我们获取某个字段需要判空时，我们可能写成这样：
+
+```kotlin
+val comment = if(field == null) getComment(field) else "No comment"
+```
+
+我们可以用`let`函数替代这种写法：
+
+```kotlin
+val comment = field?.let { getComment(it) } ?: "No comment"
+```
+
+### apply函数
+
+有时我们需要通过调用某个方法来初始化对象或者修改某些属性：
+
+```kotlin
+val button = Button(context)
+button.text = "Click me"
+button.isVisible = true
+button.setOnClickListener { /* ... */ }
+this.button = button
+```
+
+此时我们可以通过`apply`函数来减少冗余代码：
+
+```kotlin
+button = Button(context).apply {
+    text = "Click me"
+    isVisible = true
+    setOnClickListener { /* ... */ }
+}
+```
+
+### also函数
+
+`also`函数和`apply`函数非常相似，唯一的区别是入参是一个函数而非扩展函数接收者自身，适用于非初始化的场景：
+
+```kotlin
+abstract class Provider<T> {
+    var original: T? = null
+    var override: T? = null
+    abstract fun create(): T
+    fun get(): T = override ?: original ?: create().also { original = it}
+}
+```
+
+also函数的另一个适用场景是我们正在处于扩展函数的定义之中：
+
+```kotlin
+class People{
+    var name: String = ""
+    var type: String = ""
+    fun greet() {
+        println("Hello, I am $name")
+    }
+}
+
+class Building{
+    var members = listOf<People>()
+    fun People.reproduce(): People= People().also {
+        it.name = name
+        it.type = type
+        members += it
+    }
+}
+```
+
+### run和with函数
+
+`run`和`with`函数都接收一个lambda入参并返回它们的结果，区别是`with`多接收一个参数作为入参函数的操作对象，在初始化对象这个场景，它们可以作为`apply`函数的替代：
+
+```kotlin
+val button = findViewById(R.id.button) as Button
+
+button.apply {
+    text = "Click me"
+    isVisible = true
+    setOnClickListener { /* ... */ }
+}
+
+button.run {
+    text = "Click me"
+    isVisible = true
+    setOnClickListener { /* ... */ }
+}
+ 
+with(button) {
+    text = "Click me"
+    isVisible = true
+    setOnClickListener { /* ... */ }
+}
+```
+
+`run`，`with`，`apply`这三者的区别在于——apply返回的是接收者对象，而run和with函数返回的是函数的执行结果。
