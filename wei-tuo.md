@@ -73,7 +73,9 @@ class WitcherPlayer(player: Player) : Player by player
 
 ### 装饰器模式(Decorator pattern)
 
-Kotlin的类委托另一个非常有用的场景是用来实现装饰器模式，装饰器模式（也称为包装器模式）是一种设计模式，可以向现有类添加行为，而无需使用继承。
+Kotlin的类委托另一个非常有用的场景是用来实现装饰器模式，装饰器模式（也称为包装器模式）是一种设计模式，可以向现有类添加行为，而无需使用继承。这种设计模式的经典结构可以用如下UML图来表示：
 
-在Java世界中，
+<figure><img src=".gitbook/assets/Decorator_UML_class_diagram.svg.png" alt=""><figcaption><p>装饰器模式的经典UML图实现，图片来自网络</p></figcaption></figure>
+
+在Java世界中，最常见的一个装饰器模式的例子便是`InputStream`，这个类有许多被继承和装饰的其他类型，有些添加了缓存能力，有些添加了解压文件内容的能力，有些则提供了反序列化能力。让我们看一个例子——读取一个压缩文件的内容并将其转换为一个Java对象：
 

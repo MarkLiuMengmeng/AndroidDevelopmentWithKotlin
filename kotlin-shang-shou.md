@@ -18,7 +18,7 @@ description: Kotlin是一门非常出色的语言，能让Android开发更轻松
 Kotlin团队致力于使Kotlin插件变得越来越好。Kotlin大多数错误都已快速修复并且实现了开发者社区要求的许多功能。
 
 {% hint style="info" %}
-Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net)
+Kotlin 中文站：[https://www.kotlincn.net/](https://www.kotlincn.net/)
 
 Kotlin 官方博客：[https://blog.jetbrains.com/kotlin/](https://blog.jetbrains.com/kotlin/)
 
@@ -275,7 +275,7 @@ Retrofit（一个非常流行的Android网络框架）属性初始化将被延�
 管中窥豹，可见一斑。以上是Kotlin特性的简单介绍，我们会在本书的余下部分详细讨论如何更好地利用Kotlin的能力。
 
 {% hint style="info" %}
-运行Kotlin最快的方法是使用[Kotlin Playground](https://play.kotlinlang.org)。点击链接，无需下载任何软件，而且可以方便地在各个Kotlin版本之间切换，很容易在上面测试Kotlin的各种语言特性。
+运行Kotlin最快的方法是使用[Kotlin Playground](https://play.kotlinlang.org/)。点击链接，无需下载任何软件，而且可以方便地在各个Kotlin版本之间切换，很容易在上面测试Kotlin的各种语言特性。
 
 与Java类似，main函数是Kotlin应用程序的入口。而Android应用程序具有多个入口， main函数是被Android Framework隐式调用的，因此我们无法使用它来运行Android平台上的Kotlin代码。
 {% endhint %}
