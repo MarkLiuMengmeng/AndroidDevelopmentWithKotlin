@@ -391,8 +391,8 @@ override var name: String by bindToText(R.id.textView)
 `bindToText`是如何实现的呢？
 
 ```kotlin
-fun Activity.bindToText(@IdRes viewId: Int ) = object :
-    ReadWriteProperty<Any?, String> {
+fun Activity.bindToText(@IdRes viewId: Int ) 
+    = object : ReadWriteProperty<Any?, String> {
     val textView by lazy { findViewById<TextView>(viewId) }
     override fun getValue(thisRef: Any?, property: KProperty<*>): String {
        return textView.text.toString()
