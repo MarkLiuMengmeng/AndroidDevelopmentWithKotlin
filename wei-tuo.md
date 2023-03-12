@@ -356,7 +356,7 @@ var screenResolution : ScreenResolution by mutableLazy {
 
 #### 视图绑定
 
-在采用**MVP（Model-View-Presenter）**架构的Android项目开发中，我们经常需要使用Presenter来改变视图，我们可能会写出下面的代码：
+在采用**MVP（Model-View-Presenter）**架构的Android项目开发中，我们经常需要使用**Presenter**来改变视图，我们可能会写出下面的代码：
 
 ```kotlin
 // 接口声明
@@ -393,13 +393,13 @@ override var name: String by bindToText(R.id.textView)
 ```kotlin
 fun Activity.bindToText(@IdRes viewId: Int ) 
     = object : ReadWriteProperty<Any?, String> {
-    val textView by lazy { findViewById<TextView>(viewId) }
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String {
-       return textView.text.toString()
-    }
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
-       textView.text = value
-    }
+        val textView by lazy { findViewById<TextView>(viewId) }
+        override fun getValue(thisRef: Any?, property: KProperty<*>): String {
+            return textView.text.toString()
+        }
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+            textView.text = value
+        }
 }
 ```
 
